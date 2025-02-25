@@ -1,1 +1,1 @@
-![License](https://img.shields.io/static/v1?label=license&message=CC-BY-NC-4.0&color=green) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/gibberlings3/itemrevisions?include_prereleases)
+![License](https://img.shields.io/static/v1?label=license&message=CC-BY-NC-4.0&color=green) ![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/rigbir/itemrevisions?include_prereleases)
