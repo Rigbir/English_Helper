@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="design.css">
+        <style>
+            .hidden { display: none; }
+        </style>
+    </head>
+    <body>
+        
+        <div id="main-window">
+            <div class="toggle-container">
+                <input type="checkbox" id="theme-toggle" class="toggle_input">
+                <label for="theme-toggle" class="toggle_label">
+                    <svg width="800px" height="800px" viewBox="0 0 20 20" version="1.1" class="moon" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+        
+                        <title>moon [#1247]</title>
+                        <desc>Created with Sketch.</desc>
+                        <defs>
+                    
+                    </defs>
+                        <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g id="Dribbble-Light-Preview" transform="translate(-260.000000, -2599.000000)" fill="#7e7e7e">
+                                <g id="icons" transform="translate(56.000000, 160.000000)">
+                                    <path d="M213.978454,2456.99569 C210.914867,2456.99569 208.250138,2455.26697 206.900236,2452.73453 C213.101568,2453.26066 218.261663,2448.1176 217.735531,2441.90024 C220.266974,2443.25014 221.995691,2445.91487 221.995691,2448.97845 C221.995691,2453.39896 218.398958,2456.99569 213.978454,2456.99569 M214.834294,2439 C218.520218,2445.91687 210.972992,2453.55028 204,2449.83429 C204.429924,2454.90419 208.683069,2459 213.978454,2459 C219.513354,2459 224,2454.51335 224,2448.97845 C224,2443.68006 219.901188,2439.42992 214.834294,2439" id="moon-[#1247]">
+                    
+                    </path>
+                                </g>
+                            </g>
+                        </g>
+                    </svg>
+                    <svg height="800px" width="800px" version="1.1" id="_x32_" class="sun" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" 
+                            viewBox="0 0 512 512"  xml:space="preserve">
+                    <style type="text/css">
+        .st0{fill:#fff;}
+                    </style>
+                    <g>
+        <path class="st0" d="M255.996,127.577c-70.925,0-128.42,57.495-128.42,128.42c0,70.933,57.496,128.428,128.42,128.428
+            s128.428-57.495,128.428-128.428C384.424,185.072,326.921,127.577,255.996,127.577z"/>
+        <path class="st0" d="M512,255.996c-78.109-49.042-98.052-93.51-75.065-180.932c-87.414,22.995-131.89,3.036-180.939-75.057
+            c-49.042,78.093-93.51,98.052-180.932,75.057C98.06,162.487,78.109,206.954,0,255.996c78.109,49.049,98.06,93.525,75.065,180.939
+            c87.422-22.987,131.89-3.036,180.932,75.057c49.049-78.093,93.525-98.044,180.939-75.057
+            C413.948,349.522,433.891,305.046,512,255.996z M255.996,423.766c-92.666,0-167.762-75.112-167.762-167.77
+            c0-92.65,75.096-167.762,167.762-167.762c92.65,0,167.769,75.112,167.769,167.762C423.766,348.654,348.646,423.766,255.996,423.766
+            z"/>
+                    </g>
+                    </svg>
+                </label>
+
+                <button id="information" class="information-btn">
+                    <img src="image/information.png" alt="" style="display: block; width: 87%; height: auto; margin-left: 3px;">
+                </button>
+                <div id="overlay" class="overlay"></div>
+                <div id="info-popup" class="popup">
+                    <p>
+                        Это приложение поможет учить Английские слова <strong>Эффективнее!</strong>
+                    </p><br/>
+                    <p>Основные возможности:</p><br/>
+                    <p><strong>Изменение темы:</strong> Слева сверху можно поменять тему (светлая/темная).</p><br/>
+                    <p><strong>Включение/отключение расширения:</strong> Справа сверху можно включить или отключить расширение.</p><br/>
+                    <p><strong>Изучение слов:</strong> В центре экрана будет отображаться новое слово, которое нужно перевести.</p><br/>
+                    <p><strong>Выбор другого слова:</strong> Вы можете выбрать другое слово для перевода.</p><br/>
+                    <p><strong>Подсказка:</strong> При необходимости можно взять подсказку на кнопку: <strong>?</strong>.</p><br/>
+                    <p><strong>Добавление в список:</strong> Используйте кнопку: <strong>+</strong>, чтобы добавить слово в список.</p><br/>
+                    <p><strong>Озвучивание:</strong> Воспроизведите слово с помощью машинного голоса.</p><br/>
+                    <p><strong>Выбор темы для изучения:</strong> Выберите тему, которую хотите изучать.</p><br/>
+                    <p><strong>Настройка времени:</strong> Настройте время получения новых слов.</p><br/>
+                    <p><strong>Список изученных слов:</strong> Загляните в список изученных слов через кнопку: <strong>List</strong>.</p><br/>
+                    <button id="close-popup">Close</button>
+                </div>
+
+                <input type="checkbox" id="on-off-toggle" class="on-off_input">
+                <label for="on-off-toggle" class="on-off_label">
+                    <svg width="800px" height="800px" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg" class="off">
+                        <path d="M4.4955 7.44088C3.54724 8.11787 2.77843 8.84176 2.1893 9.47978C0.857392 10.9222 0.857393 13.0778 2.1893 14.5202C3.9167 16.391 7.18879 19 12 19C13.2958 19 14.4799 18.8108 15.5523 18.4977L13.8895 16.8349C13.2936 16.9409 12.6638 17 12 17C7.9669 17 5.18832 14.82 3.65868 13.1634C3.03426 12.4872 3.03426 11.5128 3.65868 10.8366C4.23754 10.2097 4.99526 9.50784 5.93214 8.87753L4.4955 7.44088Z" fill="#fff"/>
+                        <path d="M8.53299 11.4784C8.50756 11.6486 8.49439 11.8227 8.49439 12C8.49439 13.933 10.0614 15.5 11.9944 15.5C12.1716 15.5 12.3458 15.4868 12.516 15.4614L8.53299 11.4784Z" fill="#fff"/>
+                        <path d="M15.4661 12.4471L11.5473 8.52829C11.6937 8.50962 11.8429 8.5 11.9944 8.5C13.9274 8.5 15.4944 10.067 15.4944 12C15.4944 12.1515 15.4848 12.3007 15.4661 12.4471Z" fill="#fff"/>
+                        <path d="M18.1118 15.0928C19.0284 14.4702 19.7715 13.7805 20.3413 13.1634C20.9657 12.4872 20.9657 11.5128 20.3413 10.8366C18.8117 9.18002 16.0331 7 12 7C11.3594 7 10.7505 7.05499 10.1732 7.15415L8.50483 5.48582C9.5621 5.1826 10.7272 5 12 5C16.8112 5 20.0833 7.60905 21.8107 9.47978C23.1426 10.9222 23.1426 13.0778 21.8107 14.5202C21.2305 15.1486 20.476 15.8603 19.5474 16.5284L18.1118 15.0928Z" fill="#fff"/>
+                        <path d="M2.00789 3.42207C1.61736 3.03155 1.61736 2.39838 2.00789 2.00786C2.39841 1.61733 3.03158 1.61733 3.4221 2.00786L22.0004 20.5862C22.391 20.9767 22.391 21.6099 22.0004 22.0004C21.6099 22.3909 20.9767 22.3909 20.5862 22.0004L2.00789 3.42207Z" fill="#fff"/>
+                    </svg>
+                    <svg fill="none" width="800px" height="800px" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" class="on">
+
+                        <title/>
+                        
+                        <g>
+                        
+                        <path d="M94.9936,44.6718C83.6788,27.7025,70.155,11.9989,48,11.9989S12.3212,27.7025,1.0064,44.6718a6.0063,6.0063,0,0,0,0,6.6564C12.3212,68.2975,25.845,84.0011,48,84.0011S83.6788,68.2975,94.9936,51.3282A6.0063,6.0063,0,0,0,94.9936,44.6718ZM48,72.0007C35.2672,72.0007,25.3294,65.21,13.2646,48,25.3294,30.7905,35.2672,23.9993,48,23.9993S70.6706,30.7905,82.7354,48C70.6706,65.21,60.7328,72.0007,48,72.0007Z"/>
+                        
+                        <path d="M48,36A12,12,0,1,0,60,48,12.0161,12.0161,0,0,0,48,36Z"/>
+                        
+                        </g>
+                        
+                        </svg>
+                </label>
+            </div> 
+
+            <hr class="horizontal-line horizontal-line-first">
+
+            <div class="center-container">
+                <div class="word-container">
+                    <p class="word">Hello</p>
+                    <div class="translate-container">
+                        <input placeholder="Input Translate..." id="translateField" type="text" name="text" autocomplete="off" class="inputTranslate">
+                        <p class="translate">Привет</p>
+                    </div>
+                </div>
+                <div class="icon-container">
+                    <button id="help-btn" class="icon-btn">
+                        <img src="image/question.png" alt="" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    </button>
+                    <button id="replace-btn" class="icon-btn">
+                        <img src="image/replace.png" alt="" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    </button>
+                    <button id="sound-btn" class="icon-btn">
+                        <img src="image/sound.png" alt="" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    </button>
+                    <button id="plus-btn" class="icon-btn">
+                        <img src="image/plus.png" alt="" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    </button>
+                </div>
+            </div>
+
+            <hr class="horizontal-line horizontal-line-second">
+
+            <div class="select-theme-container">
+                <button id="prev-btn-theme" class="arrow-btn">
+                    <img src="image/arrow-left.png" alt="" style="display: block; width: 100%; height: 100%;">
+                </button>
+                <input type="text" id="text-field-theme" class="theme-input" readonly>
+                <button id="next-btn-theme" class="arrow-btn">
+                    <img src="image/arrow-right.png" alt="" style="display: block; width: 100%; height: 100%;">
+                </button>
+            </div>
+            <div class="select-time-container">
+                <button id="prev-btn-time" class="arrow-btn">
+                    <img src="image/arrow-left.png" alt="" style="display: block; width: 100%; height: 100%;">
+                </button>
+                <input type="text" id="text-field-time" class="time-input" readonly>
+                <button id="next-btn-time" class="arrow-btn">
+                    <img src="image/arrow-right.png" alt="" style="display: block; width: 100%; height: 100%;">
+                </button>
+            </div>
+            <div class="list-container">
+                <button class="list-check-btn">list</button>
+            </div>
+
+        </div>
+
+        <div id="list-window" class="hidden">
+            <hr class="list-line vertical-center-line">
+            <div class="center">
+                <div class="header">
+                    <p class="head-word">word</p>
+                    <p class="head-translate">translate</p>
+                </div>
+                <hr class="list-line horizontal-center-line">
+            </div>
+
+            <div class="all-words">
+            <!--
+                 <div class="new-learned-word">
+                    <p class="learned-word">hello</p>
+                    <p class="learned-translate">привет</p>
+                    <button id="return-word-btn" class="icon-btn">
+                        <img src="image/return.png" alt="" style="display: block; width: 100%; height: auto;">
+                    </button>
+                </div>
+            --> 
+            </div>
+
+            <div class="footer">
+                <hr class="list-line horizontal-second-center-line">
+                <div class="back-container">
+                    <button id="back-btn" class="return-btn">back</button>
+                </div>
+            </div>
+        </div>
+
+        <script src="functional.js"></script>
+    </body>    
+</html>

@@ -1,0 +1,24 @@
+{
+    "name": "English Helper",
+    "version": "1.0",
+    "description": "Extension",
+    "manifest_version": 3,
+    "permissions": [
+        "alarms", 
+        "notifications", 
+        "storage"
+    ],
+    "content_scripts":[
+        {
+            "matches": ["<all_urls>"],
+            "js": ["functional.js"]
+        }
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_icon": "image/favicon.png",
+        "default_popup": "popup.html"
+    }
+}
