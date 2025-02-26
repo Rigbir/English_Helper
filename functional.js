@@ -116,14 +116,15 @@ function setupOnOffToggle() {
     });
 }
 
+let countHelpButtonPressed = 0;
 function inputFieldAndHelpButton(database) {
     const wordContainer = document.querySelector('.word-container');
     let translateWord = document.querySelector('.translate');
-
     let inputField = document.getElementById('translateField');
     const helpButton = document.getElementById('help-btn');
 
     const selectedTheme = document.getElementById('text-field-theme').value;
+    console.log("selected theme: ", selectedTheme);
     const sound = new Audio('sound/CorrectWord.mp3');
 
     helpButton.addEventListener('click', (event) => {
@@ -136,19 +137,33 @@ function inputFieldAndHelpButton(database) {
             const wordText = document.querySelector('.word').textContent;
             const foundWord = data.find(item => item.word === wordText);
 
-            translateWord.style.color = "#1DB954";
-            translateWord.textContent = foundWord.translation;
-            translateWord.textContent = toLowerCaseAll(translateWord.textContent);
+            if (foundWord && foundWord.translation) {
+                if (countHelpButtonPressed === 0) {
+                    translateWord.style.color = "#1DB954";
+                    translateWord.textContent = foundWord.translation;
+                    translateWord.textContent = toLowerCaseAll(translateWord.textContent);
+                    console.log("help-btn click");
+                    wordContainer.classList.add('show-translate');
+                    console.log("Class added:", wordContainer.classList);
+                    ++countHelpButtonPressed;
+                } 
+                else if (countHelpButtonPressed === 1){
+                    console.log("help-btn click");
+                    wordContainer.classList.remove('show-translate');
+                    console.log("Class removed:", wordContainer.classList);
+                    --countHelpButtonPressed;
+                }
+            } else {
+                console.warn("Word or translation not found:", wordText);
+            }
         }
         event.stopPropagation();
-        wordContainer.classList.add('show-translate');
-        console.log("Class added:", wordContainer.classList);
-        console.log("help-btn click");
     });
 
     inputField.addEventListener('keydown', (event) => {
         if (event.key === 'Enter'){
             inputField.value = toLowerCaseAll(inputField.value);
+            inputField.value = inputField.value.trim();
             console.log("enter press");
             console.log(inputField.value);
 
@@ -161,17 +176,18 @@ function inputFieldAndHelpButton(database) {
                 const wordText = document.querySelector('.word').textContent;
 
                 let foundWord = data.find(item => toLowerCaseAll(item.word) === toLowerCaseAll(wordText));
-                foundWord.translation = toLowerCaseAll(foundWord.translation);
-                console.log(foundWord);
+            
+                if (foundWord && foundWord.translation) {
+                    foundWord.translation = toLowerCaseAll(foundWord.translation);
+                    //foundWord.translation = foundWord.translation.trim();
+                } else {
+                    console.warn("Word or translation not found:", wordText);
+                    translateWord.textContent = "Translation not available";  
+                }
 
                 if (foundWord) {
-                    if (inputField.value == foundWord.translation){
+                    if (normalizeWord(inputField.value) == normalizeWord(foundWord.translation)){
                         sound.play();
-                        //translateWord.style.color = "#1DB954";
-                        //translateWord.textContent = foundWord.translation;
-                        //wordContainer.classList.add('show-translate');
-                        //console.log("Class added:", wordContainer.classList);
-                    
                         changeWord(data);
                     } else {
                         inputField.classList.add('error');
@@ -214,6 +230,10 @@ function changeWord(data) {
         inputField.value = ""; // Clear the input field
         console.log("New word:", randomWord.word);
     }
+}
+
+function normalizeWord(word) {
+    return word.replace(/ё/g, 'е');
 }
 
 function generateRandomWord(database) {
@@ -272,6 +292,7 @@ function wordVoiceover() {
 
 function setupChangeThemesAndTimes() {
     function changeThemesAndTimes(prevBtn, nextBtn, textField, arr, nameIndex) {
+        const wordContainer = document.querySelector('.word-container');
         let currentIndex = 0;
 
         chrome.storage.local.get(nameIndex, (data) => {
@@ -285,24 +306,17 @@ function setupChangeThemesAndTimes() {
             textField.value = arr[currentIndex];
         }
 
-        // const savedIndex = localStorage.getItem(nameIndex);
-        // if (savedIndex !== null){
-        //     currentIndex = parseInt(savedIndex, 10);
-        // }
-
-        //updateTextField();
-
         prevBtn.addEventListener('click', () => {
             currentIndex = (currentIndex - 1 + arr.length) % arr.length;
             updateTextField();
-            //localStorage.setItem(nameIndex, currentIndex);
+            wordContainer.classList.remove('show-translate');
             chrome.storage.local.set({ [nameIndex]: currentIndex });
         });
 
         nextBtn.addEventListener('click', () => {
             currentIndex = (currentIndex + 1) % arr.length;
+            wordContainer.classList.remove('show-translate');
             updateTextField();
-            //localStorage.setItem(nameIndex, currentIndex);
             chrome.storage.local.set({ [nameIndex]: currentIndex });
         });
     }
@@ -440,7 +454,6 @@ function fetchWordsFromDB(database, theme) {
 
     /*get english word contain*/
     const wordElement = document.querySelector('.word');
-
     /*get translation word contain*/
     const translateElement = document.querySelector('.translate');
 
@@ -452,9 +465,6 @@ function fetchWordsFromDB(database, theme) {
             console.warn("No data in IndexedDB!");
             return;  
         }
-    
-        //let currentIndexWord = data[Math.floor(Math.random() * data.length)];
-        //const wordObj = data[Math.floor(Math.random() * data.length)];
         
         const updateWord = () => {
             const word = data[Math.floor(Math.random() * data.length)];
@@ -463,11 +473,9 @@ function fetchWordsFromDB(database, theme) {
             wordElement.textContent = toLowerCaseAll(word.word) || "No data";
             translateElement.textContent = toLowerCaseAll(word.translation) || "No translation";
     
-            //currentIndexWord = (currentIndexWord + 1) % data.length;
         };
     
         updateWord();
-        /*setInterval(updateWord, 3000);*/
     };
     
     getAllRequest.onerror = (event) => {
@@ -712,5 +720,27 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
             console.log("theme changed: ", changes.themeIndex.newValue);
         else 
             console.log("time changed: ", changes.timeIndex);
+    }
+
+    if (changes.themeIndex) {
+        const newThemeIndex = changes.themeIndex.newValue;
+        const jsonThemes = ['All Words', 'Human', 'Food', 'House', 'Sport', 
+                            'Profession', 'Money', 'Cinema', 'Nature', 'Traveling'];
+
+        const newTheme = jsonThemes[newThemeIndex];
+        console.log("newTheme: ", newTheme);
+
+        setupDatebase();
+
+        const request = indexedDB.open("words", 1);
+        request.onsuccess = (event) => {
+            const database = event.target.result;
+            console.log("database opened", database);
+            inputFieldAndHelpButton(database);
+            generateRandomWord(database);
+        };
+        request.onerror = (event) => {
+            console.error("Error opened new databse: ", error)
+        };
     }
 });
