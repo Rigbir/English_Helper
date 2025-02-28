@@ -139,7 +139,12 @@ function inputFieldAndHelpButton(database) {
     console.log("selected theme: ", selectedTheme);
     const sound = new Audio('sound/CorrectWord.mp3');
 
+    let isHelpButtonLocked = false;
     helpButton.addEventListener('click', (event) => {
+        if (isHelpButtonLocked) return;
+
+        isHelpButtonLocked = true;
+
         const transaction = database.transaction(selectedTheme, 'readonly');
         const store = transaction.objectStore(selectedTheme);
         const getAllRequest = store.getAll();
@@ -149,25 +154,24 @@ function inputFieldAndHelpButton(database) {
             const wordText = document.querySelector('.word').textContent;
             const foundWord = data.find(item => item.word === wordText);
 
-            if (foundWord && foundWord.translation) {
-                if (countHelpButtonPressed === 0) {
-                    translateWord.style.color = "#1DB954";
-                    translateWord.textContent = foundWord.translation;
-                    translateWord.textContent = toLowerCaseAll(translateWord.textContent);
-                    console.log("help-btn click");
-                    wordContainer.classList.add('show-translate');
-                    console.log("Class added:", wordContainer.classList);
-                    ++countHelpButtonPressed;
-                } 
-                else if (countHelpButtonPressed === 1){
-                    console.log("help-btn click");
-                    wordContainer.classList.remove('show-translate');
-                    console.log("Class removed:", wordContainer.classList);
-                    --countHelpButtonPressed;
-                }
-            } else {
-                console.warn("Word or translation not found:", wordText);
-            }
+            if (countHelpButtonPressed === 0) {
+                translateWord.style.color = "#1DB954";
+                translateWord.textContent = foundWord.translation;
+                translateWord.textContent = toLowerCaseAll(translateWord.textContent);
+                console.log("help-btn click");
+                wordContainer.classList.add('show-translate');
+                console.log("Class added:", wordContainer.classList);
+                ++countHelpButtonPressed;
+            } else if (countHelpButtonPressed === 1){
+                console.log("help-btn click");
+                wordContainer.classList.remove('show-translate');
+                console.log("Class removed:", wordContainer.classList);
+                --countHelpButtonPressed;
+            } 
+
+            setTimeout(() => {
+                isHelpButtonLocked = false;
+            }, 200); 
         }
         event.stopPropagation();
     });
@@ -269,9 +273,9 @@ function generateRandomWord(database) {
         const data = getAllRequest.result;
 
         randomButton.addEventListener('click', () => {
-            countHelpButtonPressed = 0;
             countVoiceoverButtonPressed = true;
-            console.log("countHelpButtonPressed: ", countHelpButtonPressed);
+            countHelpButtonPressed = 0;
+            console.log("countHelpButtonPressed: ", countHelpButtonPressed); 
             const wordObj = data[Math.floor(Math.random() * data.length)];
             wordPlace.textContent = toLowerCaseAll(wordObj.word);
             inputField.value = "";
@@ -306,10 +310,13 @@ function wordVoiceover() {
 }
 
 function setupChangeThemesAndTimes() {
-    countHelpButtonPressed = 0;
+    if (countHelpButtonPressed === 1) {
+        countHelpButtonPressed = 0;
+        console.log("countHelpButtonPressed: ", countHelpButtonPressed); 
+    }
     countVoiceoverButtonPressed = true;
 
-    function changeThemesAndTimes(prevBtn, nextBtn, textField, arr, nameIndex) {
+    function changeThemesAndTimes(prevBtn, nextBtn, textField, arr, nameIndex) {        
         const wordContainer = document.querySelector('.word-container');
         let currentIndex = 0;
 
@@ -326,15 +333,15 @@ function setupChangeThemesAndTimes() {
 
         prevBtn.addEventListener('click', () => {
             currentIndex = (currentIndex - 1 + arr.length) % arr.length;
-            wordContainer.classList.remove('show-translate');
             updateTextField();
+            wordContainer.classList.remove('show-translate');
             chrome.storage.local.set({ [nameIndex]: currentIndex });
         });
 
         nextBtn.addEventListener('click', () => {
             currentIndex = (currentIndex + 1) % arr.length;
-            wordContainer.classList.remove('show-translate');
             updateTextField();
+            wordContainer.classList.remove('show-translate');
             chrome.storage.local.set({ [nameIndex]: currentIndex });
         });
     }
