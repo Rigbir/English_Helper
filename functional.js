@@ -548,7 +548,11 @@ function addWordToList(databaseWords, databaseLearned) {
             let foundWord = data.find(item => toLowerCaseAll(item.word) === toLowerCaseAll(wordText));
             if (foundWord) {
                 deleteWordFromDB(databaseWords, selectedTheme, foundWord.word)
-                    .then(() => moveWordToLearned(databaseLearned, foundWord))
+                    .then(() => {
+                        moveWordToLearned(databaseLearned, foundWord);
+                        console.log("Calling CHANGEWROD");
+                        changeWord(data);
+                    })
                     .catch(error => console.error("Error deleting word:", error));
                 } else {
                 console.log("Word not found");
@@ -684,6 +688,17 @@ function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
     });
 
     getAllRequest.onsuccess = () => {
+        const allWordsContainer = document.querySelector('.all-words');
+        const heightAllWordsContainer = allWordsContainer.clientHeight;
+        const heightVerticalCenterLine = document.querySelector('.vertical-center-line');
+    
+        if (heightAllWordsContainer > 0) {
+            heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px';
+        } else {
+            
+            heightVerticalCenterLine.style.height = '40px'; 
+        }
+
         const words = getAllRequest.result;
         console.log('Words loaded from Learned: ', words);
         console.log('get-main-cont', allWordsContainer);
@@ -724,7 +739,12 @@ function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
 
             newButton.addEventListener('click', () => {
                 returnToMainDB(databaseWords, databaseLearned, item);
+                newContainer.remove();
                 console.log('click return-btn', newButton);
+
+                const heightAllWordsContainer = allWordsContainer.clientHeight;
+                let heightVerticalCenterLine = document.querySelector('.vertical-center-line');
+                heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px';
             });
         
             newContainer.appendChild(newWord);
