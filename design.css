@@ -1,11 +1,16 @@
 html body {
-    width: 300px;
-    height: 550px;
+    width: 320px;
+    height: 600px;
     border: none;
     background-color: white;
     margin: 0;
     padding: 0;
     transition: background-color 0.3s ease;
+}
+
+#main-window {
+    width: 320px;
+    height: 600px;
 }
 
 * {
@@ -59,7 +64,7 @@ html body {
     background: #242424;
 }
 .toggle_input:checked + .toggle_label::after {
-    left: 107px;
+    left: 118px;
     transform: translateX(-100%);
     background: linear-gradient(180deg,#777,#3a3a3a);
 }
@@ -81,7 +86,7 @@ html body {
     transition: 0.3s;
 }
 .toggle_label svg.moon {
-    left:77px;
+    left:87px;
     fill: #7e7e7e;
     transition: 0.3s;
 }
@@ -187,8 +192,8 @@ html body {
     width: 40px;
     height: 35px;
     position: absolute;
-    top: 3px;
-    left: 3px;
+    top: 2.5px;
+    left: 4px;
     background: linear-gradient(180deg,#a44c3a,#8a3535);
     border-radius: 180px;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
@@ -204,7 +209,7 @@ html body {
     background: #242424;
 }
 .on-off_input:checked + .on-off_label::after {
-    left: 107px;
+    left: 118px;
     transform: translateX(-100%);
     background: linear-gradient(180deg,#23541c,#215e22);
 }
@@ -221,12 +226,12 @@ html body {
     z-index: 100;
 }
 .on-off_label svg.off {
-    left: 3px;
+    left: 4px;
     fill: #fff;
     transition: 0.3s;
 }
 .on-off_label svg.on {
-    left: 68px;
+    left: 79px;
     fill: #7e7e7e;
     transition: 0.3s;
 }
@@ -243,14 +248,14 @@ html body {
     align-items: center; 
     justify-content: center; 
     gap: 5px; 
-    margin-top: 7%;
+    margin-top: 15px;
     margin-right: 3px;
 }
 
 .theme-input {
-    height: 30px;
+    height: 38px;
     text-align: center; 
-    font-size: 16px;
+    font-size: 18px;
     border: 1px solid black; 
     border-radius: 5px;
 }
@@ -278,14 +283,14 @@ html body {
     align-items: center;
     justify-content: center;
     gap: 5px;
-    margin-top: 30px;
+    margin-top: 23px;
     margin-right: 3px;
 }
 
 .time-input {
-    height: 30px;
+    height: 38px;
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     border: 1px solid black;
     border-radius: 5px;
 }
@@ -347,7 +352,7 @@ html body {
 /*line*/
 .horizontal-line-first {
     border: none;
-    width: 300px;
+    width: auto;
     height: 2px;
     background-color: black;
     margin-top: 10px;
@@ -355,7 +360,7 @@ html body {
 
 .horizontal-line-second {
     border: none;
-    width: 300px;
+    width: auto;
     height: 2px;
     background-color: black;
     margin-top: 20px
@@ -364,56 +369,48 @@ html body {
 /*world and translate*/
 .center-container {
     height: 275px;
+    max-width: 99%;
+    width: 99%;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     text-align: center;
     margin: 0px 0px;
 }
 
 .word-container {
+    height: 100%;
+    width: 100%;
     display: flex;
+    justify-content: center;
     flex-direction: column;
-    align-items: center;
-    position: relative;
+}
+
+.word-in-container {
+    width: 100%;
+    height: auto;
 }
 
 .word {
-    overflow-wrap: break-word;
-    font-size: 45px;
+    word-wrap: break-word;
+    font-size: 43px;
     font-weight: bold;
     margin-top: 23px;
     margin-bottom: 10px;
 }
 
 .translate-container {
-    position: relative;
-    width: 300px; 
-    height: 108px; 
-    display: flex;
-    align-items: center;
-    justify-content: center; 
-}
-
-.translate {
-    position: absolute;
-    width: 100%; 
-    max-width: 100%; 
-    height: 100%; 
-    font-size: 37px;
-    margin-top: 4px;
-    font-weight: bold;
-    text-align: center;
-    opacity: 0; 
-    pointer-events: none; 
-    transition: opacity 0.2s ease-in-out;
+    width: 100%;
+    height: auto;
 }
 
 .inputTranslate {
     position: absolute;
     width: 60%;
-    height: 30%;
+    height: 34px;
+    margin-top: 32px;
     left: 17%;
     padding: 12px;
     border-radius: 12px;
@@ -422,6 +419,19 @@ html body {
     transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
     box-shadow: 0px 0px 20px -18px;
     font-size: 16px;
+}
+
+.translate {
+    width: 100%; 
+    max-width: 100%; 
+    height: auto; 
+    font-size: 38px;
+    font-weight: bold;
+    text-align: center;
+    word-wrap: break-word;
+    opacity: 0; 
+    pointer-events: none; 
+    transition: opacity 0.2s ease-in-out;
 }
   
 .inputTranslate:hover {
@@ -466,7 +476,9 @@ border: 2px solid grey;
 
 .icon-container {
     display: flex;
-    gap: 35px;
+    gap: 40px;
+    justify-content: center;
+    margin-top: 21px;
 }
 
 .icon-btn {
@@ -497,7 +509,6 @@ border: 2px solid grey;
     left: 50%;
     border: none;
     width: 2px;
-    height: 492px;
     background-color: black;
     z-index: 1;
 }
@@ -530,14 +541,13 @@ border: 2px solid grey;
 .all-words {
     display: flex;
     flex-direction: column;
-    width: 300px;
-    height: 450px;
-    max-height: 450px; 
+    width: 100%;
+    height: 98%;
+    max-height: 495px; 
     margin-top: 12px;
     overflow-y: auto;
     overflow-x: hidden;
     box-sizing: border-box;
-    background-color: #313030;
 }
 
 .all-words::-webkit-scrollbar {
@@ -551,7 +561,7 @@ border: 2px solid grey;
 }
 
 .new-learned-word {
-    min-height: 50px;
+    min-height: 60px;
     height: auto;
     display: flex;
     width: 100%;
@@ -561,7 +571,7 @@ border: 2px solid grey;
 }
 
 .learned-word { 
-    margin-left: 1px;
+    margin-left: 2px;
     width: 150px;
     color: #1a2e3b;
     font-weight: bold;
@@ -570,7 +580,7 @@ border: 2px solid grey;
 
 .learned-translate {
     width: 117px;
-    margin-left: 3px;
+    margin-left: 14px;
     word-break: break-word;
     color: #1a2e3b;
     font-weight: bold;

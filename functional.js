@@ -59,15 +59,18 @@ function setupThemeToggle() {
         listHeadTranslate.style.color = isDark ? 'white' : 'black';
     }
 
-    const savedTheme = localStorage.getItem('theme');
-    const isDarkMode = savedTheme === 'dark';
-    toggle.checked = isDarkMode;
-    applyTheme(isDarkMode);
+    chrome.storage.local.get('theme', (data) => {
+        const savedTheme = data.theme;
+        const isDarkMode = savedTheme === 'dark';
+        toggle.checked = isDarkMode;
+        applyTheme(isDarkMode);
+    });
     
     toggle.addEventListener('change', () => {
         const isDark = toggle.checked;
         applyTheme(isDark);
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        chrome.storage.local.set({ theme: isDark ? 'dark' : 'light' });
+        setupOnOffToggle();
     });
 }
 
@@ -95,11 +98,20 @@ function getAppInformation() {
 
 function setupOnOffToggle() {
     const toggle = document.getElementById("on-off-toggle");
+    const toggleBackgroundColor = document.querySelector('.on-off_label'); 
 
-    chrome.storage.local.get(["extensionState"], function (data) {
+    chrome.storage.local.get(['extensionState', 'theme'], function (data) {
         const isOnMode = data.extensionState !== undefined ? data.extensionState : true;
+        const themeState = data.theme;
+
         toggle.checked = isOnMode;
         console.log(`State on load: ${isOnMode ? "Enabled" : "Disabled"}`);
+
+        if (themeState === 'light') {
+            toggleBackgroundColor.style.backgroundColor = "#ebebeb";
+        } else if (themeState === 'dark') {
+            toggleBackgroundColor.style.backgroundColor = "#242424";
+        }
 
         if (data.extensionState === undefined) {
             chrome.storage.local.set({ extensionState: true });
@@ -257,6 +269,9 @@ function generateRandomWord(database) {
         const data = getAllRequest.result;
 
         randomButton.addEventListener('click', () => {
+            countHelpButtonPressed = 0;
+            countVoiceoverButtonPressed = true;
+            console.log("countHelpButtonPressed: ", countHelpButtonPressed);
             const wordObj = data[Math.floor(Math.random() * data.length)];
             wordPlace.textContent = toLowerCaseAll(wordObj.word);
             inputField.value = "";
@@ -268,9 +283,9 @@ function generateRandomWord(database) {
     };
 }
 
+let countVoiceoverButtonPressed = true;
 function wordVoiceover() {
     const voice = document.getElementById('sound-btn');
-    let isNormalSpeed = true;
 
     voice.addEventListener('click', () => {
         if (window.speechSynthesis) {
@@ -282,8 +297,8 @@ function wordVoiceover() {
             const utterance = new SpeechSynthesisUtterance();
             utterance.text = wordElement.textContent;
             utterance.lang = "en";
-            utterance.rate = isNormalSpeed ? 1 : 0.1;
-            isNormalSpeed = !isNormalSpeed;
+            utterance.rate = countVoiceoverButtonPressed ? 1 : 0.1;
+            countVoiceoverButtonPressed = !countVoiceoverButtonPressed;
             speechSynthesis.speak(utterance);
             console.log(wordElement);
         }
@@ -291,6 +306,9 @@ function wordVoiceover() {
 }
 
 function setupChangeThemesAndTimes() {
+    countHelpButtonPressed = 0;
+    countVoiceoverButtonPressed = true;
+
     function changeThemesAndTimes(prevBtn, nextBtn, textField, arr, nameIndex) {
         const wordContainer = document.querySelector('.word-container');
         let currentIndex = 0;
@@ -308,8 +326,8 @@ function setupChangeThemesAndTimes() {
 
         prevBtn.addEventListener('click', () => {
             currentIndex = (currentIndex - 1 + arr.length) % arr.length;
-            updateTextField();
             wordContainer.classList.remove('show-translate');
+            updateTextField();
             chrome.storage.local.set({ [nameIndex]: currentIndex });
         });
 
@@ -653,8 +671,10 @@ function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
     const store = transaction.objectStore('learned');
     const getAllRequest = store.getAll();
 
-    const savedTheme = localStorage.getItem('theme');
-    console.log('current theme: ', savedTheme);
+    chrome.storage.local.get('theme', (data) => {
+        savedTheme = data.theme;
+        console.log('current theme: ', savedTheme);
+    });
 
     getAllRequest.onsuccess = () => {
         const words = getAllRequest.result;
@@ -667,9 +687,11 @@ function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
             
             if (savedTheme === 'dark') {
                 newContainer.style.backgroundColor = index % 2 === 0 ? '#9a9a9a' : '#8fa3b0';
+                console.log("STYLE SET FOR DARK");
             }
             else if (savedTheme === 'light') {
                 newContainer.style.backgroundColor = index % 2 === 0 ? '#f0e8e4' : '#d6c7c3';
+                console.log("STYLE SET FOR LIGHT");
             }
 
             const newWord = document.createElement('p');
@@ -704,6 +726,11 @@ function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
         
             allWordsContainer.appendChild(newContainer);
             console.log('final', newContainer);
+
+            const heightAllWordsContainer = allWordsContainer.clientHeight;
+            let heightVerticalCenterLine = document.querySelector('.vertical-center-line');
+            
+            heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px';
         });
     }
 }
@@ -742,5 +769,9 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         request.onerror = (event) => {
             console.error("Error opened new databse: ", error)
         };
+    }
+
+    if (changes.timeIndex) {
+        saveUserTime();
     }
 });
