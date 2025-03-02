@@ -129,6 +129,7 @@ function setupOnOffToggle() {
 }
 
 let countHelpButtonPressed = 0;
+let helpButtonClickHandler = null;
 function inputFieldAndHelpButton(database) {
     const wordContainer = document.querySelector('.word-container');
     let translateWord = document.querySelector('.translate');
@@ -139,11 +140,18 @@ function inputFieldAndHelpButton(database) {
     console.log("selected theme: ", selectedTheme);
     const sound = new Audio('sound/CorrectWord.mp3');
 
-    let isHelpButtonLocked = false;
-    helpButton.addEventListener('click', (event) => {
-        if (isHelpButtonLocked) return;
+    if (helpButtonClickHandler) {
+        helpButton.removeEventListener('click', helpButtonClickHandler);
+    }
 
+    let isHelpButtonLocked = false;
+
+    helpButtonClickHandler = (event) => {
+        console.log("Listener added!");
+        if (isHelpButtonLocked) return;
         isHelpButtonLocked = true;
+
+        console.log("BEFORE CLICK - COUNT:", countHelpButtonPressed);
 
         const transaction = database.transaction(selectedTheme, 'readonly');
         const store = transaction.objectStore(selectedTheme);
@@ -151,8 +159,13 @@ function inputFieldAndHelpButton(database) {
 
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
-            const wordText = document.querySelector('.word').textContent;
-            const foundWord = data.find(item => item.word === wordText);
+            const wordText = document.querySelector('.word').textContent.trim().toLowerCase();
+            const foundWord = data.find(item => item.word.trim().toLowerCase() === wordText);
+
+            if (!foundWord) {
+                console.error("Error: No translation found for:", wordText);
+                return; 
+            }
 
             if (countHelpButtonPressed === 0) {
                 translateWord.style.color = "#1DB954";
@@ -161,20 +174,25 @@ function inputFieldAndHelpButton(database) {
                 console.log("help-btn click");
                 wordContainer.classList.add('show-translate');
                 console.log("Class added:", wordContainer.classList);
-                ++countHelpButtonPressed;
-            } else if (countHelpButtonPressed === 1){
+                countHelpButtonPressed = 1;
+            } else if (countHelpButtonPressed === 1) {
                 console.log("help-btn click");
                 wordContainer.classList.remove('show-translate');
                 console.log("Class removed:", wordContainer.classList);
-                --countHelpButtonPressed;
+                countHelpButtonPressed = 0;
             } 
+
+            console.log("AFTER CLICK - COUNT:", countHelpButtonPressed);
 
             setTimeout(() => {
                 isHelpButtonLocked = false;
             }, 200); 
-        }
+        };
+
         event.stopPropagation();
-    });
+    };
+
+    helpButton.addEventListener('click', helpButtonClickHandler);
 
     inputField.addEventListener('keydown', (event) => {
         if (event.key === 'Enter'){
@@ -189,7 +207,7 @@ function inputFieldAndHelpButton(database) {
 
             getAllRequest.onsuccess = () => {
                 const data = getAllRequest.result;
-                const wordText = document.querySelector('.word').textContent;
+                const wordText = document.querySelector('.word')?.textContent?.trim();
 
                 let foundWord = data.find(item => toLowerCaseAll(item.word) === toLowerCaseAll(wordText));
             
@@ -310,10 +328,7 @@ function wordVoiceover() {
 }
 
 function setupChangeThemesAndTimes() {
-    if (countHelpButtonPressed === 1) {
-        countHelpButtonPressed = 0;
-        console.log("countHelpButtonPressed: ", countHelpButtonPressed); 
-    }
+    countHelpButtonPressed = 0;
     countVoiceoverButtonPressed = true;
 
     function changeThemesAndTimes(prevBtn, nextBtn, textField, arr, nameIndex) {        
