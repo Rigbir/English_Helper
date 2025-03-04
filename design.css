@@ -205,9 +205,7 @@ html body {
     height: 0;
     visibility: hidden;
 }
-.on-off_input:checked + .on-off_label {
-    background: #242424;
-}
+
 .on-off_input:checked + .on-off_label::after {
     left: 118px;
     transform: translateX(-100%);

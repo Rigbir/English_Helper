@@ -132,11 +132,12 @@ let countHelpButtonPressed = 0;
 let helpButtonClickHandler = null;
 function inputFieldAndHelpButton(database) {
     const wordContainer = document.querySelector('.word-container');
+    const helpButton = document.getElementById('help-btn');
     let translateWord = document.querySelector('.translate');
     let inputField = document.getElementById('translateField');
-    const helpButton = document.getElementById('help-btn');
+    const wordPlace = document.querySelector('.word');
 
-    const selectedTheme = document.getElementById('text-field-theme').value;
+    let selectedTheme = document.getElementById('text-field-theme').value;
     console.log("selected theme: ", selectedTheme);
     const sound = new Audio('sound/CorrectWord.mp3');
 
@@ -147,6 +148,7 @@ function inputFieldAndHelpButton(database) {
     let isHelpButtonLocked = false;
 
     helpButtonClickHandler = (event) => {
+        selectedTheme = document.getElementById('text-field-theme').value;
         console.log("Listener added!");
         if (isHelpButtonLocked) return;
         isHelpButtonLocked = true;
@@ -164,7 +166,6 @@ function inputFieldAndHelpButton(database) {
 
             if (!foundWord) {
                 console.error("Error: No translation found for:", wordText);
-                return; 
             }
 
             if (countHelpButtonPressed === 0) {
@@ -195,6 +196,12 @@ function inputFieldAndHelpButton(database) {
     helpButton.addEventListener('click', helpButtonClickHandler);
 
     inputField.addEventListener('keydown', (event) => {
+        selectedTheme = document.getElementById('text-field-theme').value;
+
+        const transaction = database.transaction(selectedTheme, 'readonly');
+        const store = transaction.objectStore(selectedTheme);
+        const getAllRequest = store.getAll();
+
         if (event.key === 'Enter'){
             inputField.value = toLowerCaseAll(inputField.value);
             inputField.value = inputField.value.trim();
@@ -207,13 +214,21 @@ function inputFieldAndHelpButton(database) {
 
             getAllRequest.onsuccess = () => {
                 const data = getAllRequest.result;
+
+                if (!data || data.length === 0) {
+                    console.warn("No words available in theme:", selectedTheme);
+                    wordPlace.textContent = "No words available";
+                    inputField.value = "";
+                    return;
+                }
+
                 const wordText = document.querySelector('.word')?.textContent?.trim();
 
                 let foundWord = data.find(item => toLowerCaseAll(item.word) === toLowerCaseAll(wordText));
             
                 if (foundWord && foundWord.translation) {
                     foundWord.translation = toLowerCaseAll(foundWord.translation);
-                    //foundWord.translation = foundWord.translation.trim();
+                    foundWord.translation = foundWord.translation.trim();
                 } else {
                     console.warn("Word or translation not found:", wordText);
                     translateWord.textContent = "Translation not available";  
@@ -221,8 +236,12 @@ function inputFieldAndHelpButton(database) {
 
                 if (foundWord) {
                     if (normalizeWord(inputField.value) == normalizeWord(foundWord.translation)){
+                        sound.pause();
+                        sound.currentTime = 0;
                         sound.play();
+
                         changeWord(data);
+                        moveWordToLearnedForThisSection(database, selectedTheme, 'Correct', foundWord.word);
                     } else {
                         inputField.classList.add('error');
                         inputField.value = "";
@@ -270,39 +289,118 @@ function normalizeWord(word) {
     return word.replace(/ё/g, 'е');
 }
 
+let count = 0;
+let generateRandomWordButtonClickHandler = null;
 function generateRandomWord(database) {
-    const selectedTheme = document.getElementById('text-field-theme').value;
     const wordContainer = document.querySelector('.word-container');
     const inputField = document.getElementById('translateField');
-    
-    if (!selectedTheme || !database.objectStoreNames.contains(selectedTheme)) {
-        console.error("Error: The specified theme is missing in IndexedDB:", selectedTheme);
-        return;
-    }
-
-    const transaction = database.transaction(selectedTheme, 'readonly');
-    const store = transaction.objectStore(selectedTheme);
-    const getAllRequest = store.getAll();
-
     const randomButton = document.getElementById('replace-btn');
     const wordPlace = document.querySelector('.word');
 
-    getAllRequest.onsuccess = () => {
-        const data = getAllRequest.result;
+    if (generateRandomWordButtonClickHandler) {
+        console.log("Removing old event listener");
+        randomButton.removeEventListener('click', generateRandomWordButtonClickHandler);
+    }
 
-        randomButton.addEventListener('click', () => {
-            countVoiceoverButtonPressed = true;
+    generateRandomWordButtonClickHandler = (Event) => {
+        console.trace("GenerateRandomWord called");
+
+        const selectedTheme = document.getElementById('text-field-theme').value;
+
+        if (!selectedTheme || !database.objectStoreNames.contains(selectedTheme)) {
+            console.error("Error: The specified theme is missing in IndexedDB:", selectedTheme);
+            return;
+        }
+
+        const transaction = database.transaction(selectedTheme, 'readonly');
+        const store = transaction.objectStore(selectedTheme);
+        const getAllRequest = store.getAll();
+
+        getAllRequest.onsuccess = () => {
+            console.log("COUNT GENERATE: ", count);
+            ++count;
+            const data = getAllRequest.result;
+            if (!data || data.length === 0) {
+                console.warn("No words available in theme:", selectedTheme);
+                wordPlace.textContent = "No words available";
+                inputField.value = "";
+                return;
+            }
+
+            // countHelpButtonPressed = 0;
+            // countVoiceoverButtonPressed = true;
+            // console.log("countHelpButtonPressed: ", countHelpButtonPressed);
+
+            // const max = data.length;
+            // const maxMask = (1 << Math.ceil(Math.log2(max))) - 1;
+            // let randIndex;
+
+            // do {
+            //     randIndex = Math.random() * maxMask;
+            // } while (randIndex >= max);
+
+            // randIndex = randIndex | 0;
+            // const wordObj = data[randIndex];
+            // console.log("WORD CONTENT: ", wordObj);
+
             countHelpButtonPressed = 0;
-            console.log("countHelpButtonPressed: ", countHelpButtonPressed); 
+            countVoiceoverButtonPressed = true;
+            console.log("countHelpButtonPressed: ", countHelpButtonPressed);
+
             const wordObj = data[Math.floor(Math.random() * data.length)];
-            wordPlace.textContent = toLowerCaseAll(wordObj.word);
+            console.log("WORD CONTENT: ", wordObj);
+
             inputField.value = "";
+            wordPlace.textContent = toLowerCaseAll(wordObj.word);
             wordContainer.classList.remove('show-translate');
-        });
-    };
-    getAllRequest.onerror = (event) => {
-        console.error("Error reading data:", event.target.error);    
-    };
+        };
+
+        getAllRequest.onerror = (event) => {
+            console.error("Error reading data:", event.target.error);
+        };
+    }
+
+    randomButton.addEventListener('click', generateRandomWordButtonClickHandler);
+    console.log("Event listener added to replace-btn", generateRandomWordButtonClickHandler);
+
+
+    // randomButton.addEventListener('click', () => {
+    //     const selectedTheme = document.getElementById('text-field-theme').value;
+
+    //     if (!selectedTheme || !database.objectStoreNames.contains(selectedTheme)) {
+    //         console.error("Error: The specified theme is missing in IndexedDB:", selectedTheme);
+    //         return;
+    //     }
+
+    //     const transaction = database.transaction(selectedTheme, 'readonly');
+    //     const store = transaction.objectStore(selectedTheme);
+    //     const getAllRequest = store.getAll();
+
+    //     getAllRequest.onsuccess = () => {
+    //         console.log("COUNT GENERATE: ", count);
+    //         ++count;
+    //         const data = getAllRequest.result;
+    //         if (!data || data.length === 0) {
+    //             console.warn("No words available in theme:", selectedTheme);
+    //             wordPlace.textContent = "No words available";
+    //             inputField.value = "";
+    //             return;
+    //         }
+
+    //         countVoiceoverButtonPressed = true;
+    //         countHelpButtonPressed = 0;
+    //         console.log("countHelpButtonPressed: ", countHelpButtonPressed);
+
+    //         const wordObj = data[Math.floor(Math.random() * data.length)];
+    //         wordPlace.textContent = toLowerCaseAll(wordObj.word);
+    //         inputField.value = "";
+    //         wordContainer.classList.remove('show-translate');
+    //     };
+
+    //     getAllRequest.onerror = (event) => {
+    //         console.error("Error reading data:", event.target.error);
+    //     };
+    // });
 }
 
 let countVoiceoverButtonPressed = true;
@@ -386,7 +484,7 @@ function setupDatebase(){
     request.onupgradeneeded = (event) => {
         const database = event.target.result;
         const jsonThemes = ['All Words', 'Human', 'Food', 'House', 'Sport', 
-                            'Profession', 'Money', 'Cinema', 'Nature', 'Traveling'];
+                            'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'Correct'];
 
         jsonThemes.forEach(theme => {
             if (!database.objectStoreNames.contains(theme)) {
@@ -487,40 +585,134 @@ function loadJsonIntoDB(database) {
     });
 }
 
-function fetchWordsFromDB(database, theme) {
-    const transaction = database.transaction(theme, "readonly");
-    const store = transaction.objectStore(theme);
-    const getAllRequest = store.getAll();
+let updateWordHandler = null; 
+async function fetchWordsFromDB(database, theme, autoSetWord = true) {
+    await restoreWordsToOriginalStores(database);
 
-    /*get english word contain*/
     const wordElement = document.querySelector('.word');
-    /*get translation word contain*/
     const translateElement = document.querySelector('.translate');
+    const replaceButton = document.getElementById('replace-btn');
 
-    getAllRequest.onsuccess = () => {
-        const data = getAllRequest.result;
-        console.log("Data from IndexedDB:", data);
-    
-        if (!data || data.length === 0) {
-            console.warn("No data in IndexedDB!");
-            return;  
-        }
-        
-        const updateWord = () => {
+    if (updateWordHandler) {
+        replaceButton.removeEventListener('click', updateWordHandler);
+    }
+
+    updateWordHandler = () => {
+        const transaction = database.transaction(theme, "readonly");
+        const store = transaction.objectStore(theme);
+        const getAllRequest = store.getAll();
+
+        getAllRequest.onsuccess = () => {
+            const data = getAllRequest.result;
+
+            if (!data || data.length === 0) {
+                wordElement.textContent = "No words available";
+                console.warn("No data in IndexedDB!");
+                return;
+            }
+
             const word = data[Math.floor(Math.random() * data.length)];
-            if (!word) return;
-    
             wordElement.textContent = toLowerCaseAll(word.word) || "No data";
-            translateElement.textContent = toLowerCaseAll(word.translation) || "No translation";
-    
+            translateElement.textContent = toLowerCaseAll(word.translation) || "No translation";      
         };
-    
-        updateWord();
+
+        getAllRequest.onerror = (event) => {
+            console.error("Error reading data:", event.target.error);
+        };
     };
+
+    replaceButton.addEventListener('click', updateWordHandler);
     
-    getAllRequest.onerror = (event) => {
-        console.error("Error reading data:", event.target.error);
-    };    
+    if (autoSetWord) {
+        updateWordHandler(); 
+    }
+}
+
+function moveWordToLearnedForThisSection(database, fromStoreName, toStoreName, word) {
+    const transaction = database.transaction([fromStoreName, toStoreName], 'readwrite');
+    const fromStore = transaction.objectStore(fromStoreName);
+    const toStore = transaction.objectStore(toStoreName);
+    const getAllRequest = fromStore.getAll();
+
+    const inputField = document.getElementById('translateField');
+    const wordPlace = document.querySelector('.word');
+
+    const getRequest = fromStore.get(word);
+    getRequest.onsuccess = (event) => {
+        const wordData = event.target.result;
+        if (!wordData) {
+            console.error(`Word with key ${word} not found in ${fromStoreName}`);
+            return;
+        }
+
+        chrome.storage.session.get({ movedWords: {} }, (data) => {
+            const movedWords = data.movedWords;
+            movedWords[word] = fromStoreName;
+
+            chrome.storage.session.set({ movedWords }, () => {
+                console.log(`Saved '${word}' original store: '${fromStoreName}'`);
+            });
+        });
+
+        const addRequest = toStore.add(wordData);
+        addRequest.onsuccess = () => {
+            console.log(`Word '${word}' moved to '${toStoreName}'`);
+            fromStore.delete(word);
+
+            const dataMainDB = getAllRequest.result;
+            if (!dataMainDB || dataMainDB.length === 0){
+                console.log("FUNCTION WORK!");
+                wordPlace.textContent = "No words available";
+                inputField.value = "";
+                return;
+            }
+        };
+    }
+}
+
+async function restoreWordsToOriginalStores(database) {
+    return new Promise((resolve) => {
+        chrome.storage.session.get({ movedWords: {} }, (data) => {
+            const movedWords = data.movedWords;
+            if (Object.keys(movedWords).length === 0) {
+                resolve();
+                return;
+            }
+
+            const transaction = database.transaction(["Correct", ...new Set(Object.values(movedWords))], 'readwrite');
+            const correctStore = transaction.objectStore("Correct");
+
+            let restoreCount = Object.entries(movedWords).length;
+            if (restoreCount === 0) {
+                resolve();
+                return;
+            }
+
+            Object.entries(movedWords).forEach(([word, originalStore]) => {
+                const getRequest = correctStore.get(word);
+                getRequest.onsuccess = (event) => {
+                    const wordData = event.target.result;
+                    if (!wordData) {
+                        restoreCount--;
+                        if (restoreCount === 0) resolve(); 
+                        return;
+                    }
+
+                    const originalStoreObj = transaction.objectStore(originalStore);
+                    const addRequest = originalStoreObj.add(wordData);
+
+                    addRequest.onsuccess = () => {
+                        correctStore.delete(word);
+                        console.log(`Restored '${word}' to '${originalStore}'`);
+                        restoreCount--;
+                        if (restoreCount === 0) resolve(); 
+                    };
+                };
+            });
+
+            chrome.storage.session.set({ movedWords: {} });
+        });
+    });
 }
 
 function setupDatabaseList() {
@@ -537,6 +729,8 @@ function setupDatabaseList() {
 
 function addWordToList(databaseWords, databaseLearned) {
     const plusButton = document.getElementById('plus-btn');
+    const inputField = document.getElementById('translateField');
+    const wordPlace = document.querySelector('.word');
 
     plusButton.addEventListener('click', () => {
 
@@ -560,11 +754,18 @@ function addWordToList(databaseWords, databaseLearned) {
             const wordText = document.querySelector('.word').textContent;
             const translationText = document.querySelector('.translate').textContent
 
+            if (data.length === 0) {
+                console.warn("No words available in theme:", selectedTheme);
+                wordPlace.textContent = "No words available";
+                inputField.value = "";
+                return;
+            }
+
             let foundWord = data.find(item => toLowerCaseAll(item.word) === toLowerCaseAll(wordText));
             if (foundWord) {
                 deleteWordFromDB(databaseWords, selectedTheme, foundWord.word)
                     .then(() => {
-                        moveWordToLearned(databaseLearned, foundWord);
+                        moveWordToLearned(databaseLearned, foundWord, selectedTheme);
                         console.log("Calling CHANGEWROD");
                         changeWord(data);
                     })
@@ -594,7 +795,7 @@ function deleteWordFromDB(database, theme, word) {
     });    
 }
 
-function moveWordToLearned(databaseLearned, word) {
+function moveWordToLearned(databaseLearned, word, theme) {
     if (!word || !word.word) {
         console.error("Invalid word format:", word);
         return;
@@ -602,12 +803,15 @@ function moveWordToLearned(databaseLearned, word) {
     
     const transaction = databaseLearned.transaction('learned', 'readwrite');
     const store = transaction.objectStore('learned');
+    
     word.word = toLowerCaseAll(word.word);
     word.translation = toLowerCaseAll(word.translation);
+    word.theme = theme;
+    
     const addRequest = store.put(word);
     
     addRequest.onsuccess = () => {
-        console.log(`Word '${word.word}' successfully added to learned.`);
+        console.log(`Word '${word.word}' successfully added to learned under theme '${theme}'.`);
     };
     
     addRequest.onerror = (event) => {
@@ -620,17 +824,17 @@ function returnToMainDB(databaseWords, databaseLearned, word){
         console.error("Invalid word format:", word);
         return;
     }
-    
-    const selectedTheme = document.getElementById('text-field-theme').value;
+
+    const originalTheme = word.theme;
     
     deleteWordFromDB(databaseLearned, 'learned', word.word)
         .then(() => {
-            const transaction = databaseWords.transaction(selectedTheme, 'readwrite');
-            const store = transaction.objectStore(selectedTheme);
+            const transaction = databaseWords.transaction(originalTheme, 'readwrite');
+            const store = transaction.objectStore(originalTheme);
             const addRequest = store.put(word);
     
             addRequest.onsuccess = () => {
-                console.log(`Word '${word.word}' successfully returned to the main database.`);
+                console.log(`Word '${word.word}' successfully returned to theme '${originalTheme}'.`);
             };
     
             addRequest.onerror = (event) => {
@@ -679,9 +883,13 @@ function openListPopup(databaseWords, databaseLearned) {
         listWindow.classList.remove('hidden');
     });
 
-    returnButton.addEventListener('click', () => {
+    returnButton.addEventListener('click', () => {  
+        const selectedTheme = document.getElementById('text-field-theme').value;
         listWindow.classList.add('hidden');
         mainWindow.classList.remove('hidden');
+        console.log("Return to main menu")
+        console.log('SELECTED THEME: ', selectedTheme);
+        fetchWordsFromDB(databaseWords, selectedTheme);
     });
 }
 
