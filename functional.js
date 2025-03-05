@@ -311,10 +311,12 @@ function generateRandomWord(database) {
     }
 
     generateRandomWordButtonClickHandler = (event) => {
-        console.log("OLD WORLD: ", wordPlace.textContent);
-
         const selectedTheme = document.getElementById('text-field-theme').value;
 
+        const transaction = database.transaction(selectedTheme, 'readonly');
+        const store = transaction.objectStore(selectedTheme);
+        const getAllRequest = store.getAll();
+    
         if (inputField.style.display === "none") { 
             inputField.style.display = "block";
         }
@@ -324,21 +326,23 @@ function generateRandomWord(database) {
             return;
         }
 
-        const transaction = database.transaction(selectedTheme, 'readonly');
-        const store = transaction.objectStore(selectedTheme);
-        const getAllRequest = store.getAll();
-
         getAllRequest.onsuccess = () => {
-            console.log("OLD WORLD: ", wordPlace.textContent);
-
-            console.log("COUNT GENERATE: ", count);
-            ++count;
-
             const data = getAllRequest.result;
+
             if (!data || data.length === 0) {
                 console.warn("No words available in theme:", selectedTheme);
                 wordPlace.textContent = "No words available";
                 inputField.value = "";
+                return;
+            }
+            
+            console.log("WORD: ", wordPlace.textContent);
+            console.log("COUNT GENERATE: ", count);
+            ++count;
+
+            if (wordPlace.textContent === "EnjoyandLearn!") {
+                console.log("FIRST OPEN");
+                fetchWordsFromDB(database, selectedTheme);
                 return;
             }
 
@@ -346,12 +350,9 @@ function generateRandomWord(database) {
             countVoiceoverButtonPressed = true;
             console.log("countHelpButtonPressed: ", countHelpButtonPressed);
 
-            console.log("OLD WORLD: ", wordPlace.textContent);
-
-            //const wordObj = data[Math.floor(Math.random() * data.length)];
-            
             wordPlace.textContent = toLowerCaseAll(wordPlace.textContent);
-            console.log("WORD CONTENT: ", wordPlace.textContent);   
+
+            console.log("WORD: ", wordPlace.textContent);
             
             inputField.value = "";
             wordContainer.classList.remove('show-translate');
