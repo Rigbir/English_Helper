@@ -130,6 +130,8 @@ function setupOnOffToggle() {
 
 let countHelpButtonPressed = 0;
 let helpButtonClickHandler = null;
+let inputFieldClickHandler = null;
+let flagForInputField = false;
 function inputFieldAndHelpButton(database) {
     const wordContainer = document.querySelector('.word-container');
     const helpButton = document.getElementById('help-btn');
@@ -195,7 +197,12 @@ function inputFieldAndHelpButton(database) {
 
     helpButton.addEventListener('click', helpButtonClickHandler);
 
-    inputField.addEventListener('keydown', async (event) => {
+    if (inputFieldClickHandler) {
+        inputField.removeEventListener('keydown', inputFieldClickHandler);
+    }
+
+    inputFieldClickHandler = (event) => {
+        console.log("Event listener added");
         selectedTheme = document.getElementById('text-field-theme').value;
 
         if (event.key === 'Enter'){
@@ -224,6 +231,10 @@ function inputFieldAndHelpButton(database) {
                 }
 
                 if (foundWord) {
+                    console.log("Input:", normalizeWord(inputField.value));
+                    console.log("Translation:", normalizeWord(foundWord.translation));
+                    console.log("Comparison:", normalizeWord(inputField.value) === normalizeWord(foundWord.translation));
+
                     if (normalizeWord(inputField.value) == normalizeWord(foundWord.translation)){
                         sound.pause();
                         sound.currentTime = 0;
@@ -231,15 +242,18 @@ function inputFieldAndHelpButton(database) {
 
                         changeWord(data);
                         moveWordToLearnedForThisSection(database, selectedTheme, 'Correct', foundWord.word);
+                        
                         if (data.length === 1) {
                             wordPlace.textContent = "No words available";
                             inputField.style.display = "none";
+                            inputField.value = "";
                             console.log("END OF WORDS IN THEME");
                             return;
                         }
                     } else {
                         inputField.classList.add('error');
                         inputField.value = "";
+                        console.log("ERROR INPUT");
 
                         setTimeout(() => {
                             inputField.classList.remove('error');
@@ -251,7 +265,9 @@ function inputFieldAndHelpButton(database) {
                 console.error("Error reading data:", event.target.error);
             };            
         }
-    });
+    }
+
+    inputField.addEventListener('keydown', inputFieldClickHandler);
 
     wordContainer.addEventListener('click', (event) => {
         if (event.target !== helpButton && event.target !== inputField) {
@@ -271,9 +287,9 @@ function changeWord(data) {
     const randomWord = filteredData[Math.floor(Math.random() * filteredData.length)];
 
     if (randomWord) {
-        wordElement.textContent = randomWord.word; // Change the word
-        translateWord.textContent = ""; // Clear the translation
-        inputField.value = ""; // Clear the input field
+        wordElement.textContent = randomWord.word; 
+        translateWord.textContent = ""; 
+        inputField.value = ""; 
         console.log("New word:", randomWord.word);
     }
 }
@@ -299,6 +315,10 @@ function generateRandomWord(database) {
         console.trace("GenerateRandomWord called");
 
         const selectedTheme = document.getElementById('text-field-theme').value;
+
+        if (inputField.style.display === "none") { 
+            inputField.style.display = "block";
+        }
 
         if (!selectedTheme || !database.objectStoreNames.contains(selectedTheme)) {
             console.error("Error: The specified theme is missing in IndexedDB:", selectedTheme);
@@ -421,6 +441,7 @@ function wordVoiceover() {
 function setupChangeThemesAndTimes() {
     countHelpButtonPressed = 0;
     countVoiceoverButtonPressed = true;
+    const inputField = document.getElementById('translateField');
 
     function changeThemesAndTimes(prevBtn, nextBtn, textField, arr, nameIndex) {        
         const wordContainer = document.querySelector('.word-container');
@@ -442,6 +463,7 @@ function setupChangeThemesAndTimes() {
             updateTextField();
             wordContainer.classList.remove('show-translate');
             chrome.storage.local.set({ [nameIndex]: currentIndex });
+            inputField.value = "";
         });
 
         nextBtn.addEventListener('click', () => {
@@ -449,6 +471,7 @@ function setupChangeThemesAndTimes() {
             updateTextField();
             wordContainer.classList.remove('show-translate');
             chrome.storage.local.set({ [nameIndex]: currentIndex });
+            inputField.value = "";
         });
     }
 
@@ -474,6 +497,7 @@ function setupDatebase(){
     /*open and use DateBase*/
     const request = indexedDB.open("words", 1);
     const inputField = document.getElementById('translateField');
+    const wordPlace = document.querySelector('.word');
 
     request.onupgradeneeded = (event) => {
         const database = event.target.result;
@@ -489,24 +513,23 @@ function setupDatebase(){
     
     request.onsuccess = (event) => {
         const database = event.target.result;
-    
+
         isDatabaseEmpty(database).then(isEmpty => {
             if (isEmpty) {
                 console.log("IndexedDB is empty, loading JSON");
+                wordPlace.innerHTML = "Enjoy<br>and<br>Learn!";
+                inputField.style.display = "none"; 
+
                 loadJsonIntoDB(database);
             } else {
                 inputField.style.display = "block";
                 console.log("IndexedDB already contains data");
+
+                const selectedTheme = document.getElementById('text-field-theme').value;
+                console.log("selectedTheme: ", selectedTheme);
+                fetchWordsFromDB(database, selectedTheme); 
             }
         });
-    
-        const selectedTheme = document.getElementById('text-field-theme').value;
-        console.log("selectedTheme: ", selectedTheme);
-        if (selectedTheme && database.objectStoreNames.contains(selectedTheme)) {
-            fetchWordsFromDB(database, selectedTheme);
-        } else {
-            console.warn("The theme does not exist in the database or is not selected!");
-        }
     };
     
     request.onerror = (event) => {
@@ -751,7 +774,6 @@ function addWordToList(databaseWords, databaseLearned) {
                 deleteWordFromDB(databaseWords, selectedTheme, foundWord.word)
                     .then(() => {
                         moveWordToLearned(databaseLearned, foundWord, selectedTheme);
-                        console.log("Calling CHANGEWROD");
                         changeWord(data);
                     })
                     .catch(error => console.error("Error deleting word:", error));
