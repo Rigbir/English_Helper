@@ -131,7 +131,6 @@ function setupOnOffToggle() {
 let countHelpButtonPressed = 0;
 let helpButtonClickHandler = null;
 let inputFieldClickHandler = null;
-let flagForInputField = false;
 function inputFieldAndHelpButton(database) {
     const wordContainer = document.querySelector('.word-container');
     const helpButton = document.getElementById('help-btn');
@@ -311,8 +310,8 @@ function generateRandomWord(database) {
         randomButton.removeEventListener('click', generateRandomWordButtonClickHandler);
     }
 
-    generateRandomWordButtonClickHandler = (Event) => {
-        console.trace("GenerateRandomWord called");
+    generateRandomWordButtonClickHandler = (event) => {
+        console.log("OLD WORLD: ", wordPlace.textContent);
 
         const selectedTheme = document.getElementById('text-field-theme').value;
 
@@ -330,8 +329,11 @@ function generateRandomWord(database) {
         const getAllRequest = store.getAll();
 
         getAllRequest.onsuccess = () => {
+            console.log("OLD WORLD: ", wordPlace.textContent);
+
             console.log("COUNT GENERATE: ", count);
             ++count;
+
             const data = getAllRequest.result;
             if (!data || data.length === 0) {
                 console.warn("No words available in theme:", selectedTheme);
@@ -340,31 +342,18 @@ function generateRandomWord(database) {
                 return;
             }
 
-            // countHelpButtonPressed = 0;
-            // countVoiceoverButtonPressed = true;
-            // console.log("countHelpButtonPressed: ", countHelpButtonPressed);
-
-            // const max = data.length;
-            // const maxMask = (1 << Math.ceil(Math.log2(max))) - 1;
-            // let randIndex;
-
-            // do {
-            //     randIndex = Math.random() * maxMask;
-            // } while (randIndex >= max);
-
-            // randIndex = randIndex | 0;
-            // const wordObj = data[randIndex];
-            // console.log("WORD CONTENT: ", wordObj);
-
             countHelpButtonPressed = 0;
             countVoiceoverButtonPressed = true;
             console.log("countHelpButtonPressed: ", countHelpButtonPressed);
 
-            const wordObj = data[Math.floor(Math.random() * data.length)];
-            console.log("WORD CONTENT: ", wordObj);
+            console.log("OLD WORLD: ", wordPlace.textContent);
 
+            //const wordObj = data[Math.floor(Math.random() * data.length)];
+            
+            wordPlace.textContent = toLowerCaseAll(wordPlace.textContent);
+            console.log("WORD CONTENT: ", wordPlace.textContent);   
+            
             inputField.value = "";
-            wordPlace.textContent = toLowerCaseAll(wordObj.word);
             wordContainer.classList.remove('show-translate');
         };
 
@@ -375,45 +364,6 @@ function generateRandomWord(database) {
 
     randomButton.addEventListener('click', generateRandomWordButtonClickHandler);
     console.log("Event listener added to replace-btn", generateRandomWordButtonClickHandler);
-
-
-    // randomButton.addEventListener('click', () => {
-    //     const selectedTheme = document.getElementById('text-field-theme').value;
-
-    //     if (!selectedTheme || !database.objectStoreNames.contains(selectedTheme)) {
-    //         console.error("Error: The specified theme is missing in IndexedDB:", selectedTheme);
-    //         return;
-    //     }
-
-    //     const transaction = database.transaction(selectedTheme, 'readonly');
-    //     const store = transaction.objectStore(selectedTheme);
-    //     const getAllRequest = store.getAll();
-
-    //     getAllRequest.onsuccess = () => {
-    //         console.log("COUNT GENERATE: ", count);
-    //         ++count;
-    //         const data = getAllRequest.result;
-    //         if (!data || data.length === 0) {
-    //             console.warn("No words available in theme:", selectedTheme);
-    //             wordPlace.textContent = "No words available";
-    //             inputField.value = "";
-    //             return;
-    //         }
-
-    //         countVoiceoverButtonPressed = true;
-    //         countHelpButtonPressed = 0;
-    //         console.log("countHelpButtonPressed: ", countHelpButtonPressed);
-
-    //         const wordObj = data[Math.floor(Math.random() * data.length)];
-    //         wordPlace.textContent = toLowerCaseAll(wordObj.word);
-    //         inputField.value = "";
-    //         wordContainer.classList.remove('show-translate');
-    //     };
-
-    //     getAllRequest.onerror = (event) => {
-    //         console.error("Error reading data:", event.target.error);
-    //     };
-    // });
 }
 
 let countVoiceoverButtonPressed = true;
