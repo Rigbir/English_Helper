@@ -32094,5 +32094,175 @@
       "word": "wildberry",
       "translation": "лесная ягода"
     }
+  ],
+  "IT": [
+    {
+      "word": "variable",
+      "translation": "Переменная"
+    },
+    {
+      "word": "Function",
+      "translation": "Функция"
+    },
+    {
+      "word": "Conditional Statement",
+      "translation": "Условное выражение"
+    },
+    {
+      "word": "Loop",
+      "translation": "Цикл"
+    },
+    {
+      "word": "access",
+      "translation": "доступ"
+    },
+    {
+      "word": "Array",
+      "translation": "Массив"
+    },
+    {
+      "word": "Class",
+      "translation": "Класс"
+    },
+    {
+      "word": "security",
+      "translation": "безопасность"
+    },
+    {
+      "word": "bit",
+      "translation": "бит"
+    },
+    {
+      "word": "compile",
+      "translation": "компилировать"
+    },
+    {
+      "word": "shell",
+      "translation": "ракушка"
+    },
+    {
+      "word": "database",
+      "translation": "база данных"
+    },
+    {
+      "word": "script",
+      "translation": "скрипт"
+    },
+    {
+      "word": "network",
+      "translation": "сеть"
+    },
+    {
+      "word": "data",
+      "translation": "данные"
+    },
+    {
+      "word": "Object",
+      "translation": "Объект"
+    },
+    {
+      "word": "command",
+      "translation": "команда"
+    },
+    {
+      "word": "software",
+      "translation": "программное обеспечение"
+    },
+    {
+      "word": "Recursion",
+      "translation": "Рекурсия"
+    },
+    {
+      "word": "hardware",
+      "translation": "аппаратура"
+    },
+    {
+      "word": "Queue",
+      "translation": "Очередь"
+    },
+    {
+      "word": "Stack",
+      "translation": "Стек"
+    },
+    {
+      "word": "Application Programming Interface",
+      "translation": "Интерфейс прикладного программирования"
+    },
+    {
+      "word": "Debugging",
+      "translation": "Отладка"
+    },
+    {
+      "word": "Algorithm",
+      "translation": "Алгоритм"
+    },
+    {
+      "word": "Exception",
+      "translation": "Исключение"
+    },
+    {
+      "word": "Index",
+      "translation": "Индекс"
+    },
+    {
+      "word": "Thread",
+      "translation": "Поток"
+    },
+    {
+      "word": "Hashing",
+      "translation": "Хэширование"
+    },
+    {
+      "word": "Bitwise Operations",
+      "translation": "Битовые операции"
+    },
+    {
+      "word": "Refactoring",
+      "translation": "Рефакторинг"
+    },
+    {
+      "word": "Memory Management",
+      "translation": "Управление памятью"
+    },
+    {
+      "word": "Deserialization",
+      "translation": "Десериализация"
+    },
+    {
+      "word": "Regular Expressions",
+      "translation": "Регулярные выражения"
+    },
+    {
+      "word": "Sorting",
+      "translation": "Сортировка"
+    },
+    {
+      "word": "Design Pattern",
+      "translation": "Шаблон проектирования"
+    },
+    {
+      "word": "Cryptography",
+      "translation": "Криптография"
+    },
+    {
+      "word": "Deadlock",
+      "translation": "Взаимная блокировка"
+    },
+    {
+      "word": "Unit Test",
+      "translation": "Модульное тестирование"
+    },
+    {
+      "word": "Big O notation",
+      "translation": "Нотация большого O"
+    },
+    {
+      "word": "Multithreading",
+      "translation": "Многопоточность"
+    },
+    {
+      "word": "Encapsulation",
+      "translation": "Инкапсуляция"
+    }
   ]
 }

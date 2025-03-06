@@ -468,7 +468,7 @@ function setupChangeThemesAndTimes() {
         document.getElementById('next-btn-theme'),
         document.getElementById('text-field-theme'),
         ['All Words', 'Human', 'Food', 'House', 'Sport', 
-         'Profession', 'Money', 'Cinema', 'Nature', 'Traveling'],
+         'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT'],
         'themeIndex'
     );
 
@@ -490,7 +490,7 @@ function setupDatebase(){
     request.onupgradeneeded = (event) => {
         const database = event.target.result;
         const jsonThemes = ['All Words', 'Human', 'Food', 'House', 'Sport', 
-                            'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'Correct'];
+                            'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT', 'Correct'];
 
         jsonThemes.forEach(theme => {
             if (!database.objectStoreNames.contains(theme)) {
