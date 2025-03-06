@@ -256,6 +256,8 @@ html body {
     font-size: 18px;
     border: 1px solid black; 
     border-radius: 5px;
+    pointer-events: none;
+    user-select: none;
 }
 
 .arrow-btn {
@@ -291,6 +293,8 @@ html body {
     font-size: 18px;
     border: 1px solid black;
     border-radius: 5px;
+    pointer-events: none;
+    user-select: none;
 }
 
 .list-container {
@@ -368,6 +372,7 @@ html body {
 .center-container {
     height: 275px;
     max-width: 99%;
+    left: 0.2%;
     width: 99%;
     position: relative;
     display: flex;
@@ -429,7 +434,7 @@ html body {
     word-wrap: break-word;
     opacity: 0; 
     pointer-events: none; 
-    transition: opacity 0.2s ease-in-out;
+    /* transition: opacity 0.2s ease-in-out; */
 }
   
 .inputTranslate:hover {

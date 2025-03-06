@@ -38,9 +38,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const appState = {
+    count: 0,
     countHelpButtonPressed: 0,
     countVoiceoverButtonPressed: true,
-    count: 0,
     generateRandomWordButtonClickHandler: null,
     helpButtonClickHandler: null,
     inputFieldClickHandler: null,
@@ -926,6 +926,7 @@ function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
             const img = document.createElement('img');
             img.src = 'image/return.png';
             img.alt = '';
+            img.draggable = false;
             img.style.display = 'block';
             img.style.width = '100%';
             img.style.height = 'auto';
