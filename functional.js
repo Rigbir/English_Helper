@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Database 'words' successfully opened", databaseWords);
 
         generateRandomWord(databaseWords);
+        changeModeWord(databaseWords);
         inputFieldAndHelpButton(databaseWords);
         
         const requestList = indexedDB.open('learned_words', 1);
@@ -41,7 +42,9 @@ const appState = {
     count: 0,
     countHelpButtonPressed: 0,
     countVoiceoverButtonPressed: true,
+    mode: 'eng-to-rus',
     generateRandomWordButtonClickHandler: null,
+    changeModeButtonClickHandler: null,
     helpButtonClickHandler: null,
     inputFieldClickHandler: null,
     updateWordHandler: null,
@@ -167,7 +170,13 @@ function inputFieldAndHelpButton(database) {
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
             const wordText = document.querySelector('.word').textContent.trim().toLowerCase();
-            const foundWord = data.find(item => item.word.trim().toLowerCase() === wordText);
+            const foundWord = data.find(item => {
+                if (appState.mode === 'eng-to-rus') {
+                    return item.word.trim().toLowerCase() === wordText
+                } else {
+                    return item.translation.trim().toLowerCase() === wordText;
+                }
+            });
 
             if (!foundWord) {
                 console.error("Error: No translation found for:", wordText);
@@ -175,7 +184,7 @@ function inputFieldAndHelpButton(database) {
 
             if (appState.countHelpButtonPressed === 0) {
                 translateWord.style.color = "#1DB954";
-                translateWord.textContent = foundWord.translation;
+                translateWord.textContent = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
                 translateWord.textContent = toLowerCaseAll(translateWord.textContent);
                 console.log("help-btn click");
                 wordContainer.classList.add('show-translate');
@@ -223,7 +232,13 @@ function inputFieldAndHelpButton(database) {
 
                 const wordText = document.querySelector('.word')?.textContent?.trim();
 
-                let foundWord = data.find(item => toLowerCaseAll(item.word) === toLowerCaseAll(wordText));
+                let foundWord = data.find(item => {
+                    if (appState.mode === 'eng-to-rus') { 
+                        return toLowerCaseAll(item.word) === toLowerCaseAll(wordText);
+                    } else {
+                        return toLowerCaseAll(item.translation) === toLowerCaseAll(wordText);
+                    }
+                });
             
                 if (foundWord && foundWord.translation) {
                     foundWord.translation = toLowerCaseAll(foundWord.translation);
@@ -234,11 +249,12 @@ function inputFieldAndHelpButton(database) {
                 }
 
                 if (foundWord) {
+                    const correctAnswer = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
                     console.log("Input:", normalizeWord(inputField.value));
-                    console.log("Translation:", normalizeWord(foundWord.translation));
+                    console.log("Translation:", normalizeWord(correctAnswer));
                     console.log("Comparison:", normalizeWord(inputField.value) === normalizeWord(foundWord.translation));
 
-                    if (normalizeWord(inputField.value) == normalizeWord(foundWord.translation)){
+                    if (normalizeWord(inputField.value) == normalizeWord(correctAnswer)){
                         sound.pause();
                         sound.currentTime = 0;
                         sound.play();
@@ -302,9 +318,9 @@ function normalizeWord(word) {
 }
 
 function generateRandomWord(database) {
+    const randomButton = document.getElementById('replace-btn');
     const wordContainer = document.querySelector('.word-container');
     const inputField = document.getElementById('translateField');
-    const randomButton = document.getElementById('replace-btn');
     const wordPlace = document.querySelector('.word');
 
     if (appState.generateRandomWordButtonClickHandler) {
@@ -369,6 +385,26 @@ function generateRandomWord(database) {
     console.log("Event listener added to replace-btn", appState.generateRandomWordButtonClickHandler);
 }
 
+function changeModeWord(database) {
+    const changeModeButton = document.getElementById('change-mode');
+    const wordContainer = document.querySelector('.word-container');
+
+    if (appState.changeModeButtonClickHandler) {
+        changeModeButton.removeEventListener('click', appState.changeModeButtonClickHandler);
+    }
+
+    appState.changeModeButtonClickHandler = (event) => {
+        appState.mode = appState.mode === 'eng-to-rus' ? 'rus-to-eng' : 'eng-to-rus';
+        wordContainer.classList.remove('show-translate');
+        appState.countHelpButtonPressed = 0;
+        appState.countVoiceoverButtonPressed = true;
+        chrome.storage.local.set({ mode: appState.mode }, () => {});
+    }
+
+    changeModeButton.addEventListener('click', appState.changeModeButtonClickHandler);
+    console.log("Event listener added to change-mode-btn", appState.generateRandomWordButtonClickHandler);
+}
+
 function wordVoiceover() {
     const voice = document.getElementById('sound-btn');
 
@@ -381,7 +417,7 @@ function wordVoiceover() {
             }
             const utterance = new SpeechSynthesisUtterance();
             utterance.text = wordElement.textContent;
-            utterance.lang = "en";
+            utterance.lang = appState.mode === 'eng-to-rus' ? 'en' : 'ru';
             utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
             appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
             speechSynthesis.speak(utterance);
@@ -567,36 +603,49 @@ async function fetchWordsFromDB(database, theme, autoSetWord = true) {
         replaceButton.removeEventListener('click', appState.updateWordHandler);
     }
 
-    appState.updateWordHandler = () => {
-        const transaction = database.transaction(theme, "readonly");
-        const store = transaction.objectStore(theme);
-        const getAllRequest = store.getAll();
+    chrome.storage.local.get({ mode: 'eng-to-rus' }, (data) => {
+        appState.mode = data.mode || 'eng-to-rus';
+        console.log("NOW MODE APP", appState.mode);
 
-        getAllRequest.onsuccess = () => {
-            const data = getAllRequest.result;
-
-            if (!data || data.length === 0) {
-                wordElement.textContent = "No words available";
-                inputField.style.display = "none";
-                console.warn("No data in IndexedDB!");
-                return;
-            }
-
-            const word = data[Math.floor(Math.random() * data.length)];
-            wordElement.textContent = toLowerCaseAll(word.word) || "No data";
-            translateElement.textContent = toLowerCaseAll(word.translation) || "No translation";      
-        };
-
-        getAllRequest.onerror = (event) => {
-            console.error("Error reading data:", event.target.error);
-        };
-    };
-
-    replaceButton.addEventListener('click', appState.updateWordHandler);
+        appState.updateWordHandler = () => {
+            const transaction = database.transaction(theme, "readonly");
+            const store = transaction.objectStore(theme);
+            const getAllRequest = store.getAll();
     
-    if (autoSetWord) {
-        appState.updateWordHandler(); 
-    }
+            getAllRequest.onsuccess = () => {
+                const data = getAllRequest.result;
+    
+                if (!data || data.length === 0) {
+                    wordElement.textContent = "No words available";
+                    inputField.style.display = "none";
+                    console.warn("No data in IndexedDB!");
+                    return;
+                }
+    
+                const word = data[Math.floor(Math.random() * data.length)];
+    
+                if (appState.mode === 'eng-to-rus') {
+                    wordElement.textContent = toLowerCaseAll(word.word) || "No data";
+                    translateElement.textContent = toLowerCaseAll(word.translation) || "No translation";  
+                    console.log("FIRST MODE");
+                } else if (appState.mode === 'rus-to-eng') {
+                    wordElement.textContent = toLowerCaseAll(word.translation) || "No data";
+                    translateElement.textContent = toLowerCaseAll(word.word) || "No translation";  
+                    console.log("SECOND MODE");
+                }         
+            };
+    
+            getAllRequest.onerror = (event) => {
+                console.error("Error reading data:", event.target.error);
+            };
+        };
+
+        replaceButton.addEventListener('click', appState.updateWordHandler);
+    
+        if (autoSetWord) {
+            appState.updateWordHandler(); 
+        }
+    });
 }
 
 function moveWordToLearnedForThisSection(database, fromStoreName, toStoreName, word) {
@@ -992,6 +1041,10 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         request.onerror = (event) => {
             console.error("Error opened new databse: ", error)
         };
+    }
+
+    if (changes.mode) {
+        setupDatebase();
     }
 
     if (changes.timeIndex) {
