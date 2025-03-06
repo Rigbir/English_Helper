@@ -37,14 +37,21 @@ document.addEventListener('DOMContentLoaded', () => {
     saveUserTime();
 });
 
+const appState = {
+    countHelpButtonPressed: 0,
+    countVoiceoverButtonPressed: true,
+    count: 0,
+    generateRandomWordButtonClickHandler: null,
+    helpButtonClickHandler: null,
+    inputFieldClickHandler: null,
+    updateWordHandler: null,
+};
+
 function setupThemeToggle() {
-    /*Main items */
     const toggle = document.getElementById('theme-toggle');
     const words = document.querySelectorAll('.word');
     const translates = document.querySelectorAll('.translate');
     const lines = document.querySelectorAll('.horizontal-line');
-    
-    /*List items*/
     const listLines = document.querySelectorAll('.list-line');
     const listHeadWord = document.querySelector('.head-word');
     const listHeadTranslate = document.querySelector('.head-translate');
@@ -128,9 +135,6 @@ function setupOnOffToggle() {
     });
 }
 
-let countHelpButtonPressed = 0;
-let helpButtonClickHandler = null;
-let inputFieldClickHandler = null;
 function inputFieldAndHelpButton(database) {
     const wordContainer = document.querySelector('.word-container');
     const helpButton = document.getElementById('help-btn');
@@ -142,19 +146,19 @@ function inputFieldAndHelpButton(database) {
     console.log("selected theme: ", selectedTheme);
     const sound = new Audio('sound/CorrectWord.mp3');
 
-    if (helpButtonClickHandler) {
-        helpButton.removeEventListener('click', helpButtonClickHandler);
+    if (appState.helpButtonClickHandler) {
+        helpButton.removeEventListener('click', appState.helpButtonClickHandler);
     }
 
     let isHelpButtonLocked = false;
 
-    helpButtonClickHandler = (event) => {
+    appState.helpButtonClickHandler = (event) => {
         selectedTheme = document.getElementById('text-field-theme').value;
         console.log("Listener added!");
         if (isHelpButtonLocked) return;
         isHelpButtonLocked = true;
 
-        console.log("BEFORE CLICK - COUNT:", countHelpButtonPressed);
+        console.log("BEFORE CLICK - COUNT:", appState.countHelpButtonPressed);
 
         const transaction = database.transaction(selectedTheme, 'readonly');
         const store = transaction.objectStore(selectedTheme);
@@ -169,22 +173,22 @@ function inputFieldAndHelpButton(database) {
                 console.error("Error: No translation found for:", wordText);
             }
 
-            if (countHelpButtonPressed === 0) {
+            if (appState.countHelpButtonPressed === 0) {
                 translateWord.style.color = "#1DB954";
                 translateWord.textContent = foundWord.translation;
                 translateWord.textContent = toLowerCaseAll(translateWord.textContent);
                 console.log("help-btn click");
                 wordContainer.classList.add('show-translate');
                 console.log("Class added:", wordContainer.classList);
-                countHelpButtonPressed = 1;
-            } else if (countHelpButtonPressed === 1) {
+                appState.countHelpButtonPressed = 1;
+            } else if (appState.countHelpButtonPressed === 1) {
                 console.log("help-btn click");
                 wordContainer.classList.remove('show-translate');
                 console.log("Class removed:", wordContainer.classList);
-                countHelpButtonPressed = 0;
+                appState.countHelpButtonPressed = 0;
             } 
 
-            console.log("AFTER CLICK - COUNT:", countHelpButtonPressed);
+            console.log("AFTER CLICK - COUNT:", appState.countHelpButtonPressed);
 
             setTimeout(() => {
                 isHelpButtonLocked = false;
@@ -194,13 +198,13 @@ function inputFieldAndHelpButton(database) {
         event.stopPropagation();
     };
 
-    helpButton.addEventListener('click', helpButtonClickHandler);
+    helpButton.addEventListener('click', appState.helpButtonClickHandler);
 
-    if (inputFieldClickHandler) {
-        inputField.removeEventListener('keydown', inputFieldClickHandler);
+    if (appState.inputFieldClickHandler) {
+        inputField.removeEventListener('keydown', appState.inputFieldClickHandler);
     }
 
-    inputFieldClickHandler = (event) => {
+    appState.inputFieldClickHandler = (event) => {
         console.log("Event listener added");
         selectedTheme = document.getElementById('text-field-theme').value;
 
@@ -266,7 +270,7 @@ function inputFieldAndHelpButton(database) {
         }
     }
 
-    inputField.addEventListener('keydown', inputFieldClickHandler);
+    inputField.addEventListener('keydown', appState.inputFieldClickHandler);
 
     wordContainer.addEventListener('click', (event) => {
         if (event.target !== helpButton && event.target !== inputField) {
@@ -297,20 +301,18 @@ function normalizeWord(word) {
     return word.replace(/ё/g, 'е');
 }
 
-let count = 0;
-let generateRandomWordButtonClickHandler = null;
 function generateRandomWord(database) {
     const wordContainer = document.querySelector('.word-container');
     const inputField = document.getElementById('translateField');
     const randomButton = document.getElementById('replace-btn');
     const wordPlace = document.querySelector('.word');
 
-    if (generateRandomWordButtonClickHandler) {
+    if (appState.generateRandomWordButtonClickHandler) {
         console.log("Removing old event listener");
-        randomButton.removeEventListener('click', generateRandomWordButtonClickHandler);
+        randomButton.removeEventListener('click', appState.generateRandomWordButtonClickHandler);
     }
 
-    generateRandomWordButtonClickHandler = (event) => {
+    appState.generateRandomWordButtonClickHandler = (event) => {
         const selectedTheme = document.getElementById('text-field-theme').value;
 
         const transaction = database.transaction(selectedTheme, 'readonly');
@@ -335,10 +337,10 @@ function generateRandomWord(database) {
                 inputField.value = "";
                 return;
             }
-            
+
             console.log("WORD: ", wordPlace.textContent);
-            console.log("COUNT GENERATE: ", count);
-            ++count;
+            console.log("COUNT GENERATE: ", appState.count);
+            ++appState.count;
 
             if (wordPlace.textContent === "EnjoyandLearn!") {
                 console.log("FIRST OPEN");
@@ -346,9 +348,9 @@ function generateRandomWord(database) {
                 return;
             }
 
-            countHelpButtonPressed = 0;
-            countVoiceoverButtonPressed = true;
-            console.log("countHelpButtonPressed: ", countHelpButtonPressed);
+            appState.countHelpButtonPressed = 0;
+            appState.countVoiceoverButtonPressed = true;
+            console.log("countHelpButtonPressed: ", appState.countHelpButtonPressed);
 
             wordPlace.textContent = toLowerCaseAll(wordPlace.textContent);
 
@@ -363,11 +365,10 @@ function generateRandomWord(database) {
         };
     }
 
-    randomButton.addEventListener('click', generateRandomWordButtonClickHandler);
-    console.log("Event listener added to replace-btn", generateRandomWordButtonClickHandler);
+    randomButton.addEventListener('click', appState.generateRandomWordButtonClickHandler);
+    console.log("Event listener added to replace-btn", appState.generateRandomWordButtonClickHandler);
 }
 
-let countVoiceoverButtonPressed = true;
 function wordVoiceover() {
     const voice = document.getElementById('sound-btn');
 
@@ -381,8 +382,8 @@ function wordVoiceover() {
             const utterance = new SpeechSynthesisUtterance();
             utterance.text = wordElement.textContent;
             utterance.lang = "en";
-            utterance.rate = countVoiceoverButtonPressed ? 1 : 0.1;
-            countVoiceoverButtonPressed = !countVoiceoverButtonPressed;
+            utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
+            appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
             speechSynthesis.speak(utterance);
             console.log(wordElement);
         }
@@ -390,8 +391,8 @@ function wordVoiceover() {
 }
 
 function setupChangeThemesAndTimes() {
-    countHelpButtonPressed = 0;
-    countVoiceoverButtonPressed = true;
+    appState.countHelpButtonPressed = 0;
+    appState.countVoiceoverButtonPressed = true;
     const inputField = document.getElementById('translateField');
 
     function changeThemesAndTimes(prevBtn, nextBtn, textField, arr, nameIndex) {        
@@ -445,7 +446,7 @@ function setupChangeThemesAndTimes() {
 }
 
 function setupDatebase(){
-    /*open and use DateBase*/
+    /*open DateBase*/
     const request = indexedDB.open("words", 1);
     const inputField = document.getElementById('translateField');
     const wordPlace = document.querySelector('.word');
@@ -554,7 +555,6 @@ function loadJsonIntoDB(database) {
     });
 }
 
-let updateWordHandler = null; 
 async function fetchWordsFromDB(database, theme, autoSetWord = true) {
     await restoreWordsToOriginalStores(database);
 
@@ -563,11 +563,11 @@ async function fetchWordsFromDB(database, theme, autoSetWord = true) {
     const replaceButton = document.getElementById('replace-btn');
     const inputField = document.getElementById('translateField');
 
-    if (updateWordHandler) {
-        replaceButton.removeEventListener('click', updateWordHandler);
+    if (appState.updateWordHandler) {
+        replaceButton.removeEventListener('click', appState.updateWordHandler);
     }
 
-    updateWordHandler = () => {
+    appState.updateWordHandler = () => {
         const transaction = database.transaction(theme, "readonly");
         const store = transaction.objectStore(theme);
         const getAllRequest = store.getAll();
@@ -592,10 +592,10 @@ async function fetchWordsFromDB(database, theme, autoSetWord = true) {
         };
     };
 
-    replaceButton.addEventListener('click', updateWordHandler);
+    replaceButton.addEventListener('click', appState.updateWordHandler);
     
     if (autoSetWord) {
-        updateWordHandler(); 
+        appState.updateWordHandler(); 
     }
 }
 
@@ -836,6 +836,7 @@ function openListPopup(databaseWords, databaseLearned) {
     const listButton = document.querySelector('.list-check-btn');
     const returnButton = document.querySelector('.return-btn');
     const allWordsContainer = document.querySelector('.all-words');
+    const wordContainer = document.querySelector('.word-container');
 
     if(!listButton){
         console.error("Not found button list")
@@ -858,6 +859,8 @@ function openListPopup(databaseWords, databaseLearned) {
         mainWindow.classList.remove('hidden');
         console.log("Return to main menu")
         console.log('SELECTED THEME: ', selectedTheme);
+        wordContainer.classList.remove('show-translate');
+        appState.countHelpButtonPressed = 0;
         fetchWordsFromDB(databaseWords, selectedTheme);
     });
 }
@@ -994,3 +997,4 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         saveUserTime();
     }
 });
+

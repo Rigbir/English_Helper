@@ -474,7 +474,7 @@ border: 2px solid grey;
 
 .icon-container {
     display: flex;
-    gap: 40px;
+    gap: 23px;
     justify-content: center;
     margin-top: 21px;
 }
