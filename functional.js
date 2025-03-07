@@ -184,7 +184,19 @@ function inputFieldAndHelpButton(database) {
 
             if (appState.countHelpButtonPressed === 0) {
                 translateWord.style.color = "#1DB954";
-                translateWord.textContent = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
+                // translateWord.textContent = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
+                
+                if (appState.mode === 'eng-to-rus'){
+                    if (foundWord.translation.length > 1) {
+                        translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
+                    }else {
+                        translateWord.textContent = foundWord.translation;
+                    }
+                }
+                else {
+                    translateWord.textContent = foundWord.word;
+                }
+
                 translateWord.textContent = toLowerCaseAll(translateWord.textContent);
                 console.log("help-btn click");
                 wordContainer.classList.add('show-translate');
@@ -241,20 +253,42 @@ function inputFieldAndHelpButton(database) {
                 });
             
                 if (foundWord && foundWord.translation) {
-                    foundWord.translation = toLowerCaseAll(foundWord.translation);
-                    foundWord.translation = foundWord.translation.trim();
+
+                    if (appState.mode === 'eng-to-rus'){
+                        if (foundWord.translation.length > 1) {
+                            foundWord.translation = Array.isArray(foundWord.translation)
+                                ? foundWord.translation.map(tr => toLowerCaseAll(tr).trim())
+                                : [toLowerCaseAll(foundWord.translation).trim()];
+                            toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
+                        }else {
+                            foundWord.translation = [foundWord.translation.trim()];
+                        }
+                    }
+                    else {
+                        foundWord.translation = [foundWord.translation.trim()];
+                    }
+
+                    // foundWord.translation = toLowerCaseAll(foundWord.translation);
+                    // foundWord.translation = foundWord.translation.trim();
                 } else {
                     console.warn("Word or translation not found:", wordText);
                     translateWord.textContent = "Translation not available";  
                 }
 
                 if (foundWord) {
-                    const correctAnswer = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
-                    console.log("Input:", normalizeWord(inputField.value));
-                    console.log("Translation:", normalizeWord(toLowerCaseAll(correctAnswer)));
-                    console.log("Comparison:", normalizeWord(inputField.value) === normalizeWord(foundWord.translation));
+                    //const correctAnswer = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
+                    
+                    const correctAnswer = appState.mode === 'eng-to-rus' 
+                        ? (Array.isArray(foundWord.translation) ? foundWord.translation : [foundWord.translation]) 
+                        : [foundWord.word];
 
-                    if (normalizeWord(inputField.value) == normalizeWord(toLowerCaseAll(correctAnswer))){
+                    console.log("Input:", normalizeWord(inputField.value));
+                    //console.log("Translation:", normalizeWord(toLowerCaseAll(correctAnswer)));
+                    //console.log("Comparison:", normalizeWord(inputField.value) === normalizeWord(foundWord.translation));
+                    console.log("Translation:", correctAnswer.map(tr => normalizeWord(toLowerCaseAll(tr))).join(", "));
+
+                    if (correctAnswer.some(tr => normalizeWord(inputField.value) === normalizeWord(tr))) {
+                    //if (normalizeWord(inputField.value) == normalizeWord(toLowerCaseAll(correctAnswer))){
                         sound.pause();
                         sound.currentTime = 0;
                         sound.play();
@@ -291,6 +325,7 @@ function inputFieldAndHelpButton(database) {
     wordContainer.addEventListener('click', (event) => {
         if (event.target !== helpButton && event.target !== inputField) {
             wordContainer.classList.remove('show-translate');
+            appState.countHelpButtonPressed = 0;
             inputField.value = "";
             console.log("Class remove:", wordContainer.classList);
         }
@@ -625,8 +660,14 @@ async function fetchWordsFromDB(database, theme, autoSetWord = true) {
                 const word = data[Math.floor(Math.random() * data.length)];
     
                 if (appState.mode === 'eng-to-rus') {
+                    console.log("Word object:", word);
                     wordElement.textContent = toLowerCaseAll(word.word) || "No data";
-                    translateElement.textContent = toLowerCaseAll(word.translation) || "No translation";  
+                    //translateElement.textContent = toLowerCaseAll(word.translation) || "No translation";  
+                    translateElement.textContent = word.translation 
+                        ? toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) 
+                        : "No translation";
+                    
+                    console.log("TRANSLATE ELEMENT: ", translateElement.textContent);
                     console.log("FIRST MODE");
                 } else if (appState.mode === 'rus-to-eng') {
                     wordElement.textContent = toLowerCaseAll(word.translation) || "No data";

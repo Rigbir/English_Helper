@@ -32097,172 +32097,173 @@
   ],
   "IT": [
     {
-      "word": "variable",
-      "translation": "Переменная"
+        "word": "variable",
+        "translation": ["Переменная", "изменяемый"]
     },
     {
-      "word": "Function",
-      "translation": "Функция"
+        "word": "Function",
+        "translation": ["Функция", "назначение"]
     },
     {
-      "word": "Conditional Statement",
-      "translation": "Условное выражение"
+        "word": "Conditional Statement",
+        "translation": ["Условное выражение", "условный оператор"]
     },
     {
-      "word": "Loop",
-      "translation": "Цикл"
+        "word": "Loop",
+        "translation": ["Цикл", "повторение"]
     },
     {
-      "word": "access",
-      "translation": "доступ"
+        "word": "access",
+        "translation": ["доступ", "вход"]
     },
     {
-      "word": "Array",
-      "translation": "Массив"
+        "word": "Array",
+        "translation": ["Массив", "набор"]
     },
     {
-      "word": "Class",
-      "translation": "Класс"
+        "word": "Class",
+        "translation": ["Класс", "группа"]
     },
     {
-      "word": "security",
-      "translation": "безопасность"
+        "word": "security",
+        "translation": ["безопасность", "защита"]
     },
     {
-      "word": "bit",
-      "translation": "бит"
+        "word": "bit",
+        "translation": ["бит", "байт"]
     },
     {
-      "word": "compile",
-      "translation": "компилировать"
+        "word": "compile",
+        "translation": ["компилировать", "собирать"]
     },
     {
-      "word": "shell",
-      "translation": "ракушка"
+        "word": "shell",
+        "translation": ["ракушка", "оболочка"]
     },
     {
-      "word": "database",
-      "translation": "база данных"
+        "word": "database",
+        "translation": ["база данных", "хранилище"]
     },
     {
-      "word": "script",
-      "translation": "скрипт"
+        "word": "script",
+        "translation": ["скрипт", "сценарий"]
     },
     {
-      "word": "network",
-      "translation": "сеть"
+        "word": "network",
+        "translation": ["сеть", "инфраструктура"]
     },
     {
-      "word": "data",
-      "translation": "данные"
+        "word": "data",
+        "translation": ["данные", "информация"]
     },
     {
-      "word": "Object",
-      "translation": "Объект"
+        "word": "Object",
+        "translation": ["Объект", "предмет"]
     },
     {
-      "word": "command",
-      "translation": "команда"
+        "word": "command",
+        "translation": ["команда", "приказ"]
     },
     {
-      "word": "software",
-      "translation": "программное обеспечение"
+        "word": "software",
+        "translation": ["программное обеспечение", "ПО"]
     },
     {
-      "word": "Recursion",
-      "translation": "Рекурсия"
+        "word": "Recursion",
+        "translation": ["Рекурсия", "повторение"]
     },
     {
-      "word": "hardware",
-      "translation": "аппаратура"
+        "word": "hardware",
+        "translation": ["аппаратура", "оборудование"]
     },
     {
-      "word": "Queue",
-      "translation": "Очередь"
+        "word": "Queue",
+        "translation": ["Очередь", "линия"]
     },
     {
-      "word": "Stack",
-      "translation": "Стек"
+        "word": "Stack",
+        "translation": ["Стек", "куча"]
     },
     {
-      "word": "Application Programming Interface",
-      "translation": "Интерфейс прикладного программирования"
+        "word": "Application Programming Interface",
+        "translation": ["Интерфейс прикладного программирования", "API"]
     },
     {
-      "word": "Debugging",
-      "translation": "Отладка"
+        "word": "Debugging",
+        "translation": ["Отладка", "исправление ошибок"]
     },
     {
-      "word": "Algorithm",
-      "translation": "Алгоритм"
+        "word": "Algorithm",
+        "translation": ["Алгоритм", "метод"]
     },
     {
-      "word": "Exception",
-      "translation": "Исключение"
+        "word": "Exception",
+        "translation": ["Исключение", "ошибка"]
     },
     {
-      "word": "Index",
-      "translation": "Индекс"
+        "word": "Index",
+        "translation": ["Индекс", "указатель"]
     },
     {
-      "word": "Thread",
-      "translation": "Поток"
+        "word": "Thread",
+        "translation": ["Поток", "нить"]
     },
     {
-      "word": "Hashing",
-      "translation": "Хэширование"
+        "word": "Hashing",
+        "translation": ["Хэширование", "шифрование"]
     },
     {
-      "word": "Bitwise Operations",
-      "translation": "Битовые операции"
+        "word": "Bitwise Operations",
+        "translation": ["Битовые операции", "побитовые вычисления"]
     },
     {
-      "word": "Refactoring",
-      "translation": "Рефакторинг"
+        "word": "Refactoring",
+        "translation": ["Рефакторинг", "оптимизация кода"]
     },
     {
-      "word": "Memory Management",
-      "translation": "Управление памятью"
+        "word": "Memory Management",
+        "translation": ["Управление памятью", "распределение памяти"]
     },
     {
-      "word": "Deserialization",
-      "translation": "Десериализация"
+        "word": "Deserialization",
+        "translation": ["Десериализация", "распаковка данных"]
     },
     {
-      "word": "Regular Expressions",
-      "translation": "Регулярные выражения"
+        "word": "Regular Expressions",
+        "translation": ["Регулярные выражения", "шаблон поиска"]
     },
     {
-      "word": "Sorting",
-      "translation": "Сортировка"
+        "word": "Sorting",
+        "translation": ["Сортировка", "упорядочивание"]
     },
     {
-      "word": "Design Pattern",
-      "translation": "Шаблон проектирования"
+        "word": "Design Pattern",
+        "translation": ["Шаблон проектирования", "архитектурный шаблон"]
     },
     {
-      "word": "Cryptography",
-      "translation": "Криптография"
+        "word": "Cryptography",
+        "translation": ["Криптография", "шифрование"]
     },
     {
-      "word": "Deadlock",
-      "translation": "Взаимная блокировка"
+        "word": "Deadlock",
+        "translation": ["Взаимная блокировка", "зависание"]
     },
     {
-      "word": "Unit Test",
-      "translation": "Модульное тестирование"
+        "word": "Unit Test",
+        "translation": ["Модульное тестирование", "юнит-тест"]
     },
     {
-      "word": "Big O notation",
-      "translation": "Нотация большого O"
+        "word": "Big O notation",
+        "translation": ["Нотация большого O", "оценка сложности"]
     },
     {
-      "word": "Multithreading",
-      "translation": "Многопоточность"
+        "word": "Multithreading",
+        "translation": ["Многопоточность", "параллельное выполнение"]
     },
     {
-      "word": "Encapsulation",
-      "translation": "Инкапсуляция"
+        "word": "Encapsulation",
+        "translation": ["Инкапсуляция", "скрытие данных"]
     }
   ]
 }
+
