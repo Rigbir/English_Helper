@@ -251,10 +251,10 @@ function inputFieldAndHelpButton(database) {
                 if (foundWord) {
                     const correctAnswer = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
                     console.log("Input:", normalizeWord(inputField.value));
-                    console.log("Translation:", normalizeWord(correctAnswer));
+                    console.log("Translation:", normalizeWord(toLowerCaseAll(correctAnswer)));
                     console.log("Comparison:", normalizeWord(inputField.value) === normalizeWord(foundWord.translation));
 
-                    if (normalizeWord(inputField.value) == normalizeWord(correctAnswer)){
+                    if (normalizeWord(inputField.value) == normalizeWord(toLowerCaseAll(correctAnswer))){
                         sound.pause();
                         sound.currentTime = 0;
                         sound.play();
@@ -306,7 +306,7 @@ function changeWord(data) {
     const randomWord = filteredData[Math.floor(Math.random() * filteredData.length)];
 
     if (randomWord) {
-        wordElement.textContent = randomWord.word; 
+        wordElement.textContent = appState.mode === 'eng-to-rus' ? toLowerCaseAll(randomWord.word) : toLowerCaseAll(randomWord.translation); 
         translateWord.textContent = ""; 
         inputField.value = ""; 
         console.log("New word:", randomWord.word);
