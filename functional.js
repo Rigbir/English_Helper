@@ -54,16 +54,34 @@ function setupThemeToggle() {
     const toggle = document.getElementById('theme-toggle');
     const words = document.querySelectorAll('.word');
     const translates = document.querySelectorAll('.translate');
+    const iconButtons = document.querySelectorAll('.icon-btn');
+    const arrowButtons = document.querySelectorAll('.arrow-btn');
+    const toggleLabel = document.querySelector('.toggle_label');
+    const infoButton = document.querySelector('.information-btn');
     const lines = document.querySelectorAll('.horizontal-line');
     const listLines = document.querySelectorAll('.list-line');
     const listHeadWord = document.querySelector('.head-word');
     const listHeadTranslate = document.querySelector('.head-translate');
 
-    const applyTheme = (isDark) => {
-        document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
+    // const applyTheme = (isDark) => {
+    //     document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
+    //     lines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+    //     words.forEach(word => {word.style.color = isDark ? 'white' : 'black'});
+    //     translates.forEach(translate => {translate.style.color = isDark ? '#1DB954' : '#1DB954'});
+    //     iconButtons.forEach(icon => {icon.style.backgroundColor = isDark ? '#dcc788' : 'white'});
+    //     listLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+    //     listHeadWord.style.color = isDark ? 'white' : 'black';
+    //     listHeadTranslate.style.color = isDark ? 'white' : 'black';
+    // }
+    const applyTheme = (isDark) => {        
+        document.body.style.backgroundColor = isDark ? '#313030' : '#C9D7E2';
         lines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
         words.forEach(word => {word.style.color = isDark ? 'white' : 'black'});
         translates.forEach(translate => {translate.style.color = isDark ? '#1DB954' : '#1DB954'});
+        iconButtons.forEach(icon => {icon.style.backgroundColor = isDark ? '#dcc788' : '#F1F4F8'});
+        arrowButtons.forEach(arrow => {arrow.style.backgroundColor = isDark ? '#dcc788' : '#F1F4F8'});
+        toggleLabel.style.background = isDark ? '#242424' : '#C9D7E2';
+        infoButton.style.backgroundColor = isDark ? '#dcc788' : '#F1F4F8';
         listLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
         listHeadWord.style.color = isDark ? 'white' : 'black';
         listHeadTranslate.style.color = isDark ? 'white' : 'black';
@@ -118,7 +136,7 @@ function setupOnOffToggle() {
         console.log(`State on load: ${isOnMode ? "Enabled" : "Disabled"}`);
 
         if (themeState === 'light') {
-            toggleBackgroundColor.style.backgroundColor = "#ebebeb";
+            toggleBackgroundColor.style.backgroundColor = "#C9D7E2";
         } else if (themeState === 'dark') {
             toggleBackgroundColor.style.backgroundColor = "#242424";
         }
