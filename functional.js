@@ -1,3 +1,5 @@
+import { elements } from "./domElements.js";
+
 document.addEventListener('DOMContentLoaded', () => {
     setupDatebase();
     setupDatabaseList();
@@ -51,38 +53,21 @@ const appState = {
 };
 
 function setupThemeToggle() {
-    const toggle = document.getElementById('theme-toggle');
-    const words = document.querySelectorAll('.word');
-    const translates = document.querySelectorAll('.translate');
-    const iconButtons = document.querySelectorAll('.icon-btn');
-    const arrowButtons = document.querySelectorAll('.arrow-btn');
-    const toggleLabel = document.querySelector('.toggle_label');
-    const infoButton = document.querySelector('.information-btn');
-    const lines = document.querySelectorAll('.horizontal-line');
-    const listLines = document.querySelectorAll('.list-line');
-    const listHeadWord = document.querySelector('.head-word');
-    const listHeadTranslate = document.querySelector('.head-translate');
+    const { themeToggleState, 
+            activeWord, 
+            translateWord, 
+            mainHorizontalLines, 
+            listHorizontalLines, 
+            listHeadWord, 
+            listHeadTranslate 
+          } = elements;
 
-    // const applyTheme = (isDark) => {
-    //     document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
-    //     lines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
-    //     words.forEach(word => {word.style.color = isDark ? 'white' : 'black'});
-    //     translates.forEach(translate => {translate.style.color = isDark ? '#1DB954' : '#1DB954'});
-    //     iconButtons.forEach(icon => {icon.style.backgroundColor = isDark ? '#dcc788' : 'white'});
-    //     listLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
-    //     listHeadWord.style.color = isDark ? 'white' : 'black';
-    //     listHeadTranslate.style.color = isDark ? 'white' : 'black';
-    // }
     const applyTheme = (isDark) => {        
-        document.body.style.backgroundColor = isDark ? '#313030' : '#C9D7E2';
-        lines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
-        words.forEach(word => {word.style.color = isDark ? 'white' : 'black'});
-        translates.forEach(translate => {translate.style.color = isDark ? '#1DB954' : '#1DB954'});
-        iconButtons.forEach(icon => {icon.style.backgroundColor = isDark ? '#dcc788' : '#F1F4F8'});
-        arrowButtons.forEach(arrow => {arrow.style.backgroundColor = isDark ? '#dcc788' : '#F1F4F8'});
-        toggleLabel.style.background = isDark ? '#242424' : '#C9D7E2';
-        infoButton.style.backgroundColor = isDark ? '#dcc788' : '#F1F4F8';
-        listLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+        document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
+        mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+        activeWord.style.color = isDark ? 'white' : 'black';
+        translateWord.style.color = isDark ? '#1DB954' : '#1DB954'
+        listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
         listHeadWord.style.color = isDark ? 'white' : 'black';
         listHeadTranslate.style.color = isDark ? 'white' : 'black';
     }
@@ -90,12 +75,12 @@ function setupThemeToggle() {
     chrome.storage.local.get('theme', (data) => {
         const savedTheme = data.theme;
         const isDarkMode = savedTheme === 'dark';
-        toggle.checked = isDarkMode;
+        themeToggleState.checked = isDarkMode;
         applyTheme(isDarkMode);
     });
     
-    toggle.addEventListener('change', () => {
-        const isDark = toggle.checked;
+    themeToggleState.addEventListener('change', () => {
+        const isDark = themeToggleState.checked;
         applyTheme(isDark);
         chrome.storage.local.set({ theme: isDark ? 'dark' : 'light' });
         setupOnOffToggle();
@@ -103,42 +88,44 @@ function setupThemeToggle() {
 }
 
 function getAppInformation() {
-    const infoButton = document.getElementById("information");
-    const popup = document.getElementById("info-popup");
-    const overlay = document.getElementById("overlay");
-    const closeButton = document.getElementById("close-popup");
+    const { infoButton,
+            infoPopup,
+            infoOverlay,
+            infoCloseOverlayButton
+          } = elements;
 
     infoButton.addEventListener("click", () => {
-        popup.style.display = "block";
-        overlay.style.display = "block";
+        infoPopup.style.display = "block";
+        infoOverlay.style.display = "block";
     });
 
-    closeButton.addEventListener("click", () => {
-        popup.style.display = "none";
-        overlay.style.display = "none";
+    infoCloseOverlayButton.addEventListener("click", () => {
+        infoPopup.style.display = "none";
+        infoOverlay.style.display = "none";
     });
 
-    overlay.addEventListener("click", () => {
-        popup.style.display = "none";
-        overlay.style.display = "none";
+    infoOverlay.addEventListener("click", () => {
+        infoPopup.style.display = "none";
+        infoOverlay.style.display = "none";
     });
 }
 
 function setupOnOffToggle() {
-    const toggle = document.getElementById("on-off-toggle");
-    const toggleBackgroundColor = document.querySelector('.on-off_label'); 
+    const { onOffToggleState,
+            onOffToggleBackground
+          } = elements;
 
     chrome.storage.local.get(['extensionState', 'theme'], function (data) {
         const isOnMode = data.extensionState !== undefined ? data.extensionState : true;
         const themeState = data.theme;
 
-        toggle.checked = isOnMode;
+        onOffToggleState.checked = isOnMode;
         console.log(`State on load: ${isOnMode ? "Enabled" : "Disabled"}`);
 
         if (themeState === 'light') {
-            toggleBackgroundColor.style.backgroundColor = "#C9D7E2";
+            onOffToggleBackground.style.backgroundColor = "#ebebeb";
         } else if (themeState === 'dark') {
-            toggleBackgroundColor.style.backgroundColor = "#242424";
+            onOffToggleBackground.style.backgroundColor = "#242424";
         }
 
         if (data.extensionState === undefined) {
@@ -146,8 +133,8 @@ function setupOnOffToggle() {
         }
     });
 
-    toggle.addEventListener('change', () => {
-        const isState = toggle.checked;
+    onOffToggleState.addEventListener('change', () => {
+        const isState = onOffToggleState.checked;
         console.log(`State changed: ${isState ? "Enabled" : "Disabled"}`);
         chrome.storage.local.set({ extensionState: isState });
         
@@ -157,27 +144,26 @@ function setupOnOffToggle() {
 }
 
 function inputFieldAndHelpButton(database) {
-    const wordContainer = document.querySelector('.word-container');
-    const helpButton = document.getElementById('help-btn');
-    const wordPlace = document.querySelector('.word');
-    let translateWord = document.querySelector('.translate');
-    let inputField = document.getElementById('translateField');
+    const { wordContainer,
+            helpButton,
+            activeWord
+          } = elements;
 
-    let selectedTheme = document.getElementById('text-field-theme').value;
-    console.log("selected theme: ", selectedTheme);
+    let { textFieldTheme,
+          selectedTheme,
+          translateWord,
+          inputField
+        } = elements;
+
     const sound = new Audio('sound/CorrectWord.mp3');
 
     if (appState.helpButtonClickHandler) {
         helpButton.removeEventListener('click', appState.helpButtonClickHandler);
     }
 
-    let isHelpButtonLocked = false;
-
     appState.helpButtonClickHandler = (event) => {
-        selectedTheme = document.getElementById('text-field-theme').value;
+        selectedTheme = textFieldTheme.value;
         console.log("Listener added!");
-        if (isHelpButtonLocked) return;
-        isHelpButtonLocked = true;
 
         console.log("BEFORE CLICK - COUNT:", appState.countHelpButtonPressed);
 
@@ -229,10 +215,6 @@ function inputFieldAndHelpButton(database) {
             } 
 
             console.log("AFTER CLICK - COUNT:", appState.countHelpButtonPressed);
-
-            setTimeout(() => {
-                isHelpButtonLocked = false;
-            }, 200); 
         };
 
         event.stopPropagation();
@@ -246,7 +228,7 @@ function inputFieldAndHelpButton(database) {
 
     appState.inputFieldClickHandler = (event) => {
         console.log("Event listener added");
-        selectedTheme = document.getElementById('text-field-theme').value;
+        selectedTheme = textFieldTheme.value;
 
         if (event.key === 'Enter'){
             inputField.value = toLowerCaseAll(inputField.value);
@@ -261,46 +243,49 @@ function inputFieldAndHelpButton(database) {
             getAllRequest.onsuccess = () => {
                 const data = getAllRequest.result;
 
-                const wordText = document.querySelector('.word')?.textContent?.trim();
+                const activeWordText = activeWord?.textContent?.trim();
+                console.log("ACTIVE WORD: ", activeWord);
 
                 let foundWord = data.find(item => {
                     if (appState.mode === 'eng-to-rus') { 
-                        return toLowerCaseAll(item.word) === toLowerCaseAll(wordText);
+                        return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
                     } else {
-                        return toLowerCaseAll(item.translation) === toLowerCaseAll(wordText);
+                        return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
                     }
                 });
             
                 if (foundWord && foundWord.translation) {
 
-                    // if (appState.mode === 'eng-to-rus'){
-                    //     if (foundWord.translation.length > 1) {
-                    //         foundWord.translation = Array.isArray(foundWord.translation)
-                    //             ? foundWord.translation.map(tr => toLowerCaseAll(tr).trim())
-                    //             : [toLowerCaseAll(foundWord.translation).trim()];
-                    //         //toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
-                    //     }else {
-                    //         foundWord.translation = [foundWord.translation];
-                    //         console.log("TRANSLATE ELEMENT: ", foundWord.translation);
-                    //     }
-                    // }
-                    // else {
-                    //     foundWord.translation = [foundWord.translation.trim()];
-                    // }
+                /* 
+                    if (appState.mode === 'eng-to-rus'){
+                        if (foundWord.translation.length > 1) {
+                            foundWord.translation = Array.isArray(foundWord.translation)
+                                ? foundWord.translation.map(tr => toLowerCaseAll(tr).trim())
+                                : [toLowerCaseAll(foundWord.translation).trim()];
+                            toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
+                        }else {
+                            foundWord.translation = [foundWord.translation];
+                            console.log("TRANSLATE ELEMENT: ", foundWord.translation);
+                        }
+                    }
+                    else {
+                        foundWord.translation = [foundWord.translation.trim()];
+                    } 
+                */
 
                     foundWord.translation = toLowerCaseAll(foundWord.translation);
                     foundWord.translation = foundWord.translation.trim();
                 } else {
-                    console.warn("Word or translation not found:", wordText);
+                    console.warn("Word or translation not found:", activeWordText);
                     translateWord.textContent = "Translation not available";  
                 }
 
                 if (foundWord) {
                     const correctAnswer = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
                     
-                    // const correctAnswer = appState.mode === 'eng-to-rus' 
-                    //     ? (Array.isArray(foundWord.translation) ? foundWord.translation : [foundWord.translation]) 
-                    //     : [foundWord.word];
+                    /* const correctAnswer = appState.mode === 'eng-to-rus' 
+                        ? (Array.isArray(foundWord.translation) ? foundWord.translation : [foundWord.translation]) 
+                        : [foundWord.word]; */
 
                     console.log("Input:", normalizeWord(inputField.value));
                     console.log("Translation:", normalizeWord(toLowerCaseAll(correctAnswer)));
@@ -317,7 +302,7 @@ function inputFieldAndHelpButton(database) {
                         moveWordToLearnedForThisSection(database, selectedTheme, 'Correct', foundWord.word);
                         
                         if (data.length === 1) {
-                            wordPlace.textContent = "No words available";
+                            activeWordText.textContent = "No words available";
                             inputField.style.display = "none";
                             inputField.value = "";
                             console.log("END OF WORDS IN THEME");
@@ -353,15 +338,16 @@ function inputFieldAndHelpButton(database) {
 }
 
 function changeWord(data) {
-    const wordElement = document.querySelector('.word');
-    let translateWord = document.querySelector('.translate');
-    let inputField = document.getElementById('translateField');
+    const { activeWord } = elements;
+    let { translateWord,
+          inputField
+     } = elements;
 
-    const filteredData = data.filter(item => item.word !== wordElement.textContent);
+    const filteredData = data.filter(item => item.word !== activeWord.textContent);
     const randomWord = filteredData[Math.floor(Math.random() * filteredData.length)];
 
     if (randomWord) {
-        wordElement.textContent = appState.mode === 'eng-to-rus' ? toLowerCaseAll(randomWord.word) : toLowerCaseAll(randomWord.translation); 
+        activeWord.textContent = appState.mode === 'eng-to-rus' ? toLowerCaseAll(randomWord.word) : toLowerCaseAll(randomWord.translation); 
         translateWord.textContent = ""; 
         inputField.value = ""; 
         console.log("New word:", randomWord.word);
@@ -373,10 +359,11 @@ function normalizeWord(word) {
 }
 
 function generateRandomWord(database) {
-    const randomButton = document.getElementById('replace-btn');
-    const wordContainer = document.querySelector('.word-container');
-    const inputField = document.getElementById('translateField');
-    const wordPlace = document.querySelector('.word');
+    const { randomButton,
+            wordContainer,
+            inputField,
+            activeWord
+          } = elements;
 
     if (appState.generateRandomWordButtonClickHandler) {
         console.log("Removing old event listener");
@@ -404,16 +391,16 @@ function generateRandomWord(database) {
 
             if (!data || data.length === 0) {
                 console.warn("No words available in theme:", selectedTheme);
-                wordPlace.textContent = "No words available";
+                activeWord.textContent = "No words available";
                 inputField.value = "";
                 return;
             }
 
-            console.log("WORD: ", wordPlace.textContent);
+            console.log("WORD: ", activeWord.textContent);
             console.log("COUNT GENERATE: ", appState.count);
             ++appState.count;
 
-            if (wordPlace.textContent === "EnjoyandLearn!") {
+            if (activeWord.textContent === "EnjoyandLearn!") {
                 console.log("FIRST OPEN");
                 fetchWordsFromDB(database, selectedTheme);
                 return;
@@ -423,9 +410,9 @@ function generateRandomWord(database) {
             appState.countVoiceoverButtonPressed = true;
             console.log("countHelpButtonPressed: ", appState.countHelpButtonPressed);
 
-            wordPlace.textContent = toLowerCaseAll(wordPlace.textContent);
+            activeWord.textContent = toLowerCaseAll(activeWord.textContent);
 
-            console.log("WORD: ", wordPlace.textContent);
+            console.log("WORD: ", activeWord.textContent);
             
             inputField.value = "";
             wordContainer.classList.remove('show-translate');
