@@ -1,4 +1,5 @@
 import { elements } from "./domElements.js";
+import { appState } from "./appState.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     setupDatebase();
@@ -39,19 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupChangeThemesAndTimes();
     saveUserTime();
 });
-
-const appState = {
-    theme: 'dark',
-    count: 0,
-    countHelpButtonPressed: 0,
-    countVoiceoverButtonPressed: true,
-    mode: 'eng-to-rus',
-    generateRandomWordButtonClickHandler: null,
-    changeModeButtonClickHandler: null,
-    helpButtonClickHandler: null,
-    inputFieldClickHandler: null,
-    updateWordHandler: null,
-};
 
 function setupThemeToggle() {
     const { themeToggleState, 
