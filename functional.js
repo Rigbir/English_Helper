@@ -2,29 +2,29 @@ import { elements } from "./domElements.js";
 import { appState } from "./appState.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    setupDatebase();
-    setupDatabaseList();
+    initializeMainDatabase();
+    initializeSecondaryDatabase();
 
-    setupThemeToggle();
-    getAppInformation();
-    setupOnOffToggle();
+    initializeThemeSettings();
+    displayAppInfoPopup();
+    initializeNotificationSettings();
 
     const requestWords = indexedDB.open("words", 1);
     requestWords.onsuccess = (event) => {
         const databaseWords = event.target.result;
         console.log("Database 'words' successfully opened", databaseWords);
 
-        generateRandomWord(databaseWords);
-        changeModeWord(databaseWords);
-        inputFieldAndHelpButton(databaseWords);
+        generateNewRandomWord(databaseWords);
+        changeInputWordMode(databaseWords);
+        initializeInputFieldAndHintButton(databaseWords);
         
         const requestList = indexedDB.open('learned_words', 1);
         requestList.onsuccess = (event) => {
             const databaseLearned = event.target.result;
             console.log("Database 'learned_words' successfully opened", databaseLearned);
 
-            addWordToList(databaseWords, databaseLearned);
-            openListPopup(databaseWords, databaseLearned);
+            addWordToSecondaryDatabase(databaseWords, databaseLearned);
+            openSecondaryListWindow(databaseWords, databaseLearned);
         };
         
         requestList.onerror = (error) => {
@@ -36,12 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error opening database 'words'", error);
     };
 
-    wordVoiceover();
-    setupChangeThemesAndTimes();
-    saveUserTime();
+    playWordPronunciation();
+    initializeThemeAndTimeSettings();
+    saveNotificationTime();
 });
 
-function setupThemeToggle() {
+function initializeThemeSettings() {
     const { themeToggleState, 
             activeWord, 
             translateWord, 
@@ -73,11 +73,11 @@ function setupThemeToggle() {
         appState.theme = isDark ? 'dark' : 'light';
         applyTheme(isDark);
         chrome.storage.local.set({ theme: appState.theme });
-        setupOnOffToggle();
+        initializeNotificationSettings();
     });
 }
 
-function getAppInformation() {
+function displayAppInfoPopup() {
     const { infoButton,
             infoPopup,
             infoOverlay,
@@ -100,7 +100,7 @@ function getAppInformation() {
     });
 }
 
-function setupOnOffToggle() {
+function initializeNotificationSettings() {
     const { onOffToggleState,
             onOffToggleBackground
           } = elements;
@@ -134,7 +134,7 @@ function setupOnOffToggle() {
     });
 }
 
-function inputFieldAndHelpButton(database) {
+function initializeInputFieldAndHintButton(database) {
     const { wordContainer,
             helpButton,
             activeWord
@@ -278,18 +278,18 @@ function inputFieldAndHelpButton(database) {
                         ? (Array.isArray(foundWord.translation) ? foundWord.translation : [foundWord.translation]) 
                         : [foundWord.word]; */
 
-                    console.log("Input:", normalizeWord(inputField.value));
-                    console.log("Translation:", normalizeWord(toLowerCaseAll(correctAnswer)));
-                    console.log("Comparison:", normalizeWord(inputField.value) === normalizeWord(foundWord.translation));
-                    //console.log("Translation:", correctAnswer.map(tr => normalizeWord(toLowerCaseAll(tr))).join(", "));
+                    console.log("Input:", replaceCharacter(inputField.value));
+                    console.log("Translation:", replaceCharacter(toLowerCaseAll(correctAnswer)));
+                    console.log("Comparison:", replaceCharacter(inputField.value) === replaceCharacter(foundWord.translation));
+                    //console.log("Translation:", correctAnswer.map(tr => replaceCharacter(toLowerCaseAll(tr))).join(", "));
 
-                    //if (correctAnswer.some(tr => normalizeWord(inputField.value) === normalizeWord(tr))) {
-                    if (normalizeWord(inputField.value) == normalizeWord(toLowerCaseAll(correctAnswer))){
+                    //if (correctAnswer.some(tr => replaceCharacter(inputField.value) === replaceCharacter(tr))) {
+                    if (replaceCharacter(inputField.value) == replaceCharacter(toLowerCaseAll(correctAnswer))){
                         sound.pause();
                         sound.currentTime = 0;
                         sound.play();
 
-                        changeWord(data);
+                        replaceCurrentWord(data);
                         moveWordToLearnedForThisSection(database, selectedTheme, 'Correct', foundWord.word);
                         
                         if (data.length === 1) {
@@ -328,7 +328,7 @@ function inputFieldAndHelpButton(database) {
     });
 }
 
-function changeWord(data) {
+function replaceCurrentWord(data) {
     const { activeWord } = elements;
     let { translateWord,
           inputField
@@ -345,11 +345,11 @@ function changeWord(data) {
     }
 }
 
-function normalizeWord(word) {
+function replaceCharacter(word) {
     return word.replace(/ё/g, 'е');
 }
 
-function generateRandomWord(database) {
+function generateNewRandomWord(database) {
     const { randomButton,
             wordContainer,
             inputField,
@@ -393,7 +393,7 @@ function generateRandomWord(database) {
 
             if (activeWord.textContent === "EnjoyandLearn!") {
                 console.log("FIRST OPEN");
-                fetchWordsFromDB(database, selectedTheme);
+                fetchRandomWordFromDatabase(database, selectedTheme);
                 return;
             }
 
@@ -418,7 +418,7 @@ function generateRandomWord(database) {
     console.log("Event listener added to replace-btn", appState.generateRandomWordButtonClickHandler);
 }
 
-function changeModeWord(database) {
+function changeInputWordMode(database) {
     const { changeModeButton,
             wordContainer
           } = elements;
@@ -439,7 +439,7 @@ function changeModeWord(database) {
     console.log("Event listener added to change-mode-btn", appState.generateRandomWordButtonClickHandler);
 }
 
-function wordVoiceover() {
+function playWordPronunciation() {
     const { voiceButton } = elements;
 
     voiceButton.addEventListener('click', () => {
@@ -460,7 +460,7 @@ function wordVoiceover() {
     })
 }
 
-function setupChangeThemesAndTimes() {
+function initializeThemeAndTimeSettings() {
     const { inputField, 
             wordContainer,
             previousThemeButton,
@@ -523,7 +523,7 @@ function setupChangeThemesAndTimes() {
     );
 }
 
-function setupDatebase(){
+function initializeMainDatabase(){
     /*open DateBase*/
     const { inputField,
             activeWord,
@@ -555,14 +555,14 @@ function setupDatebase(){
                 activeWord.innerHTML = "Enjoy<br>and<br>Learn!";
                 inputField.style.display = "none"; 
 
-                loadJsonIntoDB(database);
+                loadJsonFileIntoDB(database);
             } else {
                 inputField.style.display = "block";
                 console.log("IndexedDB already contains data");
 
                 selectedTheme = textFieldTheme.value;
                 console.log("selectedTheme: ", selectedTheme);
-                fetchWordsFromDB(database, selectedTheme); 
+                fetchRandomWordFromDatabase(database, selectedTheme); 
             }
         });
     };
@@ -606,7 +606,7 @@ function isDatabaseEmpty(database) {
     });
 }
 
-function loadJsonIntoDB(database) {
+function loadJsonFileIntoDB(database) {
     fetch("words.json")
     .then(response => response.json())
     .then(data => {
@@ -638,7 +638,7 @@ function loadJsonIntoDB(database) {
     });
 }
 
-async function fetchWordsFromDB(database, theme, autoSetWord = true) {
+async function fetchRandomWordFromDatabase(database, theme, autoSetWord = true) {
     await restoreWordsToOriginalStores(database);
 
     const { activeWord,
@@ -795,7 +795,7 @@ async function restoreWordsToOriginalStores(database) {
     });
 }
 
-function setupDatabaseList() {
+function initializeSecondaryDatabase() {
     const requestList = indexedDB.open('learned_words', 1);
 
     requestList.onupgradeneeded = (event) => {
@@ -807,7 +807,7 @@ function setupDatabaseList() {
     };
 }
 
-function addWordToList(databaseWords, databaseLearned) {
+function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
     const { addToListButton,
             inputField,
             activeWord
@@ -833,7 +833,6 @@ function addWordToList(databaseWords, databaseLearned) {
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
             const wordText = document.querySelector('.word').textContent;
-            const translationText = document.querySelector('.translate').textContent
 
             if (data.length === 0) {
                 console.warn("No words available in theme:", selectedTheme);
@@ -844,10 +843,10 @@ function addWordToList(databaseWords, databaseLearned) {
 
             let foundWord = data.find(item => toLowerCaseAll(item.word) === toLowerCaseAll(wordText));
             if (foundWord) {
-                deleteWordFromDB(databaseWords, selectedTheme, foundWord.word)
+                removeWordFromMainDatabase(databaseWords, selectedTheme, foundWord.word)
                     .then(() => {
-                        moveWordToLearned(databaseLearned, foundWord, selectedTheme);
-                        changeWord(data);
+                        transferWordToLearnedList(databaseLearned, foundWord, selectedTheme);
+                        replaceCurrentWord(data);
                     })
                     .catch(error => console.error("Error deleting word:", error));
                 } else {
@@ -857,7 +856,7 @@ function addWordToList(databaseWords, databaseLearned) {
     });
 }
 
-function deleteWordFromDB(database, theme, word) {
+function removeWordFromMainDatabase(database, theme, word) {
     return new Promise((resolve, reject) => {
         const transaction = database.transaction(theme, 'readwrite');
         const store = transaction.objectStore(theme);
@@ -875,7 +874,7 @@ function deleteWordFromDB(database, theme, word) {
     });    
 }
 
-function moveWordToLearned(databaseLearned, word, theme) {
+function transferWordToLearnedList(databaseLearned, word, theme) {
     if (!word || !word.word) {
         console.error("Invalid word format:", word);
         return;
@@ -899,7 +898,7 @@ function moveWordToLearned(databaseLearned, word, theme) {
     };    
 }
 
-function returnToMainDB(databaseWords, databaseLearned, word){
+function restoreWordToMainDatabase(databaseWords, databaseLearned, word){
     if (!word || !word.word) {
         console.error("Invalid word format:", word);
         return;
@@ -908,7 +907,7 @@ function returnToMainDB(databaseWords, databaseLearned, word){
     const inputField = document.getElementById('translateField');
     const originalTheme = word.theme;
     
-    deleteWordFromDB(databaseLearned, 'learned', word.word)
+    removeWordFromMainDatabase(databaseLearned, 'learned', word.word)
         .then(() => {
             const transaction = databaseWords.transaction(originalTheme, 'readwrite');
             const store = transaction.objectStore(originalTheme);
@@ -937,7 +936,7 @@ function returnToMainDB(databaseWords, databaseLearned, word){
         });    
 }
 
-function saveUserTime() {
+function saveNotificationTime() {
     const timeField = document.getElementById('text-field-time').value.trim();
     const match = timeField.match(/^(\d+)/); // Extract number from the string
 
@@ -952,7 +951,7 @@ function saveUserTime() {
     }
 }
 
-function openListPopup(databaseWords, databaseLearned) {
+function openSecondaryListWindow(databaseWords, databaseLearned) {
     const { mainWindow,
             listWindow,
             wordContainer,
@@ -971,7 +970,7 @@ function openListPopup(databaseWords, databaseLearned) {
     }
     
     listButton.addEventListener('click', () => {
-        loadWordLearnedDB(databaseWords, databaseLearned, listWordsContainer);
+        loadLearnedWordsFromDatabase(databaseWords, databaseLearned, listWordsContainer);
         mainWindow.classList.add('hidden');
         listWindow.classList.remove('hidden');
     });
@@ -984,11 +983,11 @@ function openListPopup(databaseWords, databaseLearned) {
         console.log('SELECTED THEME: ', selectedTheme);
         wordContainer.classList.remove('show-translate');
         appState.countHelpButtonPressed = 0;
-        fetchWordsFromDB(databaseWords, selectedTheme);
+        fetchRandomWordFromDatabase(databaseWords, selectedTheme);
     });
 }
 
-function loadWordLearnedDB(databaseWords, databaseLearned, listWordsContainer) {
+function loadLearnedWordsFromDatabase(databaseWords, databaseLearned, listWordsContainer) {
     if (!databaseLearned) {
         console.log('DB Learned not found');
         return;
@@ -1055,7 +1054,7 @@ function loadWordLearnedDB(databaseWords, databaseLearned, listWordsContainer) {
             newButton.appendChild(img);
 
             newButton.addEventListener('click', () => {
-                returnToMainDB(databaseWords, databaseLearned, item);
+                restoreWordToMainDatabase(databaseWords, databaseLearned, item);
                 newContainer.remove();
                 console.log('click return-btn', newButton);
 
@@ -1085,7 +1084,7 @@ function toLowerCaseAll(text) {
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
     if (changes.themeIndex || changes.timeIndex) {
-        setupChangeThemesAndTimes();
+        initializeThemeAndTimeSettings();
 
         if (changes.themeIndex)
             console.log("theme changed: ", changes.themeIndex.newValue);
@@ -1101,14 +1100,14 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
         const newTheme = jsonThemes[newThemeIndex];
         console.log("newTheme: ", newTheme);
 
-        setupDatebase();
+        initializeMainDatabase();
 
         const request = indexedDB.open("words", 1);
         request.onsuccess = (event) => {
             const database = event.target.result;
             console.log("database opened", database);
-            inputFieldAndHelpButton(database);
-            generateRandomWord(database);
+            initializeInputFieldAndHintButton(database);
+            generateNewRandomWord(database);
         };
         request.onerror = (event) => {
             console.error("Error opened new databse: ", error)
@@ -1116,11 +1115,11 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     }
 
     if (changes.mode) {
-        setupDatebase();
+        initializeMainDatabase();
     }
 
     if (changes.timeIndex) {
-        saveUserTime();
+        saveNotificationTime();
     }
 });
 
