@@ -27,6 +27,29 @@ export function displayAppInfoPopup() {
     });
 }
 
+export function selectedThemePopup() {
+    const { themeField,
+            themePopup,
+            themeOverlay,
+            themeCloseOverlayButton
+          } = elements;
+    
+    themeField.addEventListener('click', () => {
+        themePopup.style.display = "block";
+        themeOverlay.style.display = "block";
+    });
+
+    themeCloseOverlayButton.addEventListener("click", () => {
+        themePopup.style.display = "none";
+        themeOverlay.style.display = "none";
+    });
+
+    themeOverlay.addEventListener("click", () => {
+        themePopup.style.display = "none";
+        themeOverlay.style.display = "none";
+    });
+}
+
 export function initializeNotificationSettings() {
     const { onOffToggleState,
             onOffToggleBackground

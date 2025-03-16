@@ -8,13 +8,16 @@ import { displayAppInfoPopup,
          changeInputWordMode, 
          playWordPronunciation, 
          saveNotificationTime, 
-         openSecondaryListWindow 
+         openSecondaryListWindow,
+         selectedThemePopup
 } from './ui.js';
 import { setupStorageListeners } from './storage.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     initializeMainDatabase();
     initializeSecondaryDatabase();
+
+    selectedThemePopup();
 
     initializeThemeSettings();
     displayAppInfoPopup();

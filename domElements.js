@@ -33,6 +33,12 @@ export const elements = {
     previousThemeButton: document.getElementById('prev-btn-theme'),
     nextThemeButton: document.getElementById('next-btn-theme'),
     textFieldTheme : document.getElementById('text-field-theme'),
+
+    themeField : document.querySelector('.theme-input'),
+    themePopup : document.getElementById('theme-popup'),
+    themeOverlay : document.getElementById("overlay"),
+    themeCloseOverlayButton : document.getElementById("close-popup"),
+    
     selectedTheme : document.getElementById('text-field-theme').value,
 
     //Time Buttons

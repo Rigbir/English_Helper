@@ -256,7 +256,7 @@ html body {
     font-size: 18px;
     border: 1px solid black; 
     border-radius: 5px;
-    pointer-events: none;
+    /* pointer-events: none; */
     user-select: none;
 }
 
