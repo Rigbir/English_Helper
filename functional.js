@@ -41,6 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 const appState = {
+    theme: 'dark',
     count: 0,
     countHelpButtonPressed: 0,
     countVoiceoverButtonPressed: true,
@@ -73,16 +74,17 @@ function setupThemeToggle() {
     }
 
     chrome.storage.local.get('theme', (data) => {
-        const savedTheme = data.theme;
-        const isDarkMode = savedTheme === 'dark';
+        appState.theme = data.theme || 'dark';
+        const isDarkMode = appState.theme === 'dark';
         themeToggleState.checked = isDarkMode;
         applyTheme(isDarkMode);
     });
     
     themeToggleState.addEventListener('change', () => {
         const isDark = themeToggleState.checked;
+        appState.theme = isDark ? 'dark' : 'light';
         applyTheme(isDark);
-        chrome.storage.local.set({ theme: isDark ? 'dark' : 'light' });
+        chrome.storage.local.set({ theme: appState.theme });
         setupOnOffToggle();
     });
 }
@@ -117,14 +119,15 @@ function setupOnOffToggle() {
 
     chrome.storage.local.get(['extensionState', 'theme'], function (data) {
         const isOnMode = data.extensionState !== undefined ? data.extensionState : true;
-        const themeState = data.theme;
+        appState.theme = data.theme || 'dark';
 
         onOffToggleState.checked = isOnMode;
         console.log(`State on load: ${isOnMode ? "Enabled" : "Disabled"}`);
 
-        if (themeState === 'light') {
+        console.log("THEME: ", appState.theme);
+        if (appState.theme === 'light') {
             onOffToggleBackground.style.backgroundColor = "#ebebeb";
-        } else if (themeState === 'dark') {
+        } else if (appState.theme === 'dark') {
             onOffToggleBackground.style.backgroundColor = "#242424";
         }
 
@@ -428,8 +431,9 @@ function generateRandomWord(database) {
 }
 
 function changeModeWord(database) {
-    const changeModeButton = document.getElementById('change-mode');
-    const wordContainer = document.querySelector('.word-container');
+    const { changeModeButton,
+            wordContainer
+          } = elements;
 
     if (appState.changeModeButtonClickHandler) {
         changeModeButton.removeEventListener('click', appState.changeModeButtonClickHandler);
@@ -448,9 +452,9 @@ function changeModeWord(database) {
 }
 
 function wordVoiceover() {
-    const voice = document.getElementById('sound-btn');
+    const { voiceButton } = elements;
 
-    voice.addEventListener('click', () => {
+    voiceButton.addEventListener('click', () => {
         if (window.speechSynthesis) {
             const wordElement = document.querySelector('.word');
             if (!wordElement || !wordElement.textContent.trim()){
@@ -469,12 +473,20 @@ function wordVoiceover() {
 }
 
 function setupChangeThemesAndTimes() {
+    const { inputField, 
+            wordContainer,
+            previousThemeButton,
+            nextThemeButton,
+            textFieldTheme,
+            previousTimeButton,
+            nextTimeButton,
+            textFieldTime
+          } = elements;
+
     appState.countHelpButtonPressed = 0;
     appState.countVoiceoverButtonPressed = true;
-    const inputField = document.getElementById('translateField');
 
-    function changeThemesAndTimes(prevBtn, nextBtn, textField, arr, nameIndex) {        
-        const wordContainer = document.querySelector('.word-container');
+    function changeThemesAndTimes(previousButton, nextButton, textField, array, nameIndex) {        
         let currentIndex = 0;
 
         chrome.storage.local.get(nameIndex, (data) => {
@@ -485,19 +497,19 @@ function setupChangeThemesAndTimes() {
         })
 
         const updateTextField = () => {
-            textField.value = arr[currentIndex];
+            textField.value = array[currentIndex];
         }
 
-        prevBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex - 1 + arr.length) % arr.length;
+        previousButton.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + array.length) % array.length;
             updateTextField();
             wordContainer.classList.remove('show-translate');
             chrome.storage.local.set({ [nameIndex]: currentIndex });
             inputField.value = "";
         });
 
-        nextBtn.addEventListener('click', () => {
-            currentIndex = (currentIndex + 1) % arr.length;
+        nextButton.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % array.length;
             updateTextField();
             wordContainer.classList.remove('show-translate');
             chrome.storage.local.set({ [nameIndex]: currentIndex });
@@ -506,18 +518,18 @@ function setupChangeThemesAndTimes() {
     }
 
     changeThemesAndTimes(
-        document.getElementById('prev-btn-theme'),
-        document.getElementById('next-btn-theme'),
-        document.getElementById('text-field-theme'),
+        previousThemeButton,
+        nextThemeButton,
+        textFieldTheme,
         ['All Words', 'Human', 'Food', 'House', 'Sport', 
          'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT'],
         'themeIndex'
     );
 
     changeThemesAndTimes(
-        document.getElementById('prev-btn-time'),
-        document.getElementById('next-btn-time'),
-        document.getElementById('text-field-time'),
+        previousTimeButton,
+        nextTimeButton,
+        textFieldTime,
         ['10 min', '20 min', '30 min', '60 min', '180 min'],
         'timeIndex'
     );
@@ -525,9 +537,14 @@ function setupChangeThemesAndTimes() {
 
 function setupDatebase(){
     /*open DateBase*/
+    const { inputField,
+            activeWord,
+          } = elements;
+    let { textFieldTheme,
+          selectedTheme
+        } = elements;
+
     const request = indexedDB.open("words", 1);
-    const inputField = document.getElementById('translateField');
-    const wordPlace = document.querySelector('.word');
 
     request.onupgradeneeded = (event) => {
         const database = event.target.result;
@@ -547,7 +564,7 @@ function setupDatebase(){
         isDatabaseEmpty(database).then(isEmpty => {
             if (isEmpty) {
                 console.log("IndexedDB is empty, loading JSON");
-                wordPlace.innerHTML = "Enjoy<br>and<br>Learn!";
+                activeWord.innerHTML = "Enjoy<br>and<br>Learn!";
                 inputField.style.display = "none"; 
 
                 loadJsonIntoDB(database);
@@ -555,7 +572,7 @@ function setupDatebase(){
                 inputField.style.display = "block";
                 console.log("IndexedDB already contains data");
 
-                const selectedTheme = document.getElementById('text-field-theme').value;
+                selectedTheme = textFieldTheme.value;
                 console.log("selectedTheme: ", selectedTheme);
                 fetchWordsFromDB(database, selectedTheme); 
             }
@@ -636,13 +653,14 @@ function loadJsonIntoDB(database) {
 async function fetchWordsFromDB(database, theme, autoSetWord = true) {
     await restoreWordsToOriginalStores(database);
 
-    const wordElement = document.querySelector('.word');
-    const translateElement = document.querySelector('.translate');
-    const replaceButton = document.getElementById('replace-btn');
-    const inputField = document.getElementById('translateField');
+    const { activeWord,
+            translateWord,
+            inputField,
+            randomButton
+          } = elements;
 
     if (appState.updateWordHandler) {
-        replaceButton.removeEventListener('click', appState.updateWordHandler);
+        randomButton.removeEventListener('click', appState.updateWordHandler);
     }
 
     chrome.storage.local.get({ mode: 'eng-to-rus' }, (data) => {
@@ -658,7 +676,7 @@ async function fetchWordsFromDB(database, theme, autoSetWord = true) {
                 const data = getAllRequest.result;
     
                 if (!data || data.length === 0) {
-                    wordElement.textContent = "No words available";
+                    activeWord.textContent = "No words available";
                     inputField.style.display = "none";
                     console.warn("No data in IndexedDB!");
                     return;
@@ -668,30 +686,35 @@ async function fetchWordsFromDB(database, theme, autoSetWord = true) {
     
                 if (appState.mode === 'eng-to-rus') {
                     console.log("Word object:", word);
-                    wordElement.textContent = toLowerCaseAll(word.word) || "No data";
-                    translateElement.textContent = toLowerCaseAll(word.translation) || "No translation"; 
+                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
+                    translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"; 
 
-                    // if (Array.isArray(word.translation)) {
-                    //     translateElement.textContent = word.translation 
-                    //     ? toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) 
-                    //     : toLowerCaseAll(word.translation || "No translation");
-                    // } else {
-                    //     translateElement.textContent = word.translation;
-                    // }
+                /* 
+                    if (Array.isArray(word.translation)) {
+                        translateElement.textContent = word.translation 
+                        ? toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) 
+                        : toLowerCaseAll(word.translation || "No translation");
+                    } else {
+                        translateElement.textContent = word.translation;
+                    } 
+                */
                     
-                    console.log("TRANSLATE ELEMENT: ", translateElement.textContent);
+                    console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
                     console.log("FIRST MODE");
                 } else if (appState.mode === 'rus-to-eng') {
-                    
-                    // if (Array.isArray(word.translation)) {
-                    //     wordElement.textContent = word.translation
-                    //     ? toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)])
-                    //     : toLowerCaseAll(word.translation);
-                    // } else {
-                    //     wordElement.textContent = toLowerCaseAll(word.translation) || "No data";
-                    // }
-                    wordElement.textContent = toLowerCaseAll(word.translation) || "No data";
-                    translateElement.textContent = toLowerCaseAll(word.word) || "No translation";  
+
+                /*     
+                    if (Array.isArray(word.translation)) {
+                        wordElement.textContent = word.translation
+                        ? toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)])
+                        : toLowerCaseAll(word.translation);
+                    } else {
+                        wordElement.textContent = toLowerCaseAll(word.translation) || "No data";
+                    }
+                */
+
+                    activeWord.textContent = toLowerCaseAll(word.translation) || "No data";
+                    translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
                     console.log("SECOND MODE");
                 }         
             };
@@ -701,7 +724,7 @@ async function fetchWordsFromDB(database, theme, autoSetWord = true) {
             };
         };
 
-        replaceButton.addEventListener('click', appState.updateWordHandler);
+        randomButton.addEventListener('click', appState.updateWordHandler);
     
         if (autoSetWord) {
             appState.updateWordHandler(); 
@@ -797,11 +820,12 @@ function setupDatabaseList() {
 }
 
 function addWordToList(databaseWords, databaseLearned) {
-    const plusButton = document.getElementById('plus-btn');
-    const inputField = document.getElementById('translateField');
-    const wordPlace = document.querySelector('.word');
+    const { addToListButton,
+            inputField,
+            activeWord
+          } = elements;
 
-    plusButton.addEventListener('click', () => {
+    addToListButton.addEventListener('click', () => {
 
         if (!databaseWords) {
             console.error("main DB not initialization");
@@ -825,7 +849,7 @@ function addWordToList(databaseWords, databaseLearned) {
 
             if (data.length === 0) {
                 console.warn("No words available in theme:", selectedTheme);
-                wordPlace.textContent = "No words available";
+                activeWord.textContent = "No words available";
                 inputField.style.display = "none";
                 return;
             }
@@ -941,29 +965,30 @@ function saveUserTime() {
 }
 
 function openListPopup(databaseWords, databaseLearned) {
-    const mainWindow = document.getElementById('main-window');
-    const listWindow = document.getElementById('list-window');
-    const listButton = document.querySelector('.list-check-btn');
-    const returnButton = document.querySelector('.return-btn');
-    const allWordsContainer = document.querySelector('.all-words');
-    const wordContainer = document.querySelector('.word-container');
+    const { mainWindow,
+            listWindow,
+            wordContainer,
+            listButton,
+            returnFromList,
+            listWordsContainer
+          } = elements;
 
-    if(!listButton){
+    if (!listButton) {
         console.error("Not found button list")
         return;
     }
-    if(!returnButton){
+    if (!returnFromList) {
         console.error("Not found button back");
         return;
     }
     
     listButton.addEventListener('click', () => {
-        loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer);
+        loadWordLearnedDB(databaseWords, databaseLearned, listWordsContainer);
         mainWindow.classList.add('hidden');
         listWindow.classList.remove('hidden');
     });
 
-    returnButton.addEventListener('click', () => {  
+    returnFromList.addEventListener('click', () => {  
         const selectedTheme = document.getElementById('text-field-theme').value;
         listWindow.classList.add('hidden');
         mainWindow.classList.remove('hidden');
@@ -975,48 +1000,46 @@ function openListPopup(databaseWords, databaseLearned) {
     });
 }
 
-function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
+function loadWordLearnedDB(databaseWords, databaseLearned, listWordsContainer) {
     if (!databaseLearned) {
         console.log('DB Learned not found');
         return;
     }
 
-    allWordsContainer.innerHTML = '';
+    listWordsContainer.innerHTML = '';
 
     const transaction = databaseLearned.transaction('learned', 'readonly');
     const store = transaction.objectStore('learned');
     const getAllRequest = store.getAll();
 
     chrome.storage.local.get('theme', (data) => {
-        savedTheme = data.theme;
-        console.log('current theme: ', savedTheme);
+        appState.theme = data.theme;
+        console.log('current theme: ', appState.theme);
     });
 
     getAllRequest.onsuccess = () => {
-        const allWordsContainer = document.querySelector('.all-words');
-        const heightAllWordsContainer = allWordsContainer.clientHeight;
+        const heightAllWordsContainer = listWordsContainer.clientHeight;
         const heightVerticalCenterLine = document.querySelector('.vertical-center-line');
     
         if (heightAllWordsContainer > 0) {
             heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px';
         } else {
-            
             heightVerticalCenterLine.style.height = '40px'; 
         }
 
         const words = getAllRequest.result;
         console.log('Words loaded from Learned: ', words);
-        console.log('get-main-cont', allWordsContainer);
+        console.log('get-main-cont', listWordsContainer);
     
         words.forEach((item, index) => {
             const newContainer = document.createElement('div');
             newContainer.classList.add('new-learned-word');
             
-            if (savedTheme === 'dark') {
+            if (appState.theme === 'dark') {
                 newContainer.style.backgroundColor = index % 2 === 0 ? '#9a9a9a' : '#8fa3b0';
                 console.log("STYLE SET FOR DARK");
             }
-            else if (savedTheme === 'light') {
+            else if (appState.theme === 'light') {
                 newContainer.style.backgroundColor = index % 2 === 0 ? '#f0e8e4' : '#d6c7c3';
                 console.log("STYLE SET FOR LIGHT");
             }
@@ -1048,7 +1071,7 @@ function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
                 newContainer.remove();
                 console.log('click return-btn', newButton);
 
-                const heightAllWordsContainer = allWordsContainer.clientHeight;
+                const heightAllWordsContainer = listWordsContainer.clientHeight;
                 let heightVerticalCenterLine = document.querySelector('.vertical-center-line');
                 heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px';
             });
@@ -1057,10 +1080,10 @@ function loadWordLearnedDB(databaseWords, databaseLearned, allWordsContainer) {
             newContainer.appendChild(newTranslation);
             newContainer.appendChild(newButton);
         
-            allWordsContainer.appendChild(newContainer);
+            listWordsContainer.appendChild(newContainer);
             console.log('final', newContainer);
 
-            const heightAllWordsContainer = allWordsContainer.clientHeight;
+            const heightAllWordsContainer = listWordsContainer.clientHeight;
             let heightVerticalCenterLine = document.querySelector('.vertical-center-line');
             
             heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px';

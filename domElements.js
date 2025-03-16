@@ -1,4 +1,7 @@
 export const elements = {
+    mainWindow : document.getElementById('main-window'),
+    listWindow : document.getElementById('list-window'),
+
     //Header Button/Toggle
     themeToggleState: document.getElementById('theme-toggle'),
     themeToggleBackground: document.querySelector('.toggle_label'),
@@ -25,19 +28,23 @@ export const elements = {
     voiceButton: document.getElementById('sound-btn'),
     addToListButton: document.getElementById('plus-btn'),
 
-    //Theme and Times Buttons
+    //Theme Buttons
     arrowButtons: document.querySelectorAll('.arrow-btn'),
     previousThemeButton: document.getElementById('prev-btn-theme'),
     nextThemeButton: document.getElementById('next-btn-theme'),
     textFieldTheme : document.getElementById('text-field-theme'),
     selectedTheme : document.getElementById('text-field-theme').value,
 
+    //Time Buttons
     previousTimeButton: document.getElementById('prev-btn-time'),
     nextTimeButton: document.getElementById('next-btn-time'),
     textFieldTime : document.getElementById('text-field-time'),
 
     //Footer Button
+    listButton : document.querySelector('.list-check-btn'),
+    returnFromList : document.querySelector('.return-btn'),
     listHorizontalLines: document.querySelectorAll('.list-line'),
     listHeadWord: document.querySelector('.head-word'),
-    listHeadTranslate: document.querySelector('.head-translate')
+    listHeadTranslate: document.querySelector('.head-translate'),
+    listWordsContainer : document.querySelector('.all-words')
 };
