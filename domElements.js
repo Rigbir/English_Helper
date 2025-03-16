@@ -37,8 +37,8 @@ export const elements = {
     themeField : document.querySelector('.theme-input'),
     themePopup : document.getElementById('theme-popup'),
     themeOverlay : document.getElementById("overlay"),
-    themeCloseOverlayButton : document.getElementById("close-popup"),
-    
+    themeCloseOverlayButton : document.getElementById("close-theme-popup"),
+
     selectedTheme : document.getElementById('text-field-theme').value,
 
     //Time Buttons
