@@ -63,10 +63,10 @@ export function initializeThemeAndTimeSettings() {
     appState.countHelpButtonPressed = 0;
     appState.countVoiceoverButtonPressed = true;
 
-    function changeThemesAndTimes(previousButton, nextButton, textField, array, nameIndex) {        
+    function changeThemesAndTimes(previousButton, nextButton, textField, array, nameIndex, storageKey) {        
         let currentIndex = 0;
 
-                const updateTextField = () => {
+        const updateTextField = () => {
             textField.value = array[currentIndex];
         }
 
@@ -76,9 +76,9 @@ export function initializeThemeAndTimeSettings() {
             updateTextField();
         }
 
-        chrome.storage.local.get([nameIndex, 'selectedTheme'], (data) => {
-            if (data.selectedTheme && array.includes(data.selectedTheme)){
-                currentIndex = array.indexOf(data.selectedTheme);
+        chrome.storage.local.get([nameIndex, storageKey], (data) => {
+            if (data[storageKey] && array.includes(data[storageKey])) {
+                currentIndex = array.indexOf(data[storageKey]);
             } else if (data[nameIndex] !== undefined) {
                 currentIndex = data[nameIndex];
             } else {
@@ -89,26 +89,25 @@ export function initializeThemeAndTimeSettings() {
 
         previousButton.addEventListener('click', () => {
             currentIndex = (currentIndex - 1 + array.length) % array.length;
-            chrome.storage.local.set({ [nameIndex]: currentIndex, selectedTheme: array[currentIndex] });
+            chrome.storage.local.set({ [nameIndex]: currentIndex, [storageKey]: array[currentIndex] });
             resetState();
         });
 
         nextButton.addEventListener('click', () => {
             currentIndex = (currentIndex + 1) % array.length;
-            chrome.storage.local.set({ [nameIndex]: currentIndex, selectedTheme: array[currentIndex] });
-            resetState();
+            chrome.storage.local.set({ [nameIndex]: currentIndex, [storageKey]: array[currentIndex] });
         });
 
         chrome.storage.onChanged.addListener((changes) => {
-            if (changes.selectedTheme) {
-                const currentTheme = changes.selectedTheme.newValue;
-                if (array.includes(currentTheme)) {
-                    currentIndex = array.indexOf(currentTheme);
-                    chrome.storage.local.set({ [nameIndex]: currentIndex, selectedTheme: array[currentIndex] });
+            if (changes[storageKey]) {
+                const currentValue = changes[storageKey].newValue;
+                if (array.includes(currentValue)) {
+                    currentIndex = array.indexOf(currentValue);
+                    chrome.storage.local.set({ [nameIndex]: currentIndex, [storageKey]: array[currentIndex] });
                     resetState();
                 }
             }
-        }); 
+        });  
     }
 
     changeThemesAndTimes(
@@ -117,14 +116,16 @@ export function initializeThemeAndTimeSettings() {
         textFieldTheme,
         ['All Words', 'Human', 'Food', 'House', 'Sport', 
          'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT'],
-        'themeIndex'
+        'themeIndex',
+        'selectedTheme'
     );
 
     changeThemesAndTimes(
         previousTimeButton,
         nextTimeButton,
         textFieldTime,
-        ['10 min', '20 min', '30 min', '60 min', '180 min'],
-        'timeIndex'
+        ['10 minutes', '20 minutes', '30 minutes', '60 minutes', '180 minutes'],
+        'timeIndex',
+        'selectedTime'
     );
 }

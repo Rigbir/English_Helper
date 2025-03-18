@@ -7,9 +7,9 @@ export const elements = {
     themeToggleBackground: document.querySelector('.toggle_label'),
 
     infoButton: document.querySelector('.information-btn'),
-    infoPopup: document.getElementById("info-popup"),
-    infoOverlay: document.getElementById("overlay"),
-    infoCloseOverlayButton: document.getElementById("close-popup"),
+    infoPopup: document.getElementById('info-popup'),
+    infoOverlay: document.getElementById('overlay'),
+    infoCloseOverlayButton: document.getElementById('close-popup'),
 
     onOffToggleState: document.getElementById('on-off-toggle'),
     onOffToggleBackground: document.querySelector('.on-off_label'),
@@ -36,8 +36,8 @@ export const elements = {
 
     themeField : document.querySelector('.theme-input'),
     themePopup : document.getElementById('theme-popup'),
-    themeOverlay : document.getElementById("overlay"),
-    themeCloseOverlayButton : document.getElementById("close-theme-popup"),
+    themeOverlay : document.getElementById('overlay'),
+    themeCloseOverlayButton : document.getElementById('close-theme-popup'),
     allThemeSelections : document.querySelectorAll('.popup .theme'),
 
     selectedTheme : document.getElementById('text-field-theme').value,
@@ -46,6 +46,12 @@ export const elements = {
     previousTimeButton: document.getElementById('prev-btn-time'),
     nextTimeButton: document.getElementById('next-btn-time'),
     textFieldTime : document.getElementById('text-field-time'),
+
+    timeField : document.querySelector('.time-input'),
+    timePopup : document.getElementById('time-popup'),
+    timeOverlay : document.getElementById('overlay'),
+    timeCloseOverlayButton : document.getElementById('close-time-popup'),
+    allTimeSelections : document.querySelectorAll('.popup .time'),
 
     //Footer Button
     listButton : document.querySelector('.list-check-btn'),

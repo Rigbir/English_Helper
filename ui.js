@@ -60,6 +60,41 @@ export function selectedThemePopup() {
     });
 }
 
+export function selectedTimePopup() {
+    const { timeField,
+            timePopup,
+            timeOverlay,
+            timeCloseOverlayButton,
+            allTimeSelections,
+            textFieldTime
+          } = elements;
+    
+    timeField.addEventListener('click', () => {
+        timePopup.style.display = 'block';
+        timeOverlay.style.display = 'block';
+    });
+
+    allTimeSelections.forEach(timeSelected => {
+        timeSelected.addEventListener('click', () => {
+            allTimeSelections.forEach(item => {item.classList.remove('selected-time')});
+
+            timeSelected.classList.add('selected-time');
+            textFieldTime.value = timeSelected.textContent;
+            chrome.storage.local.set({ selectedTime: timeSelected.textContent });
+        });
+    });
+
+    timeCloseOverlayButton.addEventListener('click', () => {
+        timePopup.style.display = 'none';
+        timeOverlay.style.display = 'none';
+    });
+
+    timeOverlay.addEventListener('click', () => {
+        timePopup.style.display = 'none';
+        timeOverlay.style.display = 'none';
+    });
+}
+
 export function initializeNotificationSettings() {
     const { onOffToggleState,
             onOffToggleBackground

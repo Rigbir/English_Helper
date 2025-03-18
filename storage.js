@@ -53,6 +53,17 @@ export function setupStorageListeners() {
                 }
             });
         }
+
+        if (changes.selectedTime) {
+            const currentTime = changes.selectedTime.newValue;
+            const allTimeSelections = document.querySelectorAll('.popup .time');
+            allTimeSelections.forEach(timeSelected => {
+                if (timeSelected.textContent === currentTime) {
+                    allTimeSelections.forEach(item => {item.classList.remove('selected-time')});
+                    timeSelected.classList.add('selected-time');
+                }
+            });
+        }
     }); 
     
     chrome.storage.local.get('selectedTheme', (data) => {
@@ -61,6 +72,16 @@ export function setupStorageListeners() {
         allThemeSelections.forEach(themeSelected => {
             if (themeSelected.textContent === selectedTheme) {
                 themeSelected.classList.add('selected-theme');
+            }
+        });
+    });
+
+    chrome.storage.local.get('selectedTime', (data) => {
+        const selectedTime = data.selectedTime;
+        const allTimeSelections = document.querySelectorAll('.popup .time');
+        allTimeSelections.forEach(timeSelected => {
+            if (timeSelected.textContent === selectedTime) {
+                timeSelected.classList.add('selected-time');
             }
         });
     });
