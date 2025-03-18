@@ -4,6 +4,8 @@ import { initializeNotificationSettings } from "./ui.js";
 
 export function initializeThemeSettings() {
     const { themeToggleState, 
+            themeToggleBackground,
+            onOffToggleBackground,
             activeWord, 
             translateWord, 
             mainHorizontalLines, 
@@ -27,6 +29,15 @@ export function initializeThemeSettings() {
         const isDarkMode = appState.theme === 'dark';
         themeToggleState.checked = isDarkMode;
         applyTheme(isDarkMode);
+
+        themeToggleBackground.classList.add('no-transition');
+        onOffToggleBackground.classList.add('no-transition');
+        document.body.classList.add('no-transition');
+        setTimeout(() => {
+            document.body.classList.remove('no-transition');
+            themeToggleBackground.classList.remove('no-transition');
+            onOffToggleBackground.classList.remove('no-transition');
+        }, 50);
     });
     
     themeToggleState.addEventListener('change', () => {
@@ -55,7 +66,7 @@ export function initializeThemeAndTimeSettings() {
     function changeThemesAndTimes(previousButton, nextButton, textField, array, nameIndex) {        
         let currentIndex = 0;
 
-        const updateTextField = () => {
+                const updateTextField = () => {
             textField.value = array[currentIndex];
         }
 

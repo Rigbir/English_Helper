@@ -74,7 +74,7 @@ export function initializeNotificationSettings() {
 
         console.log('THEME: ', appState.theme);
         if (appState.theme === 'light') {
-            onOffToggleBackground.style.backgroundColor = '#ebebeb';
+            onOffToggleBackground.style.backgroundColor = '#f5f4f4';
         } else if (appState.theme === 'dark') {
             onOffToggleBackground.style.backgroundColor = '#242424';
         }

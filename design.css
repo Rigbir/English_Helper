@@ -1,11 +1,14 @@
-html body {
+html, body {
     width: 320px;
     height: 600px;
     border: none;
-    background-color: white;
     margin: 0;
     padding: 0;
     transition: background-color 0.3s ease;
+}
+
+html.no-transition, body.no-transition {
+    transition: none !important;
 }
 
 #main-window {
@@ -35,7 +38,7 @@ html body {
     margin-top: 10px;
     position: relative;
     display: block;
-    background: #ebebeb;
+    background: #f5f4f4;
     border-radius: 200px;
     box-shadow: inset 0px 5px 15px rgba(0,0,0,0.2), inset 0px -5px 15px rgba(255,255,255,0.2);
     cursor: pointer;
@@ -53,6 +56,10 @@ html body {
     border-radius: 180px;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
     transition: 0.3s;
+}
+
+.toggle_label.no-transition, .toggle_label.no-transition::after {
+    transition: none !important;
 }
 
 .toggle_input {
@@ -180,7 +187,7 @@ html body {
     margin-top: 10px;
     position: relative;
     display: block;
-    background: #ebebeb;
+    background: #f5f4f4;
     border-radius: 200px;
     box-shadow: inset 0px 5px 15px rgba(0,0,0,0.2), inset 0px -5px 15px rgba(255,255,255,0.2);
     cursor: pointer;
@@ -198,6 +205,10 @@ html body {
     border-radius: 180px;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
     transition: 0.3s;
+}
+
+.on-off_label.no-transition, .on-off_label.no-transition::after {
+    transition: none !important;
 }
 
 .on-off_input {
