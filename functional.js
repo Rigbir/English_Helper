@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     displayAppInfoPopup();
     initializeNotificationSettings();
 
-    const requestWords = indexedDB.open("words", 1);
+    const requestWords = indexedDB.open('words', 1);
     requestWords.onsuccess = (event) => {
         const databaseWords = event.target.result;
         console.log("Database 'words' successfully opened", databaseWords);

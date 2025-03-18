@@ -38,6 +38,7 @@ export const elements = {
     themePopup : document.getElementById('theme-popup'),
     themeOverlay : document.getElementById("overlay"),
     themeCloseOverlayButton : document.getElementById("close-theme-popup"),
+    allThemeSelections : document.querySelectorAll('.popup .theme'),
 
     selectedTheme : document.getElementById('text-field-theme').value,
 

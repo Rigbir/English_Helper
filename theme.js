@@ -46,7 +46,7 @@ export function initializeThemeAndTimeSettings() {
             textFieldTheme,
             previousTimeButton,
             nextTimeButton,
-            textFieldTime
+            textFieldTime,
           } = elements;
 
     appState.countHelpButtonPressed = 0;
@@ -60,7 +60,7 @@ export function initializeThemeAndTimeSettings() {
                 currentIndex = data[nameIndex];
             }
             updateTextField();
-        })
+        });
 
         const updateTextField = () => {
             textField.value = array[currentIndex];

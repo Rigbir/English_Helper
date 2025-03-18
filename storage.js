@@ -1,6 +1,6 @@
 import { initializeMainDatabase } from './database/mainDatabase.js';
 import { initializeThemeAndTimeSettings } from './theme.js';
-import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime } from './ui.js';
+import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime, selectedThemePopup } from './ui.js';
 
 export function setupStorageListeners() {
     chrome.storage.onChanged.addListener((changes) => {
@@ -42,5 +42,25 @@ export function setupStorageListeners() {
         if (changes.timeIndex) {
             saveNotificationTime();
         }
-    });    
+
+        if (changes.selectedTheme) {
+            const currentTheme = changes.selectedTheme.newValue;
+            const allThemeSelections = document.querySelectorAll('.popup .theme');
+            allThemeSelections.forEach(themeSelected => {
+                if (themeSelected.textContent === currentTheme) {
+                    themeSelected.classList.add('selected-theme');
+                }
+            })
+        }
+    }); 
+    
+    chrome.storage.local.get('selectedTheme', (data) => {
+        const selectedTheme = data.selectedTheme;
+        const allThemeSelections = document.querySelectorAll('.popup .theme');
+        allThemeSelections.forEach(themeSelected => {
+            if (themeSelected.textContent === selectedTheme) {
+                themeSelected.classList.add('selected-theme');
+            }
+        });
+    });
 }

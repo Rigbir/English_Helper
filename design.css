@@ -279,13 +279,18 @@ html body {
     transition: background-color 0.2s ease-in-out;
 }
 
+.popup .theme:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+}
+
 .popup .theme:hover {
     background-color: #d9d9d9; 
     border-radius: 5px;
 }
 
-.popup .theme:not(:last-child) {
-    border-bottom: 1px solid #ccc;
+.selected-theme {
+    background-color: #bfbfbf;
+    border-radius: 5px;
 }
 
 #close-theme-popup {

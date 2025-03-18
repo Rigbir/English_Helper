@@ -1,8 +1,8 @@
-import { elements } from "./domElements.js";
-import { appState } from "./appState.js";
-import { toLowerCaseAll, replaceCharacter } from "./utils.js";
-import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from "./database/mainDatabase.js";
-import { loadLearnedWordsFromDatabase } from "./database/secondaryDatabase.js";
+import { elements } from './domElements.js';
+import { appState } from './appState.js';
+import { toLowerCaseAll, replaceCharacter } from './utils.js';
+import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
+import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -11,19 +11,19 @@ export function displayAppInfoPopup() {
             infoCloseOverlayButton
           } = elements;
 
-    infoButton.addEventListener("click", () => {
-        infoPopup.style.display = "block";
-        infoOverlay.style.display = "block";
+    infoButton.addEventListener('click', () => {
+        infoPopup.style.display = 'block';
+        infoOverlay.style.display = 'block';
     });
 
-    infoCloseOverlayButton.addEventListener("click", () => {
-        infoPopup.style.display = "none";
-        infoOverlay.style.display = "none";
+    infoCloseOverlayButton.addEventListener('click', () => {
+        infoPopup.style.display = 'none';
+        infoOverlay.style.display = 'none';
     });
 
-    infoOverlay.addEventListener("click", () => {
-        infoPopup.style.display = "none";
-        infoOverlay.style.display = "none";
+    infoOverlay.addEventListener('click', () => {
+        infoPopup.style.display = 'none';
+        infoOverlay.style.display = 'none';
     });
 }
 
@@ -31,22 +31,32 @@ export function selectedThemePopup() {
     const { themeField,
             themePopup,
             themeOverlay,
-            themeCloseOverlayButton
+            themeCloseOverlayButton,
+            allThemeSelections
           } = elements;
     
     themeField.addEventListener('click', () => {
-        themePopup.style.display = "block";
-        themeOverlay.style.display = "block";
+        themePopup.style.display = 'block';
+        themeOverlay.style.display = 'block';
     });
 
-    themeCloseOverlayButton.addEventListener("click", () => {
-        themePopup.style.display = "none";
-        themeOverlay.style.display = "none";
+    allThemeSelections.forEach(themeSelected => {
+        themeSelected.addEventListener('click', () => {
+            allThemeSelections.forEach(item => item.classList.remove('selected-theme'));
+
+            themeSelected.classList.add('selected-theme');
+            chrome.storage.local.set({ selectedTheme: themeSelected.textContent });
+        });
     });
 
-    themeOverlay.addEventListener("click", () => {
-        themePopup.style.display = "none";
-        themeOverlay.style.display = "none";
+    themeCloseOverlayButton.addEventListener('click', () => {
+        themePopup.style.display = 'none';
+        themeOverlay.style.display = 'none';
+    });
+
+    themeOverlay.addEventListener('click', () => {
+        themePopup.style.display = 'none';
+        themeOverlay.style.display = 'none';
     });
 }
 
@@ -60,13 +70,13 @@ export function initializeNotificationSettings() {
         appState.theme = data.theme || 'dark';
 
         onOffToggleState.checked = isOnMode;
-        console.log(`State on load: ${isOnMode ? "Enabled" : "Disabled"}`);
+        console.log(`State on load: ${isOnMode ? 'Enabled' : 'Disabled'}`);
 
-        console.log("THEME: ", appState.theme);
+        console.log('THEME: ', appState.theme);
         if (appState.theme === 'light') {
-            onOffToggleBackground.style.backgroundColor = "#ebebeb";
+            onOffToggleBackground.style.backgroundColor = '#ebebeb';
         } else if (appState.theme === 'dark') {
-            onOffToggleBackground.style.backgroundColor = "#242424";
+            onOffToggleBackground.style.backgroundColor = '#242424';
         }
 
         if (data.extensionState === undefined) {
@@ -76,11 +86,11 @@ export function initializeNotificationSettings() {
 
     onOffToggleState.addEventListener('change', () => {
         const isState = onOffToggleState.checked;
-        console.log(`State changed: ${isState ? "Enabled" : "Disabled"}`);
+        console.log(`State changed: ${isState ? 'Enabled' : 'Disabled'}`);
         chrome.storage.local.set({ extensionState: isState });
         
         // Send message to background.js
-        chrome.runtime.sendMessage({ action: "toggleBackground", state: isState });
+        chrome.runtime.sendMessage({ action: 'toggleBackground', state: isState });
     });
 }
 
@@ -104,9 +114,9 @@ export function initializeInputFieldAndHintButton(database) {
 
     appState.helpButtonClickHandler = (event) => {
         selectedTheme = textFieldTheme.value;
-        console.log("Listener added!");
+        console.log('Listener added!');
 
-        console.log("BEFORE CLICK - COUNT:", appState.countHelpButtonPressed);
+        console.log('BEFORE CLICK - COUNT:', appState.countHelpButtonPressed);
 
         const transaction = database.transaction(selectedTheme, 'readonly');
         const store = transaction.objectStore(selectedTheme);
@@ -124,38 +134,40 @@ export function initializeInputFieldAndHintButton(database) {
             });
 
             if (!foundWord) {
-                console.error("Error: No translation found for:", wordText);
+                console.error('Error: No translation found for:', wordText);
             }
 
             if (appState.countHelpButtonPressed === 0) {
-                translateWord.style.color = "#1DB954";
+                translateWord.style.color = '#1DB954';
                 translateWord.textContent = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
                 
-                // if (appState.mode === 'eng-to-rus'){
-                //     if (Array.isArray(foundWord.translation)) {
-                //         translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
-                //     }else {
-                //         translateWord.textContent = [foundWord.translation];
-                //         console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
-                //     }
-                // }
-                // else {
-                //     foundWord.translation = [foundWord.word.trim()];
-                // }
+            /* 
+                if (appState.mode === 'eng-to-rus'){
+                    if (Array.isArray(foundWord.translation)) {
+                        translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
+                    }else {
+                        translateWord.textContent = [foundWord.translation];
+                        console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
+                    }
+                }
+                else {
+                    foundWord.translation = [foundWord.word.trim()];
+                } 
+            */
 
                 translateWord.textContent = toLowerCaseAll(translateWord.textContent);
-                console.log("help-btn click");
+                console.log('help-btn click');
                 wordContainer.classList.add('show-translate');
-                console.log("Class added:", wordContainer.classList);
+                console.log('Class added:', wordContainer.classList);
                 appState.countHelpButtonPressed = 1;
             } else if (appState.countHelpButtonPressed === 1) {
-                console.log("help-btn click");
+                console.log('help-btn click');
                 wordContainer.classList.remove('show-translate');
-                console.log("Class removed:", wordContainer.classList);
+                console.log('Class removed:', wordContainer.classList);
                 appState.countHelpButtonPressed = 0;
             } 
 
-            console.log("AFTER CLICK - COUNT:", appState.countHelpButtonPressed);
+            console.log('AFTER CLICK - COUNT:', appState.countHelpButtonPressed);
         };
 
         event.stopPropagation();
@@ -168,13 +180,13 @@ export function initializeInputFieldAndHintButton(database) {
     }
 
     appState.inputFieldClickHandler = (event) => {
-        console.log("Event listener added");
+        console.log('Event listener added');
         selectedTheme = textFieldTheme.value;
 
         if (event.key === 'Enter'){
             inputField.value = toLowerCaseAll(inputField.value);
             inputField.value = inputField.value.trim();
-            console.log("enter press");
+            console.log('enter press');
             console.log(inputField.value);
 
             const transaction = database.transaction(selectedTheme, 'readonly');
@@ -185,7 +197,7 @@ export function initializeInputFieldAndHintButton(database) {
                 const data = getAllRequest.result;
 
                 const activeWordText = activeWord?.textContent?.trim();
-                console.log("ACTIVE WORD: ", activeWord);
+                console.log('ACTIVE WORD: ', activeWord);
 
                 let foundWord = data.find(item => {
                     if (appState.mode === 'eng-to-rus') { 
@@ -206,7 +218,7 @@ export function initializeInputFieldAndHintButton(database) {
                             toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
                         }else {
                             foundWord.translation = [foundWord.translation];
-                            console.log("TRANSLATE ELEMENT: ", foundWord.translation);
+                            console.log('TRANSLATE ELEMENT: ', foundWord.translation);
                         }
                     }
                     else {
@@ -217,8 +229,8 @@ export function initializeInputFieldAndHintButton(database) {
                     foundWord.translation = toLowerCaseAll(foundWord.translation);
                     foundWord.translation = foundWord.translation.trim();
                 } else {
-                    console.warn("Word or translation not found:", activeWordText);
-                    translateWord.textContent = "Translation not available";  
+                    console.warn('Word or translation not found:', activeWordText);
+                    translateWord.textContent = 'Translation not available';  
                 }
 
                 if (foundWord) {
@@ -228,10 +240,10 @@ export function initializeInputFieldAndHintButton(database) {
                         ? (Array.isArray(foundWord.translation) ? foundWord.translation : [foundWord.translation]) 
                         : [foundWord.word]; */
 
-                    console.log("Input:", replaceCharacter(inputField.value));
-                    console.log("Translation:", replaceCharacter(toLowerCaseAll(correctAnswer)));
-                    console.log("Comparison:", replaceCharacter(inputField.value) === replaceCharacter(foundWord.translation));
-                    //console.log("Translation:", correctAnswer.map(tr => replaceCharacter(toLowerCaseAll(tr))).join(", "));
+                    console.log('Input:', replaceCharacter(inputField.value));
+                    console.log('Translation:', replaceCharacter(toLowerCaseAll(correctAnswer)));
+                    console.log('Comparison:', replaceCharacter(inputField.value) === replaceCharacter(foundWord.translation));
+                    //console.log('Translation:', correctAnswer.map(tr => replaceCharacter(toLowerCaseAll(tr))).join(', '));
 
                     //if (correctAnswer.some(tr => replaceCharacter(inputField.value) === replaceCharacter(tr))) {
                     if (replaceCharacter(inputField.value) == replaceCharacter(toLowerCaseAll(correctAnswer))){
@@ -243,16 +255,16 @@ export function initializeInputFieldAndHintButton(database) {
                         moveWordToLearnedForThisSection(database, selectedTheme, 'Correct', foundWord.word);
                         
                         if (data.length === 1) {
-                            activeWordText.textContent = "No words available";
-                            inputField.style.display = "none";
-                            inputField.value = "";
-                            console.log("END OF WORDS IN THEME");
+                            activeWordText.textContent = 'No words available';
+                            inputField.style.display = 'none';
+                            inputField.value = '';
+                            console.log('END OF WORDS IN THEME');
                             return;
                         }
                     } else {
                         inputField.classList.add('error');
-                        inputField.value = "";
-                        console.log("ERROR INPUT");
+                        inputField.value = '';
+                        console.log('ERROR INPUT');
 
                         setTimeout(() => {
                             inputField.classList.remove('error');
@@ -261,7 +273,7 @@ export function initializeInputFieldAndHintButton(database) {
                 }
             };
             getAllRequest.onerror = (event) => {
-                console.error("Error reading data:", event.target.error);
+                console.error('Error reading data:', event.target.error);
             };            
         }
     }
@@ -272,8 +284,8 @@ export function initializeInputFieldAndHintButton(database) {
         if (event.target !== helpButton && event.target !== inputField) {
             wordContainer.classList.remove('show-translate');
             appState.countHelpButtonPressed = 0;
-            inputField.value = "";
-            console.log("Class remove:", wordContainer.classList);
+            inputField.value = '';
+            console.log('Class remove:', wordContainer.classList);
         }
     });
 }
@@ -289,9 +301,9 @@ export function replaceCurrentWord(data) {
 
     if (randomWord) {
         activeWord.textContent = appState.mode === 'eng-to-rus' ? toLowerCaseAll(randomWord.word) : toLowerCaseAll(randomWord.translation); 
-        translateWord.textContent = ""; 
-        inputField.value = ""; 
-        console.log("New word:", randomWord.word);
+        translateWord.textContent = ''; 
+        inputField.value = ''; 
+        console.log('New word:', randomWord.word);
     }
 }
 
@@ -303,7 +315,7 @@ export function generateNewRandomWord(database) {
           } = elements;
 
     if (appState.generateRandomWordButtonClickHandler) {
-        console.log("Removing old event listener");
+        console.log('Removing old event listener');
         randomButton.removeEventListener('click', appState.generateRandomWordButtonClickHandler);
     }
 
@@ -314,12 +326,12 @@ export function generateNewRandomWord(database) {
         const store = transaction.objectStore(selectedTheme);
         const getAllRequest = store.getAll();
     
-        if (inputField.style.display === "none") { 
-            inputField.style.display = "block";
+        if (inputField.style.display === 'none') { 
+            inputField.style.display = 'block';
         }
 
         if (!selectedTheme || !database.objectStoreNames.contains(selectedTheme)) {
-            console.error("Error: The specified theme is missing in IndexedDB:", selectedTheme);
+            console.error('Error: The specified theme is missing in IndexedDB:', selectedTheme);
             return;
         }
 
@@ -327,41 +339,41 @@ export function generateNewRandomWord(database) {
             const data = getAllRequest.result;
 
             if (!data || data.length === 0) {
-                console.warn("No words available in theme:", selectedTheme);
-                activeWord.textContent = "No words available";
-                inputField.value = "";
+                console.warn('No words available in theme:', selectedTheme);
+                activeWord.textContent = 'No words available';
+                inputField.value = '';
                 return;
             }
 
-            console.log("WORD: ", activeWord.textContent);
-            console.log("COUNT GENERATE: ", appState.count);
+            console.log('WORD: ', activeWord.textContent);
+            console.log('COUNT GENERATE: ', appState.count);
             ++appState.count;
 
-            if (activeWord.textContent === "EnjoyandLearn!") {
-                console.log("FIRST OPEN");
+            if (activeWord.textContent === 'EnjoyandLearn!') {
+                console.log('FIRST OPEN');
                 fetchRandomWordFromDatabase(database, selectedTheme);
                 return;
             }
 
             appState.countHelpButtonPressed = 0;
             appState.countVoiceoverButtonPressed = true;
-            console.log("countHelpButtonPressed: ", appState.countHelpButtonPressed);
+            console.log('countHelpButtonPressed: ', appState.countHelpButtonPressed);
 
             activeWord.textContent = toLowerCaseAll(activeWord.textContent);
 
-            console.log("WORD: ", activeWord.textContent);
+            console.log('WORD: ', activeWord.textContent);
             
-            inputField.value = "";
+            inputField.value = '';
             wordContainer.classList.remove('show-translate');
         };
 
         getAllRequest.onerror = (event) => {
-            console.error("Error reading data:", event.target.error);
+            console.error('Error reading data:', event.target.error);
         };
     }
 
     randomButton.addEventListener('click', appState.generateRandomWordButtonClickHandler);
-    console.log("Event listener added to replace-btn", appState.generateRandomWordButtonClickHandler);
+    console.log('Event listener added to replace-btn', appState.generateRandomWordButtonClickHandler);
 }
 
 export function changeInputWordMode(database) {
@@ -382,7 +394,7 @@ export function changeInputWordMode(database) {
     }
 
     changeModeButton.addEventListener('click', appState.changeModeButtonClickHandler);
-    console.log("Event listener added to change-mode-btn", appState.generateRandomWordButtonClickHandler);
+    console.log('Event listener added to change-mode-btn', appState.generateRandomWordButtonClickHandler);
 }
 
 export function playWordPronunciation() {
@@ -392,7 +404,7 @@ export function playWordPronunciation() {
         if (window.speechSynthesis) {
             const wordElement = document.querySelector('.word');
             if (!wordElement || !wordElement.textContent.trim()){
-                console.log("No word to pronounce");
+                console.log('No word to pronounce');
                 return;
             }
             const utterance = new SpeechSynthesisUtterance();
@@ -414,10 +426,10 @@ export function saveNotificationTime() {
         const interval = parseInt(match[1], 10); // Convert to number
 
         chrome.storage.local.set({ messageInterval: interval }, function() {
-            console.log("✅ Interval saved:", interval, "minutes");
+            console.log('✅ Interval saved:', interval, 'minutes');
         });
     } else {
-        console.warn("⚠ Error: Invalid time value!", timeField);
+        console.warn('⚠ Error: Invalid time value!', timeField);
     }
 }
 
@@ -431,11 +443,11 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
           } = elements;
 
     if (!listButton) {
-        console.error("Not found button list")
+        console.error('Not found button list')
         return;
     }
     if (!returnFromList) {
-        console.error("Not found button back");
+        console.error('Not found button back');
         return;
     }
     
@@ -449,7 +461,7 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
         const selectedTheme = document.getElementById('text-field-theme').value;
         listWindow.classList.add('hidden');
         mainWindow.classList.remove('hidden');
-        console.log("Return to main menu")
+        console.log('Return to main menu')
         console.log('SELECTED THEME: ', selectedTheme);
         wordContainer.classList.remove('show-translate');
         appState.countHelpButtonPressed = 0;
