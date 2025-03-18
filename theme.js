@@ -46,7 +46,7 @@ export function initializeThemeAndTimeSettings() {
             textFieldTheme,
             previousTimeButton,
             nextTimeButton,
-            textFieldTime,
+            textFieldTime
           } = elements;
 
     appState.countHelpButtonPressed = 0;
@@ -55,32 +55,49 @@ export function initializeThemeAndTimeSettings() {
     function changeThemesAndTimes(previousButton, nextButton, textField, array, nameIndex) {        
         let currentIndex = 0;
 
-        chrome.storage.local.get(nameIndex, (data) => {
-            if (data[nameIndex] !== undefined) {
-                currentIndex = data[nameIndex];
-            }
-            updateTextField();
-        });
-
         const updateTextField = () => {
             textField.value = array[currentIndex];
         }
 
+        function resetState() {
+            wordContainer.classList.remove('show-translate');
+            inputField.value = "";
+            updateTextField();
+        }
+
+        chrome.storage.local.get([nameIndex, 'selectedTheme'], (data) => {
+            if (data.selectedTheme && array.includes(data.selectedTheme)){
+                currentIndex = array.indexOf(data.selectedTheme);
+            } else if (data[nameIndex] !== undefined) {
+                currentIndex = data[nameIndex];
+            } else {
+                chrome.storage.local.set({ [nameIndex]: currentIndex });
+            }
+            updateTextField();
+        });
+
         previousButton.addEventListener('click', () => {
             currentIndex = (currentIndex - 1 + array.length) % array.length;
-            updateTextField();
-            wordContainer.classList.remove('show-translate');
-            chrome.storage.local.set({ [nameIndex]: currentIndex });
-            inputField.value = "";
+            chrome.storage.local.set({ [nameIndex]: currentIndex, selectedTheme: array[currentIndex] });
+            resetState();
         });
 
         nextButton.addEventListener('click', () => {
             currentIndex = (currentIndex + 1) % array.length;
-            updateTextField();
-            wordContainer.classList.remove('show-translate');
-            chrome.storage.local.set({ [nameIndex]: currentIndex });
-            inputField.value = "";
+            chrome.storage.local.set({ [nameIndex]: currentIndex, selectedTheme: array[currentIndex] });
+            resetState();
         });
+
+        chrome.storage.onChanged.addListener((changes) => {
+            if (changes.selectedTheme) {
+                const currentTheme = changes.selectedTheme.newValue;
+                if (array.includes(currentTheme)) {
+                    currentIndex = array.indexOf(currentTheme);
+                    chrome.storage.local.set({ [nameIndex]: currentIndex, selectedTheme: array[currentIndex] });
+                    resetState();
+                }
+            }
+        }); 
     }
 
     changeThemesAndTimes(

@@ -48,9 +48,10 @@ export function setupStorageListeners() {
             const allThemeSelections = document.querySelectorAll('.popup .theme');
             allThemeSelections.forEach(themeSelected => {
                 if (themeSelected.textContent === currentTheme) {
+                    allThemeSelections.forEach(item => {item.classList.remove('selected-theme')});
                     themeSelected.classList.add('selected-theme');
                 }
-            })
+            });
         }
     }); 
     
