@@ -168,10 +168,13 @@ html.no-transition, body.no-transition {
     border: none; 
     border-radius: 65px; 
     text-align: center;
-    font-size:15px;
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: 0.1rem;
+    text-transform: uppercase;
     cursor: pointer; 
     transition: transform 0.3s, background-color 0.3s;
-    margin-left: 10px;
 }
 
 .popup button:hover {
