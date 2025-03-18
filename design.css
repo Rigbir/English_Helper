@@ -260,6 +260,38 @@ html body {
     user-select: none;
 }
 
+#theme-popup {
+    width: 260px;
+    height: 450px;
+    padding-top: 0;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.popup .theme {
+    font-weight: bold;
+    font-size: 20px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    align-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.popup .theme:hover {
+    background-color: #d9d9d9; 
+    border-radius: 5px;
+}
+
+.popup .theme:not(:last-child) {
+    border-bottom: 1px solid #ccc;
+}
+
+#close-theme-popup {
+    margin-top: 10px;
+}
+
 .arrow-btn {
     width: 40px;
     height: 35px;
