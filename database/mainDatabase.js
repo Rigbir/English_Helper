@@ -3,7 +3,6 @@ import { appState } from "../appState.js";
 import { toLowerCaseAll } from "../utils.js";
 
 export function initializeMainDatabase(){
-    /*open DateBase*/
     const { inputField,
             activeWord,
           } = elements;
@@ -157,9 +156,7 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 if (appState.mode === 'eng-to-rus') {
                     console.log("Word object:", word);
                     activeWord.textContent = toLowerCaseAll(word.word) || "No data";
-                    //translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"; 
-
-                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
+                    
                     if (Array.isArray(word.translation)) {
                         translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation";
                     } else {
@@ -176,7 +173,6 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                         activeWord.textContent = toLowerCaseAll(word.translation) || "No data";
                     }
 
-                    //activeWord.textContent = toLowerCaseAll(word.translation) || "No data";
                     translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
                     console.log("SECOND MODE");
                 }         

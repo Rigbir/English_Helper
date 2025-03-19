@@ -8,6 +8,9 @@ function updateSelection(changes, key, selector, className) {
         const allSelections = document.querySelectorAll(selector);
         allSelections.forEach(selection => {
             if (selection.textContent === currentValue) {
+                allSelections.forEach(item => {
+                    item.classList.remove(className);
+                }); 
                 selection.classList.add(className);
             }
         });

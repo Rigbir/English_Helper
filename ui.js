@@ -258,35 +258,6 @@ export function initializeInputFieldAndHintButton(database) {
                         foundWord.translation = [toLowerCaseAll(foundWord.translation.trim())];
                         console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
                     }
-                    // if (appState.mode === 'eng-to-rus') {
-                    //     if (Array.isArray(foundWord.translation)) {
-                    //         foundWord.translation = foundWord.translation.map(tr => toLowerCaseAll(tr).trim());
-                    //     } else {
-                    //         foundWord.translation = [toLowerCaseAll(foundWord.translation.trim())];
-                    //         console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
-                    //     }
-                    // } else {
-                    //     translateWord.textContent = toLowerCaseAll(translateWord.textContent);
-                    // } 
-
-                    // if (appState.mode === 'eng-to-rus') {
-                    //     if (foundWord.translation.length > 1) {
-                    //         foundWord.translation = Array.isArray(foundWord.translation)
-                    //             ? foundWord.translation.map(tr => toLowerCaseAll(tr).trim())
-                    //             : [toLowerCaseAll(foundWord.translation).trim()];
-                    //         toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
-                    //     }else {
-                    //         foundWord.translation = [foundWord.translation];
-                    //         console.log('TRANSLATE ELEMENT: ', foundWord.translation);
-                    //     }
-                    // }
-                    // else {
-                    //     foundWord.translation = [foundWord.translation.trim()];
-                    // } 
-               
-
-                    // foundWord.translation = toLowerCaseAll(foundWord.translation);
-                    // foundWord.translation = foundWord.translation.trim();
                 } else {
                     console.warn('Word or translation not found:', activeWordText);
                     translateWord.textContent = 'Translation not available';  
@@ -296,13 +267,10 @@ export function initializeInputFieldAndHintButton(database) {
                     const correctAnswer = appState.mode === 'eng-to-rus' ? foundWord.translation : [foundWord.word];
 
                     console.log('Input:', replaceCharacter(inputField.value));
-                    //console.log('Translation:', replaceCharacter(toLowerCaseAll(correctAnswer)));
-                    //console.log('Comparison:', replaceCharacter(inputField.value) === replaceCharacter(foundWord.translation));
                     console.log('Translation:', correctAnswer.map(tr => replaceCharacter(toLowerCaseAll(tr))).join(', '));
                     console.log('Comparison:', correctAnswer.some(tr => replaceCharacter(inputField.value) === replaceCharacter(tr)));
 
                     if (correctAnswer.some(tr => replaceCharacter(inputField.value) === toLowerCaseAll(replaceCharacter(tr)))) {
-                    //if (replaceCharacter(inputField.value) == replaceCharacter(toLowerCaseAll(correctAnswer))){
                         sound.pause();
                         sound.currentTime = 0;
                         sound.play();
