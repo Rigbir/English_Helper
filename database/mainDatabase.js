@@ -99,6 +99,9 @@ export function loadJsonFileIntoDB(database) {
                 const store = transaction.objectStore(theme);
 
                 data[theme].forEach(item => {
+                    if (!Array.isArray(item.translation)) {
+                        item.translation = [item.translation];
+                    }
                     store.put(item);
                 });
 
@@ -154,33 +157,26 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 if (appState.mode === 'eng-to-rus') {
                     console.log("Word object:", word);
                     activeWord.textContent = toLowerCaseAll(word.word) || "No data";
-                    translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"; 
+                    //translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"; 
 
-                /* 
+                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
                     if (Array.isArray(word.translation)) {
-                        translateElement.textContent = word.translation 
-                        ? toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) 
-                        : toLowerCaseAll(word.translation || "No translation");
+                        translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation";
                     } else {
-                        translateElement.textContent = word.translation;
-                    } 
-                */
+                        translateWord.textContent = toLowerCaseAll(word.translation) || "No translation";
+                    }
                     
                     console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
                     console.log("FIRST MODE");
                 } else if (appState.mode === 'rus-to-eng') {
 
-                /*     
                     if (Array.isArray(word.translation)) {
-                        wordElement.textContent = word.translation
-                        ? toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)])
-                        : toLowerCaseAll(word.translation);
+                        activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data";
                     } else {
-                        wordElement.textContent = toLowerCaseAll(word.translation) || "No data";
+                        activeWord.textContent = toLowerCaseAll(word.translation) || "No data";
                     }
-                */
 
-                    activeWord.textContent = toLowerCaseAll(word.translation) || "No data";
+                    //activeWord.textContent = toLowerCaseAll(word.translation) || "No data";
                     translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
                     console.log("SECOND MODE");
                 }         
