@@ -1,6 +1,6 @@
 import { initializeMainDatabase } from './database/mainDatabase.js';
 import { initializeThemeAndTimeSettings } from './theme.js';
-import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime, selectedThemePopup } from './ui.js';
+import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime } from './ui.js';
 
 function updateSelection(changes, key, selector, className) {
     if (changes[key]) {
@@ -11,6 +11,7 @@ function updateSelection(changes, key, selector, className) {
                 allSelections.forEach(item => {
                     item.classList.remove(className);
                 }); 
+                console.log("SELECTED-MODE: ", selection);
                 selection.classList.add(className);
             }
         });
@@ -23,6 +24,7 @@ function loadInitialSelection(key, selector, className) {
         const allSelections = document.querySelectorAll(selector);
         allSelections.forEach(selection => {
             if (selection.textContent === currentValue) {
+                console.log("SELECTED-MODE: ", selection);
                 selection.classList.add(className);
             }
         });
@@ -62,7 +64,7 @@ export function setupStorageListeners() {
             };
         }
     
-        if (changes.mode) {
+        if (changes.selectedMode) {
             initializeMainDatabase();
         }
     
@@ -72,8 +74,10 @@ export function setupStorageListeners() {
 
         updateSelection(changes, 'selectedTheme', '.popup .theme', 'selected-theme');
         updateSelection(changes, 'selectedTime', '.popup .time', 'selected-time');
+        updateSelection(changes, 'selectedMode', '.popup .mode', 'selected-mode');
     }); 
 
     loadInitialSelection('selectedTheme', '.popup .theme', 'selected-theme');
     loadInitialSelection('selectedTime', '.popup .time', 'selected-time');
+    loadInitialSelection('selectedMode', '.popup .mode', 'selected-mode');
 }

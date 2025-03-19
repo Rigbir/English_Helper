@@ -5,12 +5,12 @@ import { displayAppInfoPopup,
          initializeNotificationSettings, 
          initializeInputFieldAndHintButton, 
          generateNewRandomWord, 
-         changeInputWordMode, 
          playWordPronunciation, 
          saveNotificationTime, 
          openSecondaryListWindow,
          selectedThemePopup,
-         selectedTimePopup
+         selectedTimePopup,
+         selectedModePopup
 } from './ui.js';
 import { setupStorageListeners } from './storage.js';
 
@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     selectedThemePopup();
     selectedTimePopup();
+    selectedModePopup();
 
     initializeThemeSettings();
     displayAppInfoPopup();
@@ -31,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log("Database 'words' successfully opened", databaseWords);
 
         generateNewRandomWord(databaseWords);
-        changeInputWordMode(databaseWords);
         initializeInputFieldAndHintButton(databaseWords);
         
         const requestList = indexedDB.open('learned_words', 1);

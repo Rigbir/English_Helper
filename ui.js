@@ -95,6 +95,45 @@ export function selectedTimePopup() {
     });
 }
 
+export function selectedModePopup() {
+    const { changeModeButton, 
+            changeModePopup,
+            changeModeOverlay,
+            changeModeCloseButtonOverlay,
+            allModeSelections
+          } = elements;
+        
+    changeModeButton.addEventListener('click', () => {
+        console.log("CHANGHE MODE BUTTON CLICK");
+        changeModePopup.style.display = 'block';
+        changeModeOverlay.style.display = 'block';
+    });
+
+    allModeSelections.forEach(modeSelected => {
+        modeSelected.addEventListener('click', () => {
+            allModeSelections.forEach(item => {item.classList.remove('selected-mode')});
+
+            modeSelected.classList.add('selected-mode');
+            appState.mode = modeSelected.textContent;
+            appState.countHelpButtonPressed = 0;
+            appState.countVoiceoverButtonPressed = true;
+
+            chrome.storage.local.set({ selectedMode: modeSelected.textContent });
+            console.log("SAVE MODE SELECTED: ", appState.mode);
+        });
+    });
+
+    changeModeCloseButtonOverlay.addEventListener('click', () => {
+        changeModePopup.style.display = 'none';
+        changeModeOverlay.style.display = 'none';
+    });
+
+    changeModeOverlay.addEventListener('click', () => {
+        changeModePopup.style.display = 'none';
+        changeModeOverlay.style.display = 'none';
+    });
+}
+
 export function initializeNotificationSettings() {
     const { onOffToggleState,
             onOffToggleBackground
@@ -251,7 +290,6 @@ export function initializeInputFieldAndHintButton(database) {
                 });
             
                 if (foundWord && foundWord.translation) {
-
                     if (Array.isArray(foundWord.translation)) {
                         foundWord.translation = foundWord.translation.map(tr => toLowerCaseAll(tr).trim());
                     } else {
@@ -406,27 +444,6 @@ export function generateNewRandomWord(database) {
 
     randomButton.addEventListener('click', appState.generateRandomWordButtonClickHandler);
     console.log('Event listener added to replace-btn', appState.generateRandomWordButtonClickHandler);
-}
-
-export function changeInputWordMode(database) {
-    const { changeModeButton,
-            wordContainer
-          } = elements;
-
-    if (appState.changeModeButtonClickHandler) {
-        changeModeButton.removeEventListener('click', appState.changeModeButtonClickHandler);
-    }
-
-    appState.changeModeButtonClickHandler = (event) => {
-        appState.mode = appState.mode === 'eng-to-rus' ? 'rus-to-eng' : 'eng-to-rus';
-        wordContainer.classList.remove('show-translate');
-        appState.countHelpButtonPressed = 0;
-        appState.countVoiceoverButtonPressed = true;
-        chrome.storage.local.set({ mode: appState.mode }, () => {});
-    }
-
-    changeModeButton.addEventListener('click', appState.changeModeButtonClickHandler);
-    console.log('Event listener added to change-mode-btn', appState.generateRandomWordButtonClickHandler);
 }
 
 export function playWordPronunciation() {

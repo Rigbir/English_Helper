@@ -132,8 +132,8 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
         randomButton.removeEventListener('click', appState.updateWordHandler);
     }
 
-    chrome.storage.local.get({ mode: 'eng-to-rus' }, (data) => {
-        appState.mode = data.mode || 'eng-to-rus';
+    chrome.storage.local.get({ selectedMode: 'eng-to-rus' }, (data) => {
+        appState.mode = data.selectedMode || 'eng-to-rus';
         console.log("NOW MODE APP", appState.mode);
 
         appState.updateWordHandler = () => {
