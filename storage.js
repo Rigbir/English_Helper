@@ -2,6 +2,30 @@ import { initializeMainDatabase } from './database/mainDatabase.js';
 import { initializeThemeAndTimeSettings } from './theme.js';
 import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime, selectedThemePopup } from './ui.js';
 
+function updateSelection(changes, key, selector, className) {
+    if (changes[key]) {
+        const currentValue = changes[key].newValue;
+        const allSelections = document.querySelectorAll(selector);
+        allSelections.forEach(selection => {
+            if (selection.textContent === currentValue) {
+                selection.classList.add(className);
+            }
+        });
+    }
+}
+
+function loadInitialSelection(key, selector, className) {
+    chrome.storage.local.get(key, (data) => {
+        const currentValue = data[key];
+        const allSelections = document.querySelectorAll(selector);
+        allSelections.forEach(selection => {
+            if (selection.textContent === currentValue) {
+                selection.classList.add(className);
+            }
+        });
+    });
+}
+
 export function setupStorageListeners() {
     chrome.storage.onChanged.addListener((changes) => {
         if (changes.themeIndex || changes.timeIndex) {
@@ -43,46 +67,10 @@ export function setupStorageListeners() {
             saveNotificationTime();
         }
 
-        if (changes.selectedTheme) {
-            const currentTheme = changes.selectedTheme.newValue;
-            const allThemeSelections = document.querySelectorAll('.popup .theme');
-            allThemeSelections.forEach(themeSelected => {
-                if (themeSelected.textContent === currentTheme) {
-                    allThemeSelections.forEach(item => {item.classList.remove('selected-theme')});
-                    themeSelected.classList.add('selected-theme');
-                }
-            });
-        }
-
-        if (changes.selectedTime) {
-            const currentTime = changes.selectedTime.newValue;
-            const allTimeSelections = document.querySelectorAll('.popup .time');
-            allTimeSelections.forEach(timeSelected => {
-                if (timeSelected.textContent === currentTime) {
-                    allTimeSelections.forEach(item => {item.classList.remove('selected-time')});
-                    timeSelected.classList.add('selected-time');
-                }
-            });
-        }
+        updateSelection(changes, 'selectedTheme', '.popup .theme', 'selected-theme');
+        updateSelection(changes, 'selectedTime', '.popup .time', 'selected-time');
     }); 
-    
-    chrome.storage.local.get('selectedTheme', (data) => {
-        const selectedTheme = data.selectedTheme;
-        const allThemeSelections = document.querySelectorAll('.popup .theme');
-        allThemeSelections.forEach(themeSelected => {
-            if (themeSelected.textContent === selectedTheme) {
-                themeSelected.classList.add('selected-theme');
-            }
-        });
-    });
 
-    chrome.storage.local.get('selectedTime', (data) => {
-        const selectedTime = data.selectedTime;
-        const allTimeSelections = document.querySelectorAll('.popup .time');
-        allTimeSelections.forEach(timeSelected => {
-            if (timeSelected.textContent === selectedTime) {
-                timeSelected.classList.add('selected-time');
-            }
-        });
-    });
+    loadInitialSelection('selectedTheme', '.popup .theme', 'selected-theme');
+    loadInitialSelection('selectedTime', '.popup .time', 'selected-time');
 }
