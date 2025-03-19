@@ -42,6 +42,10 @@ export function setupStorageListeners() {
                 console.log("time changed: ", changes.timeIndex);
         }
     
+        if (changes.selectedMode) {
+            initializeMainDatabase();
+        }
+
         if (changes.themeIndex) {
             const newThemeIndex = changes.themeIndex.newValue;
             const jsonThemes = ['All Words', 'Human', 'Food', 'House', 'Sport', 
@@ -62,10 +66,6 @@ export function setupStorageListeners() {
             request.onerror = () => {
                 console.error("Error opened new databse: ", error)
             };
-        }
-    
-        if (changes.selectedMode) {
-            initializeMainDatabase();
         }
     
         if (changes.timeIndex) {
