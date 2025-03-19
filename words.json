@@ -31658,171 +31658,171 @@
   "IT": [
     {
       "word": "variable",
-      "translation": "Переменная"
+      "translation": ["Переменная", "изменяемый", "величина"]
     },
     {
       "word": "Function",
-      "translation": "Функция"
+      "translation": ["Функция", "метод", "процедура"]
     },
     {
       "word": "Conditional Statement",
-      "translation": "Условное выражение"
+      "translation": ["Условное выражение", "условный оператор", "логическое условие"]
     },
     {
       "word": "Loop",
-      "translation": "Цикл"
+      "translation": ["Цикл", "петля", "повторение"]
     },
     {
       "word": "access",
-      "translation": "доступ"
+      "translation": ["доступ", "вход", "подключение"]
     },
     {
       "word": "Array",
-      "translation": "Массив"
+      "translation": ["Массив", "таблица", "последовательность"]
     },
     {
       "word": "Class",
-      "translation": "Класс"
+      "translation": ["Класс", "тип", "категория"]
     },
     {
       "word": "security",
-      "translation": "безопасность"
+      "translation": ["безопасность", "защита", "охрана"]
     },
     {
       "word": "bit",
-      "translation": "бит"
+      "translation": ["бит", "частица", "двоичный разряд"]
     },
     {
       "word": "compile",
-      "translation": "компилировать"
+      "translation": ["компилировать", "собирать", "преобразовывать"]
     },
     {
       "word": "database",
-      "translation": "база данных"
+      "translation": ["база данных", "хранилище", "информационная система"]
     },
     {
       "word": "script",
-      "translation": "скрипт"
+      "translation": ["скрипт", "сценарий", "программа"]
     },
     {
       "word": "network",
-      "translation": "сеть"
+      "translation": ["сеть", "система", "коммуникация"]
     },
     {
       "word": "data",
-      "translation": "данные"
+      "translation": ["данные", "информация", "сведения"]
     },
     {
       "word": "Object",
-      "translation": "Объект"
+      "translation": ["Объект", "сущность", "экземпляр"]
     },
     {
       "word": "command",
-      "translation": "команда"
+      "translation": ["команда", "приказ", "директива"]
     },
     {
       "word": "software",
-      "translation": "программное обеспечение"
+      "translation": ["программное обеспечение", "софт", "программа"]
     },
     {
       "word": "Recursion",
-      "translation": "Рекурсия"
+      "translation": ["Рекурсия", "повторение", "самовызов"]
     },
     {
       "word": "hardware",
-      "translation": "аппаратура"
+      "translation": ["аппаратура", "оборудование", "железо"]
     },
     {
       "word": "Queue",
-      "translation": "Очередь"
+      "translation": ["Очередь", "список ожидания", "буфер"]
     },
     {
       "word": "Stack",
-      "translation": "Стек"
+      "translation": ["Стек", "стопка", "накопитель"]
     },
     {
       "word": "Debugging",
-      "translation": "Отладка"
+      "translation": ["Отладка", "устранение ошибок", "диагностика"]
     },
     {
       "word": "Algorithm",
-      "translation": "Алгоритм"
+      "translation": ["Алгоритм", "порядок действий", "метод"]
     },
     {
       "word": "Exception",
-      "translation": "Исключение"
+      "translation": ["Исключение", "ошибка", "отклонение"]
     },
     {
       "word": "Index",
-      "translation": "Индекс"
+      "translation": ["Индекс", "указатель", "номер"]
     },
     {
       "word": "Thread",
-      "translation": "Поток"
+      "translation": ["Поток", "нить", "процесс"]
     },
     {
       "word": "Hashing",
-      "translation": "Хэширование"
+      "translation": ["Хэширование", "кодирование", "шифрование"]
     },
     {
       "word": "Bitwise Operations",
-      "translation": "Битовые операции"
+      "translation": ["Битовые операции", "побитовые вычисления", "двоичная арифметика"]
     },
     {
       "word": "Refactoring",
-      "translation": "Рефакторинг"
+      "translation": ["Рефакторинг", "оптимизация кода", "улучшение структуры"]
     },
     {
       "word": "Memory Management",
-      "translation": "Управление памятью"
+      "translation": ["Управление памятью", "распределение памяти", "очистка памяти"]
     },
     {
       "word": "Deserialization",
-      "translation": "Десериализация"
+      "translation": ["Десериализация", "восстановление", "разбор данных"]
     },
     {
       "word": "Regular Expressions",
-      "translation": "Регулярные выражения"
+      "translation": ["Регулярные выражения", "шаблоны", "регэкспы"]
     },
     {
       "word": "Sorting",
-      "translation": "Сортировка"
+      "translation": ["Сортировка", "упорядочивание", "классификация"]
     },
     {
       "word": "Design Pattern",
-      "translation": "Шаблон проектирования"
+      "translation": ["Шаблон проектирования", "архитектурный шаблон", "паттерн"]
     },
     {
       "word": "Cryptography",
-      "translation": "Криптография"
+      "translation": ["Криптография", "шифрование", "защита данных"]
     },
     {
       "word": "Deadlock",
-      "translation": "Взаимная блокировка"
+      "translation": ["Взаимная блокировка", "тупик", "остановка процессов"]
     },
     {
       "word": "Unit Test",
-      "translation": "Модульное тестирование"
+      "translation": ["Модульное тестирование", "юнит-тест", "проверка кода"]
     },
     {
       "word": "Big O notation",
-      "translation": "Нотация большого O"
+      "translation": ["Нотация большого O", "оценка сложности", "асимптотическая сложность"]
     },
     {
       "word": "Multithreading",
-      "translation": "Многопоточность"
+      "translation": ["Многопоточность", "параллельное выполнение", "конкурентность"]
     },
     {
       "word": "Encapsulation",
-      "translation": "Инкапсуляция"
+      "translation": ["Инкапсуляция", "скрытие данных", "объектное объединение"]
     },
     {
       "word": "eyestrain",
-      "translation": "зрительное перенапряжение"
+      "translation": ["зрительное перенапряжение", "усталость глаз", "напряжение зрения"]
     },
     {
       "word": "promote",
-      "translation": "продвигать"
+      "translation": ["продвигать", "повышать", "рекламировать"]
     }
   ]
 }

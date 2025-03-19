@@ -174,23 +174,23 @@ export function initializeInputFieldAndHintButton(database) {
 
             if (appState.countHelpButtonPressed === 0) {
                 translateWord.style.color = '#1DB954';
-                translateWord.textContent = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
+                //translateWord.textContent = appState.mode === 'eng-to-rus' ? foundWord.translation : foundWord.word;
                 
-            /* 
-                if (appState.mode === 'eng-to-rus'){
+                if (appState.mode === 'eng-to-rus') {
                     if (Array.isArray(foundWord.translation)) {
                         translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
-                    }else {
-                        translateWord.textContent = [foundWord.translation];
+                    } else {
+                        translateWord.textContent = toLowerCaseAll(foundWord.translation);
                         console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
                     }
-                }
-                else {
-                    foundWord.translation = [foundWord.word.trim()];
-                } 
-            */
+                } else {
+                    translateWord.textContent = toLowerCaseAll(translateWord.textContent);
 
-                translateWord.textContent = toLowerCaseAll(translateWord.textContent);
+                    //foundWord.translation = [foundWord.word.trim()];
+                } 
+           
+
+               //translateWord.textContent = toLowerCaseAll(translateWord.textContent);
                 console.log('help-btn click');
                 wordContainer.classList.add('show-translate');
                 console.log('Class added:', wordContainer.classList);
