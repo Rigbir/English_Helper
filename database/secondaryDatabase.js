@@ -19,7 +19,8 @@ export function initializeSecondaryDatabase() {
 export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
     const { addToListButton,
             inputField,
-            activeWord
+            activeWord,
+            wordContainer
           } = elements;
 
     addToListButton.addEventListener('click', () => {
@@ -42,6 +43,8 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
             const wordText = document.querySelector('.word').textContent;
+            wordContainer.classList.remove('show-translate');
+            appState.countHelpButtonPressed = 0;
 
             if (data.length === 0) {
                 console.warn("No words available in theme:", selectedTheme);
@@ -75,7 +78,13 @@ export function transferWordToLearnedList(databaseLearned, word, theme) {
     const store = transaction.objectStore('learned');
     
     word.word = toLowerCaseAll(word.word);
-    word.translation = toLowerCaseAll(word.translation);
+
+    if (Array.isArray(word.translation)) {
+        word.translation = word.translation.map(tr => toLowerCaseAll(tr));
+    } else {
+        word.translation = toLowerCaseAll(word.translation);
+    }
+    
     word.theme = theme;
     
     const addRequest = store.put(word);
