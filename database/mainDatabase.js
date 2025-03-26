@@ -132,8 +132,8 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
         randomButton.removeEventListener('click', appState.updateWordHandler);
     }
 
-    chrome.storage.local.get({ selectedMode: 'eng-to-rus' }, (data) => {
-        appState.mode = data.selectedMode || 'eng-to-rus';
+    chrome.storage.local.get({ selectedMode: 'Default' }, (data) => {
+        appState.mode = data.selectedMode || 'Default';
         console.log("NOW MODE APP", appState.mode);
 
         appState.updateWordHandler = () => {
@@ -153,7 +153,7 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
     
                 const word = data[Math.floor(Math.random() * data.length)];
     
-                if (appState.mode === 'eng-to-rus') {
+                if (appState.mode === 'Default') {
                     console.log("Word object:", word);
                     activeWord.textContent = toLowerCaseAll(word.word) || "No data";
                     
@@ -165,7 +165,7 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     
                     console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
                     console.log("FIRST MODE");
-                } else if (appState.mode === 'rus-to-eng') {
+                } else if (appState.mode === 'Reverse') {
 
                     if (Array.isArray(word.translation)) {
                         activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data";

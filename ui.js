@@ -200,7 +200,7 @@ export function initializeInputFieldAndHintButton(database) {
             const data = getAllRequest.result;
             const wordText = document.querySelector('.word').textContent.trim().toLowerCase();
             const foundWord = data.find(item => {
-                if (appState.mode === 'eng-to-rus') {
+                if (appState.mode === 'Default') {
                     return item.word.trim().toLowerCase() === wordText
                 } else {
                     if (Array.isArray(item.translation)) {
@@ -218,7 +218,7 @@ export function initializeInputFieldAndHintButton(database) {
             if (appState.countHelpButtonPressed === 0) {
                 translateWord.style.color = '#1DB954';
                 
-                if (appState.mode === 'eng-to-rus') {
+                if (appState.mode === 'Default') {
                     if (Array.isArray(foundWord.translation)) {
                         translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
                     } else {
@@ -278,7 +278,7 @@ export function initializeInputFieldAndHintButton(database) {
                 console.log('ACTIVE WORD: ', activeWord);
 
                 let foundWord = data.find(item => {
-                    if (appState.mode === 'eng-to-rus') { 
+                    if (appState.mode === 'Default') { 
                         return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
                     } else {
                         if (Array.isArray(item.translation)) {
@@ -302,7 +302,7 @@ export function initializeInputFieldAndHintButton(database) {
                 }
 
                 if (foundWord) {
-                    const correctAnswer = appState.mode === 'eng-to-rus' ? foundWord.translation : [foundWord.word];
+                    const correctAnswer = appState.mode === 'Default' ? foundWord.translation : [foundWord.word];
 
                     console.log('Input:', replaceCharacter(inputField.value));
                     console.log('Translation:', correctAnswer.map(tr => replaceCharacter(toLowerCaseAll(tr))).join(', '));
@@ -362,7 +362,7 @@ export function replaceCurrentWord(data) {
     const randomWord = filteredData[Math.floor(Math.random() * filteredData.length)];
 
     if (randomWord) {
-        if (appState.mode === 'eng-to-rus') {
+        if (appState.mode === 'Default') {
             activeWord.textContent = toLowerCaseAll(randomWord.word);
         } else {
             if (Array.isArray(randomWord.translation)) {
@@ -458,7 +458,7 @@ export function playWordPronunciation() {
             }
             const utterance = new SpeechSynthesisUtterance();
             utterance.text = wordElement.textContent;
-            utterance.lang = appState.mode === 'eng-to-rus' ? 'en' : 'ru';
+            utterance.lang = appState.mode === 'Default' ? 'en' : 'ru';
             utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
             appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
             speechSynthesis.speak(utterance);

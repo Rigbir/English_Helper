@@ -3,7 +3,7 @@ export const appState = {
     count: 0,
     countHelpButtonPressed: 0,
     countVoiceoverButtonPressed: true,
-    mode: 'eng-to-rus',
+    mode: 'Default',
     generateRandomWordButtonClickHandler: null,
     changeModeButtonClickHandler: null,
     helpButtonClickHandler: null,
