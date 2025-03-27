@@ -3,6 +3,8 @@ import { appState } from './appState.js';
 import { toLowerCaseAll, replaceCharacter } from './utils.js';
 import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
 import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
+import { handleDefaultMode } from './modes/DefaultMode.js';
+import { handleReverseMode } from './modes/ReverseMode.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -219,19 +221,21 @@ export function initializeInputFieldAndHintButton(database) {
                 translateWord.style.color = '#1DB954';
                 
                 if (appState.mode === 'Default') {
-                    if (Array.isArray(foundWord.translation)) {
-                        translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
-                    } else {
-                        translateWord.textContent = toLowerCaseAll(foundWord.translation);
-                        console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
-                    }
+                    handleDefaultMode(foundWord);
+                    // if (Array.isArray(foundWord.translation)) {
+                    //     translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
+                    // } else {
+                    //     translateWord.textContent = toLowerCaseAll(foundWord.translation);
+                    //     console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
+                    // }
                 } else {
-                    if (Array.isArray(foundWord.word)) {
-                        translateWord.textContent = toLowerCaseAll(foundWord.word[Math.floor(Math.random() * foundWord.translation.length)]);
-                    } else {
-                        translateWord.textContent = toLowerCaseAll(foundWord.word);
-                        console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
-                    }
+                    handleReverseMode(foundWord);
+                    // if (Array.isArray(foundWord.word)) {
+                    //     translateWord.textContent = toLowerCaseAll(foundWord.word[Math.floor(Math.random() * foundWord.translation.length)]);
+                    // } else {
+                    //     translateWord.textContent = toLowerCaseAll(foundWord.word);
+                    //     console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
+                    // }
                 } 
            
                 console.log('help-btn click');
