@@ -102,7 +102,8 @@ export function selectedModePopup() {
             changeModePopup,
             changeModeOverlay,
             changeModeCloseButtonOverlay,
-            allModeSelections
+            allModeSelections,
+            wordContainer
           } = elements;
         
     changeModeButton.addEventListener('click', () => {
@@ -119,6 +120,7 @@ export function selectedModePopup() {
             appState.mode = modeSelected.textContent;
             appState.countHelpButtonPressed = 0;
             appState.countVoiceoverButtonPressed = true;
+            wordContainer.classList.remove('show-translate');
 
             chrome.storage.local.set({ selectedMode: modeSelected.textContent });
             console.log("SAVE MODE SELECTED: ", appState.mode);
@@ -203,8 +205,8 @@ export function initializeInputFieldAndHintButton(database) {
             const wordText = document.querySelector('.word').textContent.trim().toLowerCase();
             const foundWord = data.find(item => {
                 if (appState.mode === 'Default') {
-                    return item.word.trim().toLowerCase() === wordText
-                } else {
+                    return item.word.trim().toLowerCase() === wordText;
+                } else if (appState.mode === 'Reverse') {
                     if (Array.isArray(item.translation)) {
                         return item.translation.some(tr => tr.trim().toLowerCase() === wordText);
                     } else {
@@ -271,14 +273,8 @@ export function initializeInputFieldAndHintButton(database) {
 
                 let foundWord = data.find(item => {
                     if (appState.mode === 'Default') { 
-                        //return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
                         returnItemDefault(item, activeWordText);
                     } else if (appState.mode === 'Reverse') {
-                        // if (Array.isArray(item.translation)) {
-                        //     return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(activeWordText));
-                        // } else {
-                        //     return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
-                        // }    
                         returnItemReverse(item, activeWordText);               
                     }
                 });
@@ -364,7 +360,7 @@ export function replaceCurrentWord(data) {
     if (randomWord) {
         if (appState.mode === 'Default') {
             activeWord.textContent = toLowerCaseAll(randomWord.word);
-        } else {
+        } else if (appState.mode === 'Reverse') {
             if (Array.isArray(randomWord.translation)) {
                 activeWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)]);
             } else {
