@@ -3,8 +3,8 @@ import { appState } from './appState.js';
 import { toLowerCaseAll, replaceCharacter } from './utils.js';
 import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
 import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
-import { handleDefaultMode, replaceWordDefaultMode, returnItemDefault } from './modes/DefaultMode.js';
-import { handleReverseMode, replaceWordReverseMode, returnItemReverse } from './modes/ReverseMode.js';
+import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.js';
+import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,

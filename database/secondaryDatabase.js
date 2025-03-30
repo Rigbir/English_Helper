@@ -42,6 +42,7 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
         console.log('click plus');
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
+
             const wordText = document.querySelector('.word').textContent;
             wordContainer.classList.remove('show-translate');
             appState.countHelpButtonPressed = 0;
@@ -53,7 +54,18 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
                 return;
             }
 
-            let foundWord = data.find(item => toLowerCaseAll(item.word) === toLowerCaseAll(wordText));
+            let foundWord = data.find(item => {
+                if (appState.mode === 'Default') { 
+                    return toLowerCaseAll(item.word) === toLowerCaseAll(wordText);
+                } else if (appState.mode === 'Reverse') {
+                    if (Array.isArray(item.translation)) {
+                        return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(wordText));
+                    } else {
+                        return toLowerCaseAll(item.translation) === toLowerCaseAll(wordText);
+                    }                 
+                }
+            });
+            
             if (foundWord) {
                 removeWordFromMainDatabase(databaseWords, selectedTheme, foundWord.word)
                     .then(() => {
