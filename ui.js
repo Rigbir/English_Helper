@@ -3,8 +3,8 @@ import { appState } from './appState.js';
 import { toLowerCaseAll, replaceCharacter } from './utils.js';
 import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
 import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
-import { handleDefaultMode } from './modes/DefaultMode.js';
-import { handleReverseMode } from './modes/ReverseMode.js';
+import { handleDefaultMode, returnItemDefault } from './modes/DefaultMode.js';
+import { handleReverseMode, returnItemReverse } from './modes/ReverseMode.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -222,20 +222,8 @@ export function initializeInputFieldAndHintButton(database) {
                 
                 if (appState.mode === 'Default') {
                     handleDefaultMode(foundWord);
-                    // if (Array.isArray(foundWord.translation)) {
-                    //     translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
-                    // } else {
-                    //     translateWord.textContent = toLowerCaseAll(foundWord.translation);
-                    //     console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
-                    // }
                 } else {
                     handleReverseMode(foundWord);
-                    // if (Array.isArray(foundWord.word)) {
-                    //     translateWord.textContent = toLowerCaseAll(foundWord.word[Math.floor(Math.random() * foundWord.translation.length)]);
-                    // } else {
-                    //     translateWord.textContent = toLowerCaseAll(foundWord.word);
-                    //     console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
-                    // }
                 } 
            
                 console.log('help-btn click');
@@ -283,13 +271,15 @@ export function initializeInputFieldAndHintButton(database) {
 
                 let foundWord = data.find(item => {
                     if (appState.mode === 'Default') { 
-                        return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
-                    } else {
-                        if (Array.isArray(item.translation)) {
-                            return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(activeWordText));
-                        } else {
-                            return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
-                        }                    
+                        //return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
+                        returnItemDefault(item, activeWordText);
+                    } else if (appState.mode === 'Reverse') {
+                        // if (Array.isArray(item.translation)) {
+                        //     return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(activeWordText));
+                        // } else {
+                        //     return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
+                        // }    
+                        returnItemReverse(item, activeWordText);               
                     }
                 });
             
@@ -306,7 +296,13 @@ export function initializeInputFieldAndHintButton(database) {
                 }
 
                 if (foundWord) {
-                    const correctAnswer = appState.mode === 'Default' ? foundWord.translation : [foundWord.word];
+                    var correctAnswer = '';
+
+                    if (appState.mode === 'Default') {
+                        correctAnswer = foundWord.translation;
+                    } else if (appState.mode === 'Reverse') {
+                        correctAnswer = [foundWord.word];
+                    }
 
                     console.log('Input:', replaceCharacter(inputField.value));
                     console.log('Translation:', correctAnswer.map(tr => replaceCharacter(toLowerCaseAll(tr))).join(', '));

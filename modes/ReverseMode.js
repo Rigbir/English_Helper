@@ -11,3 +11,11 @@ export function handleReverseMode(foundWord) {
         console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
     }
 }
+
+export function returnItemReverse(item, wordText) {
+    if (Array.isArray(item.translation)) {
+        return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(wordText));
+    } else {
+        return toLowerCaseAll(item.translation) === toLowerCaseAll(wordText);
+    }  
+}

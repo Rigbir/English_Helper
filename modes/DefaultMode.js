@@ -11,3 +11,7 @@ export function handleDefaultMode(foundWord) {
         console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
     }
 }
+
+export function returnItemDefault(item, wordText) {
+    return toLowerCaseAll(item.word) === toLowerCaseAll(wordText);
+}
