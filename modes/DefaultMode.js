@@ -12,6 +12,8 @@ export function handleDefaultMode(foundWord) {
     }
 }
 
-export function returnItemDefault(item, wordText) {
-    return toLowerCaseAll(item.word) === toLowerCaseAll(wordText);
+export function replaceWordDefaultMode(randomWord) {
+    const { activeWord } = elements;
+
+    activeWord.textContent = toLowerCaseAll(randomWord.word);
 }

@@ -12,10 +12,12 @@ export function handleReverseMode(foundWord) {
     }
 }
 
-export function returnItemReverse(item, wordText) {
-    if (Array.isArray(item.translation)) {
-        return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(wordText));
+export function replaceWordReverseMode(randomWord) {
+    const { activeWord } = elements;
+
+    if (Array.isArray(randomWord.translation)) {
+        activeWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)]);
     } else {
-        return toLowerCaseAll(item.translation) === toLowerCaseAll(wordText);
-    }  
+        activeWord.textContent = toLowerCaseAll(randomWord.translation);
+    }
 }

@@ -3,8 +3,8 @@ import { appState } from './appState.js';
 import { toLowerCaseAll, replaceCharacter } from './utils.js';
 import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
 import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
-import { handleDefaultMode, returnItemDefault } from './modes/DefaultMode.js';
-import { handleReverseMode, returnItemReverse } from './modes/ReverseMode.js';
+import { handleDefaultMode, replaceWordDefaultMode, returnItemDefault } from './modes/DefaultMode.js';
+import { handleReverseMode, replaceWordReverseMode, returnItemReverse } from './modes/ReverseMode.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -273,9 +273,13 @@ export function initializeInputFieldAndHintButton(database) {
 
                 let foundWord = data.find(item => {
                     if (appState.mode === 'Default') { 
-                        returnItemDefault(item, activeWordText);
+                        return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
                     } else if (appState.mode === 'Reverse') {
-                        returnItemReverse(item, activeWordText);               
+                        if (Array.isArray(item.translation)) {
+                            return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(activeWordText));
+                        } else {
+                            return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
+                        }                 
                     }
                 });
             
@@ -359,13 +363,9 @@ export function replaceCurrentWord(data) {
 
     if (randomWord) {
         if (appState.mode === 'Default') {
-            activeWord.textContent = toLowerCaseAll(randomWord.word);
+            replaceWordDefaultMode(randomWord);
         } else if (appState.mode === 'Reverse') {
-            if (Array.isArray(randomWord.translation)) {
-                activeWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)]);
-            } else {
-                activeWord.textContent = toLowerCaseAll(randomWord.translation);
-            }
+            replaceWordReverseMode(randomWord);
         }        
         translateWord.textContent = ''; 
         inputField.value = ''; 
