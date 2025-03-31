@@ -152,30 +152,47 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 }
     
                 const word = data[Math.floor(Math.random() * data.length)];
-    
+
                 if (appState.mode === 'Default') {
                     console.log("Word object:", word);
                     activeWord.textContent = toLowerCaseAll(word.word) || "No data";
-                    
-                    if (Array.isArray(word.translation)) {
-                        translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation";
-                    } else {
-                        translateWord.textContent = toLowerCaseAll(word.translation) || "No translation";
-                    }
+
+                    Array.isArray(word.translation)
+                        ? translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation"
+                        : translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"
                     
                     console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
                     console.log("FIRST MODE");
                 } else if (appState.mode === 'Reverse') {
 
-                    if (Array.isArray(word.translation)) {
-                        activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data";
-                    } else {
-                        activeWord.textContent = toLowerCaseAll(word.translation) || "No data";
-                    }
+                    Array.isArray(word.translation)
+                        ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
+                        : activeWord.textContent = toLowerCaseAll(word.translation) || "No data"
 
                     translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
                     console.log("SECOND MODE");
-                }         
+                } else if (appState.mode === 'Mixed') {
+
+                    if (appState.handlerForMixedMode) {
+
+                        Array.isArray(word.translation)
+                        ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
+                        : activeWord.textContent = toLowerCaseAll(word.translation) || "No data"
+    
+                        translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
+                        console.log("THIRD MODE + REVERSE");
+                    } else {
+                        console.log("Word object:", word);
+                        activeWord.textContent = toLowerCaseAll(word.word) || "No data";
+                        
+                        Array.isArray(word.translation)
+                            ? translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation"
+                            : translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"
+
+                        console.log("THIRD MODE + DEFAULT");
+                    }
+                    appState.handlerForMixedMode = !appState.handlerForMixedMode;
+                }      
             };
     
             getAllRequest.onerror = (event) => {

@@ -9,4 +9,5 @@ export const appState = {
     helpButtonClickHandler: null,
     inputFieldClickHandler: null,
     updateWordHandler: null,
+    handlerForMixedMode: null,
 };

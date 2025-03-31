@@ -5,6 +5,7 @@ import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './
 import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
 import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.js';
 import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
+import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -193,40 +194,138 @@ export function initializeInputFieldAndHintButton(database) {
     appState.helpButtonClickHandler = (event) => {
         selectedTheme = textFieldTheme.value;
         console.log('Listener added!');
-
         console.log('BEFORE CLICK - COUNT:', appState.countHelpButtonPressed);
 
         const transaction = database.transaction(selectedTheme, 'readonly');
         const store = transaction.objectStore(selectedTheme);
         const getAllRequest = store.getAll();
-
+        
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
-            const wordText = document.querySelector('.word').textContent.trim().toLowerCase();
-            const foundWord = data.find(item => {
-                if (appState.mode === 'Default') {
-                    return item.word.trim().toLowerCase() === wordText;
-                } else if (appState.mode === 'Reverse') {
-                    if (Array.isArray(item.translation)) {
-                        return item.translation.some(tr => tr.trim().toLowerCase() === wordText);
+            const wordText = document.querySelector('.word').textContent.trim().toLowerCase();   
+                    
+            // const foundWord = data.find(item => {
+            //     if (appState.mode === 'Default') {
+            //         return item.word.trim().toLowerCase() === wordText;
+            //     } else if (appState.mode === 'Reverse') {
+            //         if (Array.isArray(item.translation)) {
+            //             return item.translation.some(tr => tr.trim().toLowerCase() === wordText);
+            //         } else {
+            //             return item.translation.trim().toLowerCase() === wordText;  
+            //         }
+            //     } else if (appState.handlerForMixedMode && appState.mode === 'Mixed') {
+            //         console.log('STATE HANDLE: ', appState.handlerForMixedMode);
+            //         console.log('WORD: ', wordText);
+            //         console.log('ITEM: ', item.word.trim().toLowerCase());
+
+            //         if (Array.isArray(item.translation)) {
+            //             return item.translation.some(tr => tr.trim().toLowerCase() === wordText);
+            //         } else {
+            //             return item.translation.trim().toLowerCase() === wordText;  
+            //         }                      
+            //     } else if (!appState.handlerForMixedMode && appState.mode === 'Mixed') {
+            //         console.log('STATE HANDLE: ', appState.handlerForMixedMode);
+            //         console.log('WORD: ', wordText);
+            //         console.log('ITEM: ', item.word.trim().toLowerCase());
+
+            //         return item.word.trim().toLowerCase() === wordText;
+            //     }
+            // });
+
+            // const foundWord = data.find(item => {
+            //     const itemWord = item.word.trim().toLowerCase();
+            //     const wordMatches = wordText === itemWord;
+            
+            //     if (appState.mode === 'Default') return wordMatches;
+                
+            //     if (appState.mode === 'Reverse') {
+            //         return Array.isArray(item.translation)
+            //             ? item.translation.some(tr => tr.trim().toLowerCase() === wordText)
+            //             : item.translation.trim().toLowerCase() === wordText;
+            //     }
+                
+            //     if (appState.mode === 'Mixed') {
+            //         console.log('STATE HANDLE: ', appState.handlerForMixedMode);
+            //         console.log('WORD: ', wordText);
+            //         console.log('ITEM: ', itemWord);
+            //         console.log('TRANSLATION: ', item.translation);
+
+            //         if (appState.handlerForMixedMode) {
+            //             return Array.isArray(item.translation)
+            //                 ? item.translation.some(tr => tr.trim().toLowerCase() === wordText)
+            //                 : item.translation.trim().toLowerCase() === wordText;
+            //         } else {
+            //             return wordMatches;
+            //         }               
+            //     }
+            
+            //     return false; 
+            // });
+
+            let foundWord = null;
+            const activeWordText = activeWord?.textContent?.trim();
+
+            if (appState.mode === 'Default') {
+                foundWord = data.find(item => item.word.trim().toLowerCase() === wordText);
+            } 
+
+            else if (appState.mode === 'Reverse') {
+                foundWord = data.find(item => 
+                    Array.isArray(item.translation) 
+                        ? item.translation.some(tr => tr.trim().toLowerCase() === wordText)
+                        : item.translation.trim().toLowerCase() === wordText
+                );
+            } 
+
+            else if (appState.mode === 'Mixed') {
+                foundWord = data.find(item => {
+                    if (appState.handlerForMixedMode) {
+                        if (Array.isArray(item.translation)) {
+                            return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(activeWordText));
+                        } else {
+                            return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
+                        }   
                     } else {
-                        return item.translation.trim().toLowerCase() === wordText;  
+                        return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
                     }
-                }
-            });
+                })
+            }
+            
+            // else if (appState.mode === 'Mixed') {
+            //     console.log('STATE HANDLE:', appState.handlerForMixedMode);
+            //     console.log('WORD:', wordText);
+
+            //     if (appState.handlerForMixedMode) {
+            //         foundWord = data.find(item => 
+            //             Array.isArray(item.translation) 
+            //                 ? item.translation.some(tr => tr.trim().toLowerCase() === wordText)
+            //                 : item.translation.trim().toLowerCase() === wordText
+            //         );
+            //         console.log('TRANSLATION:', foundWord);
+            //     } else {
+            //         foundWord = data.find(item => item.word.trim().toLowerCase() === wordText);
+            //         console.log('TRANSLATION:', foundWord);
+            //     }
+            // }
 
             if (!foundWord) {
                 console.error('Error: No translation found for:', wordText);
+                return;
             }
+
+            console.log('FOUND WORD:', foundWord);
 
             if (appState.countHelpButtonPressed === 0) {
                 translateWord.style.color = '#1DB954';
                 
                 if (appState.mode === 'Default') {
                     handleDefaultMode(foundWord);
-                } else {
+                } else if (appState.mode === 'Reverse') {
                     handleReverseMode(foundWord);
-                } 
+                } else if (appState.mode === 'Mixed') {
+                    console.log('FOUND WORD: ', foundWord);
+                    handleMixedMode(foundWord);
+                }
            
                 console.log('help-btn click');
                 wordContainer.classList.add('show-translate');
@@ -280,6 +379,16 @@ export function initializeInputFieldAndHintButton(database) {
                         } else {
                             return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
                         }                 
+                    } else if (appState.mode === 'Mixed') {
+                        if (appState.handlerForMixedMode) {
+                            if (Array.isArray(item.translation)) {
+                                return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(activeWordText));
+                            } else {
+                                return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
+                            }   
+                        } else {
+                            return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
+                        }
                     }
                 });
             
@@ -302,6 +411,8 @@ export function initializeInputFieldAndHintButton(database) {
                         correctAnswer = foundWord.translation;
                     } else if (appState.mode === 'Reverse') {
                         correctAnswer = [foundWord.word];
+                    } else if (appState.mode === 'Mixed') {
+                        correctAnswer = appState.handlerForMixedMode ? foundWord.translation : [foundWord.word];
                     }
 
                     console.log('Input:', replaceCharacter(inputField.value));
@@ -366,7 +477,10 @@ export function replaceCurrentWord(data) {
             replaceWordDefaultMode(randomWord);
         } else if (appState.mode === 'Reverse') {
             replaceWordReverseMode(randomWord);
-        }        
+        } else if (appState.mode === 'Mixed') {
+            replaceWordMixedMode(randomWord);
+        } 
+
         translateWord.textContent = ''; 
         inputField.value = ''; 
         console.log('New word:', randomWord.word);
@@ -424,9 +538,9 @@ export function generateNewRandomWord(database) {
             appState.countHelpButtonPressed = 0;
             appState.countVoiceoverButtonPressed = true;
             console.log('countHelpButtonPressed: ', appState.countHelpButtonPressed);
+            console.log('HANDLE-MIXED-MODE: ', appState.handlerForMixedMode);
 
             activeWord.textContent = toLowerCaseAll(activeWord.textContent);
-
             console.log('WORD: ', activeWord.textContent);
             
             inputField.value = '';
