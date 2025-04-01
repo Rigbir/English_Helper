@@ -230,7 +230,7 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                             }
                             const utterance = new SpeechSynthesisUtterance();
                             utterance.text = wordElement.textContent;
-                            utterance.lang = appState.mode === 'Default' ? 'en' : 'ru';
+                            utterance.lang = 'en';
                             utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
                             appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
                             speechSynthesis.speak(utterance);

@@ -594,9 +594,9 @@ border: 2px solid grey;
     pointer-events: none;
 }
 
-.word-container.show-translate .icon-btn {
+/* .word-container.show-translate .icon-btn {
     opacity: 0;
-}
+} */
 
 .word-container.show-translate .translate {
     opacity: 1;

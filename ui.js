@@ -253,6 +253,8 @@ export function initializeInputFieldAndHintButton(database) {
                     handleReverseMode(foundWord);
                 } else if (appState.mode === 'Mixed') {
                     handleMixedMode(foundWord);
+                } else if (appState.mode === 'Phonetic') {
+                    handlePhoneticMode(foundWord);
                 }
            
                 console.log('help-btn click');
@@ -320,6 +322,8 @@ export function initializeInputFieldAndHintButton(database) {
                         correctAnswer = [foundWord.word];
                     } else if (appState.mode === 'Mixed') {
                         correctAnswer = appState.handlerForMixedMode ? foundWord.translation : [foundWord.word];
+                    } else if (appState.mode === 'Phonetic') {
+                        correctAnswer = foundWord.translation;
                     }
 
                     console.log('Input:', replaceCharacter(inputField.value));
@@ -390,8 +394,9 @@ export function replaceCurrentWord(data) {
             replaceWordPhoneticMode(randomWord);
         }
 
-        translateWord.textContent = ''; 
         inputField.value = ''; 
+        translateWord.textContent = ''; 
+        appState.countVoiceoverButtonPressed = true;
         console.log('New word:', randomWord.word);
     }
 }
