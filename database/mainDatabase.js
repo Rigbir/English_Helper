@@ -174,10 +174,9 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 } else if (appState.mode === 'Mixed') {
 
                     if (appState.handlerForMixedMode) {
-
                         Array.isArray(word.translation)
-                        ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
-                        : activeWord.textContent = toLowerCaseAll(word.translation) || "No data"
+                            ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
+                            : activeWord.textContent = toLowerCaseAll(word.translation) || "No data"
     
                         translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
                         console.log("THIRD MODE + REVERSE");
@@ -191,7 +190,9 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
 
                         console.log("THIRD MODE + DEFAULT");
                     }
+
                     appState.handlerForMixedMode = !appState.handlerForMixedMode;
+                    console.log('HANDLE-FOR-MIXED: ', appState.handlerForMixedMode);
                 }      
             };
     

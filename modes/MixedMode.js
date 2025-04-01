@@ -5,7 +5,7 @@ import { appState } from "../appState.js";
 export function handleMixedMode(foundWord) {
     const { translateWord } = elements;
 
-    if (appState.handlerForMixedMode) {
+    if (!appState.handlerForMixedMode) {
         Array.isArray(foundWord.word)
             ? translateWord.textContent = toLowerCaseAll(foundWord.word[Math.floor(Math.random() * foundWord.translation.length)])
             : translateWord.textContent = toLowerCaseAll(foundWord.word)
@@ -14,8 +14,6 @@ export function handleMixedMode(foundWord) {
             ? translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)])
             : translateWord.textContent = toLowerCaseAll(foundWord.translation)
     }
-
-    //appState.handlerForMixedMode = !appState.handlerForMixedMode;
 }
 
 export function replaceWordMixedMode(randomWord) {
