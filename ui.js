@@ -7,7 +7,7 @@ import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.j
 import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
 import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
 import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMode.js';
-import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimesMode.js';
+import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
