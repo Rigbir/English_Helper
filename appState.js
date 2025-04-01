@@ -10,4 +10,6 @@ export const appState = {
     inputFieldClickHandler: null,
     updateWordHandler: null,
     handlerForMixedMode: null,
+    soundTimeChallenge: new Audio('sound/TimeChallenge.mp3'),
 };
+

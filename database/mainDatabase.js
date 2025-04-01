@@ -178,7 +178,6 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
                     console.log("SECOND MODE");
                 } else if (appState.mode === 'Mixed') {
-
                     if (appState.handlerForMixedMode) {
                         Array.isArray(word.translation)
                             ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
@@ -244,7 +243,24 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     
                     console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
                     console.log("FOURTH MODE");
-                }  
+                } else if (appState.mode === 'Time Challenge') {
+                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
+                    const wordContainer = document.querySelector('.word-container');
+
+                    appState.soundTimeChallenge.currentTime = 0;
+                    appState.soundTimeChallenge.play();
+
+                    Array.isArray(word.translation)
+                        ? translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation"
+                        : translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"
+        
+                    appState.soundTimeChallenge.addEventListener('ended', () => {
+                        console.log('SOUND ENDED');
+                        wordContainer.classList.add('show-translate');
+                        appState.countHelpButtonPressed = 1;
+                    });
+                    console.log("FIFTH MODE");
+                }
             };
     
             getAllRequest.onerror = (event) => {

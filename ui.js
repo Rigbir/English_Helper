@@ -7,6 +7,7 @@ import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.j
 import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
 import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
 import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMode.js';
+import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimesMode.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -122,6 +123,7 @@ export function selectedModePopup() {
             appState.mode = modeSelected.textContent;
             appState.countHelpButtonPressed = 0;
             appState.countVoiceoverButtonPressed = true;
+            appState.soundTimeChallenge.pause();
             wordContainer.classList.remove('show-translate');
 
             chrome.storage.local.set({ selectedMode: modeSelected.textContent });
@@ -200,6 +202,8 @@ function getFoundWordFromDatabase(data, activeWordText) {
             }
         case 'Phonetic':
             return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
+        case 'Time Challenge':
+            return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
     }
     return null;
 }
@@ -255,6 +259,8 @@ export function initializeInputFieldAndHintButton(database) {
                     handleMixedMode(foundWord);
                 } else if (appState.mode === 'Phonetic') {
                     handlePhoneticMode(foundWord);
+                } else if (appState.mode === 'Time Challenge') {
+                    handleTimeChallengeMode(foundWord);
                 }
            
                 console.log('help-btn click');
@@ -324,6 +330,8 @@ export function initializeInputFieldAndHintButton(database) {
                         correctAnswer = appState.handlerForMixedMode ? foundWord.translation : [foundWord.word];
                     } else if (appState.mode === 'Phonetic') {
                         correctAnswer = foundWord.translation;
+                    } else if (appState.mode === 'Time Challenge') {
+                        correctAnswer = foundWord.translation;
                     }
 
                     console.log('Input:', replaceCharacter(inputField.value));
@@ -331,9 +339,16 @@ export function initializeInputFieldAndHintButton(database) {
                     console.log('Comparison:', correctAnswer.some(tr => replaceCharacter(inputField.value) === replaceCharacter(tr)));
 
                     if (correctAnswer.some(tr => replaceCharacter(inputField.value) === toLowerCaseAll(replaceCharacter(tr)))) {
-                        sound.pause();
-                        sound.currentTime = 0;
-                        sound.play();
+
+                        if (appState.mode === 'Time Challenge') {
+                            appState.soundTimeChallenge.pause();
+                            appState.soundTimeChallenge.currentTime = 0;
+                            appState.soundTimeChallenge.play();
+                        } else {
+                            sound.pause();
+                            sound.currentTime = 0;
+                            sound.play();
+                        }
 
                         replaceCurrentWord(data);
                         moveWordToLearnedForThisSection(database, selectedTheme, 'Correct', foundWord.word);
@@ -392,6 +407,8 @@ export function replaceCurrentWord(data) {
             replaceWordMixedMode(randomWord);
         } else if (appState.mode === 'Phonetic') {
             replaceWordPhoneticMode(randomWord);
+        } else if (appState.mode === 'Time Challenge') {
+            replaceWordTimeChallengeMode(randomWord);
         }
 
         inputField.value = ''; 
