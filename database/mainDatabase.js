@@ -1,6 +1,7 @@
 import { elements } from "../domElements.js";
 import { appState } from "../appState.js";
 import { toLowerCaseAll } from "../utils.js";
+import { playWordPronunciation } from "../ui.js";
 
 export function initializeMainDatabase(){
     const { inputField,
@@ -153,6 +154,12 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
     
                 const word = data[Math.floor(Math.random() * data.length)];
 
+                const existingButton = document.getElementById('Phonetic-voice-btn');
+                if (existingButton) {
+                    existingButton.remove();
+                    activeWord.style.visibility = 'visible';   
+                }
+
                 if (appState.mode === 'Default') {
                     console.log("Word object:", word);
                     activeWord.textContent = toLowerCaseAll(word.word) || "No data";
@@ -192,7 +199,52 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
 
                     appState.handlerForMixedMode = !appState.handlerForMixedMode;
                     console.log('HANDLE-FOR-MIXED: ', appState.handlerForMixedMode);
-                }      
+                } else if (appState.mode === 'Phonetic') {
+                    console.log("Word object:", word);
+                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
+                    activeWord.style.visibility = 'hidden';
+
+                    const parantClassWord = document.querySelector('.word-in-container');
+
+                    const PhoneticVoiceButton = document.createElement('button');
+                    PhoneticVoiceButton.id = 'Phonetic-voice-btn';
+                    PhoneticVoiceButton.classList.add('icon-btn');
+
+                    const img = document.createElement('img');
+                    img.src = 'image/sound.png';
+                    img.alt = '';
+                    img.draggable = false;
+                    img.style.display = 'block';
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+        
+                    PhoneticVoiceButton.appendChild(img);
+                    parantClassWord.appendChild(PhoneticVoiceButton);
+                  
+                    PhoneticVoiceButton.addEventListener('click', () => {
+                        if (window.speechSynthesis) {
+                            const wordElement = document.querySelector('.word');
+                            if (!wordElement || !wordElement.textContent.trim()){
+                                console.log('No word to pronounce');
+                                return;
+                            }
+                            const utterance = new SpeechSynthesisUtterance();
+                            utterance.text = wordElement.textContent;
+                            utterance.lang = appState.mode === 'Default' ? 'en' : 'ru';
+                            utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
+                            appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
+                            speechSynthesis.speak(utterance);
+                            console.log(wordElement);
+                        }
+                    })
+
+                    Array.isArray(word.translation)
+                        ? translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation"
+                        : translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"
+                    
+                    console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
+                    console.log("FOURTH MODE");
+                }  
             };
     
             getAllRequest.onerror = (event) => {

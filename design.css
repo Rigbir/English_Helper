@@ -625,6 +625,18 @@ border: 2px solid grey;
     background-color: #cab063;
 }
 
+#Phonetic-voice-btn {
+    width: 91px;
+    height: 96px;
+    position: fixed;
+    top: 16%;
+    left: 36%;
+    padding-top: 2px;
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-bottom: 2px;
+}
+
 /*list disign*/
 
 #list-window {

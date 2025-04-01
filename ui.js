@@ -6,6 +6,7 @@ import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
 import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.js';
 import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
 import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
+import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMode.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -197,6 +198,8 @@ function getFoundWordFromDatabase(data, activeWordText) {
                 console.log('TRANSLATION + DEFAULT:', foundWord);
                 return foundWord;
             }
+        case 'Phonetic':
+            return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
     }
     return null;
 }
@@ -383,7 +386,9 @@ export function replaceCurrentWord(data) {
             replaceWordReverseMode(randomWord);
         } else if (appState.mode === 'Mixed') {
             replaceWordMixedMode(randomWord);
-        } 
+        } else if (appState.mode === 'Phonetic') {
+            replaceWordPhoneticMode(randomWord);
+        }
 
         translateWord.textContent = ''; 
         inputField.value = ''; 
@@ -472,7 +477,9 @@ export function playWordPronunciation() {
             }
             const utterance = new SpeechSynthesisUtterance();
             utterance.text = wordElement.textContent;
-            utterance.lang = appState.mode === 'Default' ? 'en' : 'ru';
+            appState.mode === 'Mixed'
+                ? utterance.lang = appState.handlerForMixedMode ? 'en' : 'ru'
+                : utterance.lang = appState.mode === 'Default' ? 'en' : 'ru'
             utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
             appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
             speechSynthesis.speak(utterance);
