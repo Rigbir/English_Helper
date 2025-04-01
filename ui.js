@@ -173,6 +173,34 @@ export function initializeNotificationSettings() {
     });
 }
 
+function getFoundWordFromDatabase(data, activeWordText) {
+    switch (appState.mode) {
+        case 'Default':
+            return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
+        case 'Reverse':
+            return data.find(item => 
+                Array.isArray(item.translation) 
+                    ? item.translation.some(tr => tr?.trim().toLowerCase() === activeWordText)
+                    : item.translation?.trim().toLowerCase() === activeWordText
+            );
+        case 'Mixed':
+            if (!appState.handlerForMixedMode) {
+                const foundWord = data.find(item => 
+                    Array.isArray(item.translation) 
+                        ? item.translation.some(tr => tr?.trim().toLowerCase() === activeWordText)
+                        : item.translation?.trim().toLowerCase() === activeWordText
+                );
+                console.log('TRANSLATION + REVERSE:', foundWord);
+                return foundWord;
+            } else {
+                const foundWord = data.find(item => item.word?.trim().toLowerCase() === activeWordText);
+                console.log('TRANSLATION + DEFAULT:', foundWord);
+                return foundWord;
+            }
+    }
+    return null;
+}
+
 export function initializeInputFieldAndHintButton(database) {
     const { wordContainer,
             helpButton,
@@ -202,99 +230,12 @@ export function initializeInputFieldAndHintButton(database) {
         
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
-            const wordText = document.querySelector('.word').textContent.trim().toLowerCase();   
-                    
-            // const foundWord = data.find(item => {
-            //     if (appState.mode === 'Default') {
-            //         return item.word.trim().toLowerCase() === wordText;
-            //     } else if (appState.mode === 'Reverse') {
-            //         if (Array.isArray(item.translation)) {
-            //             return item.translation.some(tr => tr.trim().toLowerCase() === wordText);
-            //         } else {
-            //             return item.translation.trim().toLowerCase() === wordText;  
-            //         }
-            //     } else if (appState.handlerForMixedMode && appState.mode === 'Mixed') {
-            //         console.log('STATE HANDLE: ', appState.handlerForMixedMode);
-            //         console.log('WORD: ', wordText);
-            //         console.log('ITEM: ', item.word.trim().toLowerCase());
+            const activeWordText = activeWord?.textContent?.trim();
 
-            //         if (Array.isArray(item.translation)) {
-            //             return item.translation.some(tr => tr.trim().toLowerCase() === wordText);
-            //         } else {
-            //             return item.translation.trim().toLowerCase() === wordText;  
-            //         }                      
-            //     } else if (!appState.handlerForMixedMode && appState.mode === 'Mixed') {
-            //         console.log('STATE HANDLE: ', appState.handlerForMixedMode);
-            //         console.log('WORD: ', wordText);
-            //         console.log('ITEM: ', item.word.trim().toLowerCase());
-
-            //         return item.word.trim().toLowerCase() === wordText;
-            //     }
-            // });
-
-            // const foundWord = data.find(item => {
-            //     const itemWord = item.word.trim().toLowerCase();
-            //     const wordMatches = wordText === itemWord;
-            
-            //     if (appState.mode === 'Default') return wordMatches;
-                
-            //     if (appState.mode === 'Reverse') {
-            //         return Array.isArray(item.translation)
-            //             ? item.translation.some(tr => tr.trim().toLowerCase() === wordText)
-            //             : item.translation.trim().toLowerCase() === wordText;
-            //     }
-                
-            //     if (appState.mode === 'Mixed') {
-            //         console.log('STATE HANDLE: ', appState.handlerForMixedMode);
-            //         console.log('WORD: ', wordText);
-            //         console.log('ITEM: ', itemWord);
-            //         console.log('TRANSLATION: ', item.translation);
-
-            //         if (appState.handlerForMixedMode) {
-            //             return Array.isArray(item.translation)
-            //                 ? item.translation.some(tr => tr.trim().toLowerCase() === wordText)
-            //                 : item.translation.trim().toLowerCase() === wordText;
-            //         } else {
-            //             return wordMatches;
-            //         }               
-            //     }
-            
-            //     return false; 
-            // });
-
-            let foundWord = null;
-
-            if (appState.mode === 'Default') {
-                foundWord = data.find(item => item.word.trim().toLowerCase() === wordText);
-            } 
-
-            else if (appState.mode === 'Reverse') {
-                foundWord = data.find(item => 
-                    Array.isArray(item.translation) 
-                        ? item.translation.some(tr => tr.trim().toLowerCase() === wordText)
-                        : item.translation.trim().toLowerCase() === wordText
-                );
-            } 
-            
-            else if (appState.mode === 'Mixed') {
-                console.log('STATE HANDLE:', appState.handlerForMixedMode);
-                console.log('WORD:', wordText);
-
-                if (!appState.handlerForMixedMode) {
-                    foundWord = data.find(item => 
-                        Array.isArray(item.translation) 
-                            ? item.translation.some(tr => tr.trim().toLowerCase() === wordText)
-                            : item.translation.trim().toLowerCase() === wordText
-                    );
-                    console.log('TRANSLATION + REVERSE:', foundWord);
-                } else {
-                    foundWord = data.find(item => item.word.trim().toLowerCase() === wordText);
-                    console.log('TRANSLATION + DEFAULT:', foundWord);
-                }
-            }
+            let foundWord = getFoundWordFromDatabase(data, activeWordText);
 
             if (!foundWord) {
-                console.error('Error: No translation found for:', wordText);
+                console.error('Error: No translation found for:', activeWordText);
                 return;
             }
 
@@ -350,32 +291,11 @@ export function initializeInputFieldAndHintButton(database) {
 
             getAllRequest.onsuccess = () => {
                 const data = getAllRequest.result;
-
                 const activeWordText = activeWord?.textContent?.trim();
                 console.log('ACTIVE WORD: ', activeWord);
 
-                let foundWord = data.find(item => {
-                    if (appState.mode === 'Default') { 
-                        return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
-                    } else if (appState.mode === 'Reverse') {
-                        if (Array.isArray(item.translation)) {
-                            return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(activeWordText));
-                        } else {
-                            return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
-                        }                 
-                    } else if (appState.mode === 'Mixed') {
-                        if (appState.handlerForMixedMode) {
-                            if (Array.isArray(item.translation)) {
-                                return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(activeWordText));
-                            } else {
-                                return toLowerCaseAll(item.translation) === toLowerCaseAll(activeWordText);
-                            }   
-                        } else {
-                            return toLowerCaseAll(item.word) === toLowerCaseAll(activeWordText);
-                        }
-                    }
-                });
-            
+                let foundWord = getFoundWordFromDatabase(data, activeWordText);
+
                 if (foundWord && foundWord.translation) {
                     if (Array.isArray(foundWord.translation)) {
                         foundWord.translation = foundWord.translation.map(tr => toLowerCaseAll(tr).trim());

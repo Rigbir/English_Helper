@@ -164,7 +164,6 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
                     console.log("FIRST MODE");
                 } else if (appState.mode === 'Reverse') {
-
                     Array.isArray(word.translation)
                         ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
                         : activeWord.textContent = toLowerCaseAll(word.translation) || "No data"
