@@ -106,7 +106,8 @@ export function selectedModePopup() {
             changeModeOverlay,
             changeModeCloseButtonOverlay,
             allModeSelections,
-            wordContainer
+            wordContainer,
+            inputField
           } = elements;
         
     changeModeButton.addEventListener('click', () => {
@@ -124,6 +125,7 @@ export function selectedModePopup() {
             appState.countHelpButtonPressed = 0;
             appState.countVoiceoverButtonPressed = true;
             appState.soundTimeChallenge.pause();
+            inputField.value = '';
             wordContainer.classList.remove('show-translate');
 
             chrome.storage.local.set({ selectedMode: modeSelected.textContent });
@@ -243,7 +245,6 @@ export function initializeInputFieldAndHintButton(database) {
 
             if (!foundWord) {
                 console.error('Error: No translation found for:', activeWordText);
-                return;
             }
 
             console.log('FOUND WORD:', foundWord);
@@ -506,6 +507,13 @@ export function playWordPronunciation() {
             appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
             speechSynthesis.speak(utterance);
             console.log(wordElement);
+
+            // FOR PHONETIC
+            // button.classList.add('pulsing');
+
+            // utterance.onend = () => {
+            //     button.classList.remove('pulsing');
+            // };
         }
     })
 }

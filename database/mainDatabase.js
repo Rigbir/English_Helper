@@ -214,8 +214,6 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     img.alt = '';
                     img.draggable = false;
                     img.style.display = 'block';
-                    img.style.width = '100%';
-                    img.style.height = 'auto';
         
                     PhoneticVoiceButton.appendChild(img);
                     parantClassWord.appendChild(PhoneticVoiceButton);
@@ -247,6 +245,7 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     activeWord.textContent = toLowerCaseAll(word.word) || "No data";
                     const wordContainer = document.querySelector('.word-container');
 
+                    appState.soundTimeChallenge.pause();
                     appState.soundTimeChallenge.currentTime = 0;
                     appState.soundTimeChallenge.play();
 

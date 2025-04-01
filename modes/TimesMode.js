@@ -1,6 +1,5 @@
 import { toLowerCaseAll } from "../utils.js";
 import { elements } from "../domElements.js";
-import { appState } from '../appState.js';
 
 export function handleTimeChallengeMode(foundWord) {
     const { translateWord } = elements;
@@ -14,6 +13,5 @@ export function handleTimeChallengeMode(foundWord) {
 export function replaceWordTimeChallengeMode(randomWord) {
     const { activeWord } = elements;
 
-    appState.soundTimeChallenge.pause();
     activeWord.textContent = toLowerCaseAll(randomWord.word);
 }

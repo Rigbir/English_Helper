@@ -625,6 +625,110 @@ border: 2px solid grey;
     background-color: #cab063;
 }
 
+/*VARIANT */
+/* #Phonetic-voice-btn {
+    width: 80px;
+    height: 80px;
+    position: fixed;
+    top: 16%;
+    left: 36%;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #e6d6a8, #c8b374);
+    box-shadow: 6px 6px 12px #b2a36b, -6px -6px 12px #f2e1b4;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease-in-out;
+}
+
+#Phonetic-voice-btn:hover {
+    box-shadow: 4px 4px 10px #b2a36b, -4px -4px 10px #f2e1b4;
+    transform: scale(1.1);
+}
+
+#Phonetic-voice-btn:active {
+    box-shadow: inset 4px 4px 8px #b2a36b, inset -4px -4px 8px #f2e1b4;
+    transform: scale(0.95);
+}
+
+#Phonetic-voice-btn img {
+    width: 60%;
+    height: auto;
+    user-select: none;
+    pointer-events: none;
+} */
+
+
+/* THIRD VARIANT */
+/* @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+#Phonetic-voice-btn {
+    width: 80px;
+    height: 80px;
+    position: fixed;
+    top: 16%;
+    left: 36%;
+    border: none;
+    border-radius: 50%;
+    background-color: #dcc788;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+#Phonetic-voice-btn:hover {
+    transform: scale(1.2);
+    background-color: #cab063;
+}
+
+#Phonetic-voice-btn img {
+    width: 60%;
+    height: auto;
+    user-select: none;
+    pointer-events: none;
+} */
+
+/* FIRST VARIANT */
+/* #Phonetic-voice-btn {
+    width: 80px;
+    height: 80px;
+    position: fixed;
+    top: 16%;
+    left: 36%;
+    padding: 5px;
+    border: none;
+    border-radius: 50%;
+    background-color: #dcc788;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+#Phonetic-voice-btn:hover {
+    transform: scale(1.15);
+    background-color: #cab063;
+}
+
+#Phonetic-voice-btn img {
+    width: 95%;
+    height: auto;
+    user-select: none;
+    pointer-events: none;
+} */
+
+/* SECOND VARIANT */
+
 #Phonetic-voice-btn {
     width: 91px;
     height: 96px;
@@ -635,6 +739,13 @@ border: 2px solid grey;
     padding-left: 2px;
     padding-right: 2px;
     padding-bottom: 2px;
+}
+
+#Phonetic-voice-btn img {
+    width: 100%;
+    height: auto;
+    user-select: none;
+    pointer-events: none;
 }
 
 /*list disign*/
