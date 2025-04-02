@@ -123,7 +123,7 @@ export function hideLetters(word) {
     if (word.length <= 2) return word;
 
     let wordArray = word.split('');
-    let hiddenCount = Math.max(1, Math.floor(word.length * 0.3));
+    let hiddenCount = Math.max(1, Math.floor(word.length * 0.4));
 
     let indices = [...Array(word.length - 2).keys()].map(i => i + 1);
     indices = indices.sort(() => Math.random() - 0.5).slice(0, hiddenCount);
