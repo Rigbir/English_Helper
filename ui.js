@@ -517,9 +517,14 @@ export function playWordPronunciation() {
             }
             const utterance = new SpeechSynthesisUtterance();
             utterance.text = wordElement.textContent;
-            appState.mode === 'Mixed'
-                ? utterance.lang = appState.handlerForMixedMode ? 'en' : 'ru'
-                : utterance.lang = appState.mode === 'Default' ? 'en' : 'ru'
+            switch(appState.mode) {
+                case 'Default': utterance.lang = 'en'; break;
+                case 'Reverse': utterance.lang = 'ru'; break;
+                case 'Mixed': utterance.lang = appState.handlerForMixedMode ? 'en' : 'ru'; break;
+                case 'Phonetic': utterance.lang = 'en'; break;
+                case 'Time Challenge': utterance.lang = 'en'; break;
+                case 'Missing Letters': utterance.lang = 'en'; break;
+            }
             utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
             appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
             speechSynthesis.speak(utterance);
