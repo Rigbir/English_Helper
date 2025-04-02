@@ -1,7 +1,7 @@
 import { elements } from "../domElements.js";
 import { appState } from "../appState.js";
 import { toLowerCaseAll } from "../utils.js";
-import { replaceCurrentWord } from "../ui.js";
+import { replaceCurrentWord, getFoundWordFromDatabase } from "../ui.js";
 import { removeWordFromMainDatabase, restoreWordToMainDatabase } from "./mainDatabase.js";
 
 export function initializeSecondaryDatabase() {
@@ -43,9 +43,15 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
 
-            const wordText = document.querySelector('.word').textContent;
+            let wordText = document.querySelector('.word').textContent;
             wordContainer.classList.remove('show-translate');
             appState.countHelpButtonPressed = 0;
+            
+            if (appState.mode === 'Time Challenge') {
+                appState.soundTimeChallenge.pause();
+                appState.soundTimeChallenge.currentTime = 0;
+                appState.soundTimeChallenge.play();
+            }
 
             if (data.length === 0) {
                 console.warn("No words available in theme:", selectedTheme);
@@ -54,17 +60,12 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
                 return;
             }
 
-            let foundWord = data.find(item => {
-                if (appState.mode === 'Default') { 
-                    return toLowerCaseAll(item.word) === toLowerCaseAll(wordText);
-                } else if (appState.mode === 'Reverse') {
-                    if (Array.isArray(item.translation)) {
-                        return item.translation.some(translation => toLowerCaseAll(translation) === toLowerCaseAll(wordText));
-                    } else {
-                        return toLowerCaseAll(item.translation) === toLowerCaseAll(wordText);
-                    }                 
-                }
-            });
+            console.log('active word: ', wordText);
+            console.log('original word in store: ', appState.originalWord);
+
+            wordText = appState.originalWord;
+            let foundWord = getFoundWordFromDatabase(data, wordText);
+            console.log('FOUND WORD: ', foundWord);
             
             if (foundWord) {
                 removeWordFromMainDatabase(databaseWords, selectedTheme, foundWord.word)
@@ -91,11 +92,9 @@ export function transferWordToLearnedList(databaseLearned, word, theme) {
     
     word.word = toLowerCaseAll(word.word);
 
-    if (Array.isArray(word.translation)) {
-        word.translation = word.translation.map(tr => toLowerCaseAll(tr));
-    } else {
-        word.translation = toLowerCaseAll(word.translation);
-    }
+    Array.isArray(word.translation)
+        ? word.translation = word.translation.map(tr => toLowerCaseAll(tr))
+        : word.translation = toLowerCaseAll(word.translation)
     
     word.theme = theme;
     

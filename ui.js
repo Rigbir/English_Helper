@@ -179,7 +179,7 @@ export function initializeNotificationSettings() {
     });
 }
 
-function getFoundWordFromDatabase(data, activeWordText) {
+export function getFoundWordFromDatabase(data, activeWordText) {
     switch (appState.mode) {
         case 'Default':
             return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
@@ -262,18 +262,13 @@ export function initializeInputFieldAndHintButton(database) {
             if (appState.countHelpButtonPressed === 0) {
                 translateWord.style.color = '#1DB954';
                 
-                if (appState.mode === 'Default') {
-                    handleDefaultMode(foundWord);
-                } else if (appState.mode === 'Reverse') {
-                    handleReverseMode(foundWord);
-                } else if (appState.mode === 'Mixed') {
-                    handleMixedMode(foundWord);
-                } else if (appState.mode === 'Phonetic') {
-                    handlePhoneticMode(foundWord);
-                } else if (appState.mode === 'Time Challenge') {
-                    handleTimeChallengeMode(foundWord);
-                } else if (appState.mode === 'Missing Letters') {
-                    handleMissingLettersMode(foundWord);
+                switch(appState.mode) {
+                    case 'Default': handleDefaultMode(foundWord); break;
+                    case 'Reverse': handleReverseMode(foundWord); break;
+                    case 'Mixed': handleMixedMode(foundWord); break;
+                    case 'Phonetic': handlePhoneticMode(foundWord); break;
+                    case 'Time Challenge': handleTimeChallengeMode(foundWord); break;
+                    case 'Missing Letters': handleMissingLettersMode(foundWord); break;
                 }
            
                 console.log('help-btn click');
@@ -337,19 +332,14 @@ export function initializeInputFieldAndHintButton(database) {
 
                 if (foundWord) {
                     var correctAnswer = '';
-
-                    if (appState.mode === 'Default') {
-                        correctAnswer = foundWord.translation;
-                    } else if (appState.mode === 'Reverse') {
-                        correctAnswer = [foundWord.word];
-                    } else if (appState.mode === 'Mixed') {
-                        correctAnswer = appState.handlerForMixedMode ? foundWord.translation : [foundWord.word];
-                    } else if (appState.mode === 'Phonetic') {
-                        correctAnswer = foundWord.translation;
-                    } else if (appState.mode === 'Time Challenge') {
-                        correctAnswer = foundWord.translation;
-                    } else if (appState.mode === 'Missing Letters') {
-                        correctAnswer = [foundWord.word];
+                    
+                    switch(appState.mode) {
+                        case 'Default': correctAnswer = foundWord.translation; break;
+                        case 'Reverse': correctAnswer = [foundWord.word]; break;
+                        case 'Mixed': correctAnswer = appState.handlerForMixedMode ? foundWord.translation : [foundWord.word]; break;
+                        case 'Phonetic': correctAnswer = foundWord.translation; break;
+                        case 'Time Challenge': correctAnswer = foundWord.translation; break;
+                        case 'Missing Letters': correctAnswer = [foundWord.word]; break;
                     }
 
                     console.log('Input:', replaceCharacter(inputField.value));
@@ -417,24 +407,24 @@ export function replaceCurrentWord(data) {
     const randomWord = filteredData[Math.floor(Math.random() * filteredData.length)];
 
     if (randomWord) {
-        if (appState.mode === 'Default') {
-            replaceWordDefaultMode(randomWord);
-        } else if (appState.mode === 'Reverse') {
-            replaceWordReverseMode(randomWord);
-        } else if (appState.mode === 'Mixed') {
-            replaceWordMixedMode(randomWord);
-        } else if (appState.mode === 'Phonetic') {
-            replaceWordPhoneticMode(randomWord);
-        } else if (appState.mode === 'Time Challenge') {
-            replaceWordTimeChallengeMode(randomWord);
-        } else if (appState.mode === 'Missing Letters') {
-            replaceWordMissingLettersMode(randomWord);
+        
+        switch(appState.mode) {
+            case 'Default': replaceWordDefaultMode(randomWord); break;
+            case 'Reverse': replaceWordReverseMode(randomWord); break;
+            case 'Mixed': replaceWordMixedMode(randomWord); break;
+            case 'Phonetic': replaceWordPhoneticMode(randomWord); break;
+            case 'Time Challenge': replaceWordTimeChallengeMode(randomWord); break;
+            case 'Missing Letters': replaceWordMissingLettersMode(randomWord); break;
         }
 
         inputField.value = ''; 
-        translateWord.textContent = ''; 
+        Array.isArray(randomWord.translation)
+            ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
+            : translateWord.textContent = toLowerCaseAll(randomWord.translation);
         appState.countVoiceoverButtonPressed = true;
+
         console.log('New word:', randomWord.word);
+        console.log('New translation: ', randomWord.translation);
     }
 }
 

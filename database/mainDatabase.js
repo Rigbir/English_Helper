@@ -1,6 +1,7 @@
 import { elements } from "../domElements.js";
 import { appState } from "../appState.js";
-import { toLowerCaseAll } from "../utils.js";
+import { replaceCharacter, toLowerCaseAll } from "../utils.js";
+import { replaceCurrentWord } from "../ui.js";
 
 export function initializeMainDatabase(){
     const { inputField,
@@ -254,8 +255,8 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
                     console.log("FOURTH MODE");
                 } else if (appState.mode === 'Time Challenge') {
-                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
                     const wordContainer = document.querySelector('.word-container');
+                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
 
                     appState.soundTimeChallenge.pause();
                     appState.soundTimeChallenge.currentTime = 0;
@@ -264,9 +265,12 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     Array.isArray(word.translation)
                         ? translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation"
                         : translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"
-        
+                  
                     appState.soundTimeChallenge.addEventListener('ended', () => {
                         console.log('SOUND ENDED');
+                        console.log('ACTIVE WORD: ', activeWord);
+                        console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
+
                         wordContainer.classList.add('show-translate');
                         appState.countHelpButtonPressed = 1;
                     });
