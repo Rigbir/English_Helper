@@ -44,20 +44,28 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
             const data = getAllRequest.result;
 
             let wordText = document.querySelector('.word').textContent;
+            const phoneticVoiceButton = document.getElementById('Phonetic-voice-btn');
             wordContainer.classList.remove('show-translate');
             appState.countHelpButtonPressed = 0;
             
+            if (data.length === 0) {
+                console.warn("No words available in theme:", selectedTheme);
+                activeWord.textContent = "No words available";
+                inputField.style.display = "none";
+                return;
+            }
+
             if (appState.mode === 'Time Challenge') {
                 appState.soundTimeChallenge.pause();
                 appState.soundTimeChallenge.currentTime = 0;
                 appState.soundTimeChallenge.play();
             }
 
-            if (data.length === 0) {
-                console.warn("No words available in theme:", selectedTheme);
-                activeWord.textContent = "No words available";
-                inputField.style.display = "none";
-                return;
+            if (appState.mode === 'Phonetic') {
+                phoneticVoiceButton.classList.add('pulse-animation');
+                setTimeout(() => {
+                    phoneticVoiceButton.classList.remove('pulse-animation');
+                }, 1000);
             }
 
             console.log('active word: ', wordText);

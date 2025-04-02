@@ -218,9 +218,9 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
 
                     const parantClassWord = document.querySelector('.word-in-container');
 
-                    const PhoneticVoiceButton = document.createElement('button');
-                    PhoneticVoiceButton.id = 'Phonetic-voice-btn';
-                    PhoneticVoiceButton.classList.add('icon-btn');
+                    const phoneticVoiceButton = document.createElement('button');
+                    phoneticVoiceButton.id = 'Phonetic-voice-btn';
+                    phoneticVoiceButton.classList.add('icon-btn');
 
                     const img = document.createElement('img');
                     img.src = 'image/sound.png';
@@ -228,10 +228,15 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     img.draggable = false;
                     img.style.display = 'block';
         
-                    PhoneticVoiceButton.appendChild(img);
-                    parantClassWord.appendChild(PhoneticVoiceButton);
+                    phoneticVoiceButton.appendChild(img);
+                    parantClassWord.appendChild(phoneticVoiceButton);
+
+                    phoneticVoiceButton.classList.add('pulse-animation');
+                    setTimeout(() => {
+                        phoneticVoiceButton.classList.remove('pulse-animation');
+                    }, 1000);
                   
-                    PhoneticVoiceButton.addEventListener('click', () => {
+                    phoneticVoiceButton.addEventListener('click', () => {
                         if (window.speechSynthesis) {
                             const wordElement = document.querySelector('.word');
                             if (!wordElement || !wordElement.textContent.trim()){

@@ -13,4 +13,3 @@ export const appState = {
     soundTimeChallenge: new Audio('sound/TimeChallenge.mp3'),
     originalWord: '',
 };
-

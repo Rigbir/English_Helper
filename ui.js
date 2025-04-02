@@ -297,6 +297,7 @@ export function initializeInputFieldAndHintButton(database) {
     appState.inputFieldClickHandler = (event) => {
         console.log('Event listener added');
         selectedTheme = textFieldTheme.value;
+        const phoneticVoiceButton = document.getElementById('Phonetic-voice-btn');
 
         if (event.key === 'Enter'){
             inputField.value = toLowerCaseAll(inputField.value);
@@ -356,6 +357,13 @@ export function initializeInputFieldAndHintButton(database) {
                             sound.pause();
                             sound.currentTime = 0;
                             sound.play();
+                        }
+
+                        if (appState.mode === 'Phonetic') {
+                            phoneticVoiceButton.classList.add('pulse-animation');
+                            setTimeout(() => {
+                                phoneticVoiceButton.classList.remove('pulse-animation');
+                            }, 1000);
                         }
 
                         replaceCurrentWord(data);
@@ -516,13 +524,6 @@ export function playWordPronunciation() {
             appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
             speechSynthesis.speak(utterance);
             console.log(wordElement);
-
-            // FOR PHONETIC
-            // button.classList.add('pulsing');
-
-            // utterance.onend = () => {
-            //     button.classList.remove('pulsing');
-            // };
         }
     })
 }
