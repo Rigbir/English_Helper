@@ -8,6 +8,7 @@ import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.j
 import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
 import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMode.js';
 import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
+import { handleMissingLettersMode, replaceWordMissingLettersMode } from './modes/MissingLetters.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -206,6 +207,8 @@ function getFoundWordFromDatabase(data, activeWordText) {
             return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
         case 'Time Challenge':
             return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
+        case 'Missing Letters':
+            return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
     }
     return null;
 }
@@ -239,7 +242,14 @@ export function initializeInputFieldAndHintButton(database) {
         
         getAllRequest.onsuccess = () => {
             const data = getAllRequest.result;
-            const activeWordText = activeWord?.textContent?.trim();
+            
+            let activeWordText = '';
+        
+            appState.mode === 'Missing Letters'
+                ? activeWordText = appState.originalWord
+                : activeWordText = activeWord?.textContent?.trim()
+            
+            console.log('ACTIVE WORD: ', activeWordText);
 
             let foundWord = getFoundWordFromDatabase(data, activeWordText);
 
@@ -262,6 +272,8 @@ export function initializeInputFieldAndHintButton(database) {
                     handlePhoneticMode(foundWord);
                 } else if (appState.mode === 'Time Challenge') {
                     handleTimeChallengeMode(foundWord);
+                } else if (appState.mode === 'Missing Letters') {
+                    handleMissingLettersMode(foundWord);
                 }
            
                 console.log('help-btn click');
@@ -303,7 +315,10 @@ export function initializeInputFieldAndHintButton(database) {
 
             getAllRequest.onsuccess = () => {
                 const data = getAllRequest.result;
-                const activeWordText = activeWord?.textContent?.trim();
+                let activeWordText = '';
+                appState.mode === 'Missing Letters'
+                    ? activeWordText = appState.originalWord
+                    : activeWordText = activeWord?.textContent?.trim()
                 console.log('ACTIVE WORD: ', activeWord);
 
                 let foundWord = getFoundWordFromDatabase(data, activeWordText);
@@ -333,6 +348,8 @@ export function initializeInputFieldAndHintButton(database) {
                         correctAnswer = foundWord.translation;
                     } else if (appState.mode === 'Time Challenge') {
                         correctAnswer = foundWord.translation;
+                    } else if (appState.mode === 'Missing Letters') {
+                        correctAnswer = [foundWord.word];
                     }
 
                     console.log('Input:', replaceCharacter(inputField.value));
@@ -410,6 +427,8 @@ export function replaceCurrentWord(data) {
             replaceWordPhoneticMode(randomWord);
         } else if (appState.mode === 'Time Challenge') {
             replaceWordTimeChallengeMode(randomWord);
+        } else if (appState.mode === 'Missing Letters') {
+            replaceWordMissingLettersMode(randomWord);
         }
 
         inputField.value = ''; 

@@ -1,7 +1,6 @@
 import { elements } from "../domElements.js";
 import { appState } from "../appState.js";
 import { toLowerCaseAll } from "../utils.js";
-import { playWordPronunciation } from "../ui.js";
 
 export function initializeMainDatabase(){
     const { inputField,
@@ -118,6 +117,19 @@ export function loadJsonFileIntoDB(database) {
     .catch(error => {
         console.error('Failed to load JSON', error);
     });
+}
+
+export function hideLetters(word) {
+    if (word.length <= 2) return word;
+
+    let wordArray = word.split('');
+    let hiddenCount = Math.max(1, Math.floor(word.length * 0.3));
+
+    let indices = [...Array(word.length - 2).keys()].map(i => i + 1);
+    indices = indices.sort(() => Math.random() - 0.5).slice(0, hiddenCount);
+    indices.forEach(index => wordArray[index] = '_');
+
+    return wordArray.join('');
 }
 
 export async function fetchRandomWordFromDatabase(database, theme, autoSetWord = true) {
@@ -259,6 +271,15 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                         appState.countHelpButtonPressed = 1;
                     });
                     console.log("FIFTH MODE");
+                } else if (appState.mode === 'Missing Letters') {
+                    let originalWord = Array.isArray(word.word)
+                        ? toLowerCaseAll(word.word[Math.floor(Math.random() * word.translation.length)]) || "No data"
+                        : toLowerCaseAll(word.word) || "No data"
+
+                    activeWord.textContent = hideLetters(originalWord);
+                    translateWord.textContent = originalWord;
+                    appState.originalWord = originalWord;
+                    console.log("SIXTH MODE");
                 }
             };
     
