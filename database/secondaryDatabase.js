@@ -60,18 +60,19 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
                 appState.soundTimeChallenge.currentTime = 0;
                 appState.soundTimeChallenge.play();
             }
-
             if (appState.mode === 'Phonetic') {
                 phoneticVoiceButton.classList.add('pulse-animation');
                 setTimeout(() => {
                     phoneticVoiceButton.classList.remove('pulse-animation');
                 }, 1000);
             }
+            if (appState.mode === 'Missing Letters') {
+                wordText = appState.originalWord;
+            }
 
             console.log('active word: ', wordText);
             console.log('original word in store: ', appState.originalWord);
 
-            wordText = appState.originalWord;
             let foundWord = getFoundWordFromDatabase(data, wordText);
             console.log('FOUND WORD: ', foundWord);
             
