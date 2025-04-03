@@ -127,6 +127,8 @@ export function hideLetters(word) {
     let hiddenCount = Math.max(1, Math.floor(word.length * 0.4));
 
     let indices = [...Array(word.length - 2).keys()].map(i => i + 1);
+    indices = indices.filter(i => wordArray[i] !== ' ');
+
     indices = indices.sort(() => Math.random() - 0.5).slice(0, hiddenCount);
     indices.forEach(index => wordArray[index] = '_');
 
