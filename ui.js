@@ -312,6 +312,7 @@ export function initializeInputFieldAndHintButton(database) {
             getAllRequest.onsuccess = () => {
                 const data = getAllRequest.result;
                 let activeWordText = '';
+
                 appState.mode === 'Missing Letters'
                     ? activeWordText = appState.originalWord
                     : activeWordText = activeWord?.textContent?.trim()
@@ -370,7 +371,16 @@ export function initializeInputFieldAndHintButton(database) {
                         moveWordToLearnedForThisSection(database, selectedTheme, 'Correct', foundWord.word);
                         
                         if (data.length === 1) {
-                            activeWordText.textContent = 'No words available';
+                            console.log("ACTIVE WORD: ", activeWord);
+
+                            if (appState.mode === 'Missing Letters')
+                                activeWordText = appState.originalWord
+                            console.log("ACTIVE WORD: ", activeWord);
+
+
+                            activeWord.textContent = 'No words available';
+                            console.log("ACTIVE WORD: ", activeWord);
+
                             inputField.style.display = 'none';
                             inputField.value = '';
                             console.log('END OF WORDS IN THEME');
@@ -437,7 +447,7 @@ export function replaceCurrentWord(data) {
         Array.isArray(randomWord.translation)
             ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
             : translateWord.textContent = toLowerCaseAll(randomWord.translation);
-            
+
         appState.countVoiceoverButtonPressed = true;
 
         console.log('New word:', randomWord.word);
