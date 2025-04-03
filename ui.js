@@ -420,7 +420,6 @@ export function replaceCurrentWord(data) {
          item.word.trim().toLowerCase() !== originalWordText
      );
     
-     //const filteredData = data.filter(item => item.word !== activeWord.textContent.trim().toLowerCase());
     const randomWord = filteredData[Math.floor(Math.random() * filteredData.length)];
 
     if (randomWord) {
@@ -465,7 +464,8 @@ export function generateNewRandomWord(database) {
         const store = transaction.objectStore(selectedTheme);
         const getAllRequest = store.getAll();
     
-        if (inputField.style.display === 'none') { 
+        if (inputField.style.display === 'none') {
+            inputField.style.visibility = 'hidden'; 
             inputField.style.display = 'block';
         }
 

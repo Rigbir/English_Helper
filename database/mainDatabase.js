@@ -32,11 +32,11 @@ export function initializeMainDatabase(){
             if (isEmpty) {
                 console.log("IndexedDB is empty, loading JSON");
                 activeWord.innerHTML = "Enjoy<br>and<br>Learn!";
-                inputField.style.display = "none"; 
+                inputField.style.visibility = 'hidden'; 
 
                 loadJsonFileIntoDB(database);
             } else {
-                inputField.style.display = "block";
+                inputField.style.visibility = 'visible';
                 console.log("IndexedDB already contains data");
 
                 selectedTheme = textFieldTheme.value;
@@ -160,9 +160,11 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
     
                 if (!data || data.length === 0) {
                     activeWord.textContent = "No words available";
-                    inputField.style.display = "none";
+                    inputField.style.display = 'none';
                     console.warn("No data in IndexedDB!");
                     return;
+                } else {
+                    inputField.style.display = 'block';
                 }
     
                 const word = data[Math.floor(Math.random() * data.length)];
@@ -422,7 +424,7 @@ export function restoreWordToMainDatabase(databaseWords, databaseLearned, word){
             
                 checkRequest.onsuccess = () => {
                     if (checkRequest.result > 0) {
-                        inputField.style.display = "block";
+                        inputField.style.visibility = 'visible';
                     }
                 };
             };
@@ -435,20 +437,3 @@ export function restoreWordToMainDatabase(databaseWords, databaseLearned, word){
             console.log(error);
         });    
 }
-// FOUND WORD:  {word: 'corridor', translation: Array(1), theme: 'House'}theme: "House"translation: ['коридор']word: "corridor"[[Prototype]]: Object
-// mainDatabase.js:390 Word 'corridor' successfully deleted from theme 'House'
-// MissingLetters.js:22 ORIGINAL WORD:  corridor
-// ui.js:434 New word: corridor
-// ui.js:435 New translation:  ['коридор']
-// secondaryDatabase.js:113 Word 'corridor' successfully added to learned under theme 'House'.
-// secondaryDatabase.js:42 click plus
-// secondaryDatabase.js:73 active word:  corridor
-// secondaryDatabase.js:74 original word in store:  corridor
-// secondaryDatabase.js:77 FOUND WORD:  undefined
-// secondaryDatabase.js:87 Word not found
-// secondaryDatabase.js:42 click plus
-// secondaryDatabase.js:73 active word:  corridor
-// secondaryDatabase.js:74 original word in store:  corridor
-// secondaryDatabase.js:77 FOUND WORD:  undefined
-// secondaryDatabase.js:87 Word not found
-// secondaryDatabase.js:42 

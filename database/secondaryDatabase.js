@@ -51,14 +51,16 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
             appState.countHelpButtonPressed = 0;
             
             if (data.length === 0) {
-                console.warn("No words available in theme:", selectedTheme);
-                activeWord.textContent = "No words available";
-                inputField.style.display = "none";
+                console.warn('No words available in theme:', selectedTheme);
+                activeWord.textContent = 'No words available';
+                inputField.style.visibility = 'hidden';
+                inputField.style.display = 'none';
                 return;
             }
             if (data.length === 1) {
                 activeWord.textContent = 'No words available';
                 inputField.style.display = 'none';
+                inputField.style.visibility = 'hidden';
                 inputField.value = '';
                 console.log('END OF WORDS IN THEME');
             }
