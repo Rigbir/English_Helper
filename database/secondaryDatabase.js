@@ -56,6 +56,12 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
                 inputField.style.display = "none";
                 return;
             }
+            if (data.length === 1) {
+                activeWord.textContent = 'No words available';
+                inputField.style.display = 'none';
+                inputField.value = '';
+                console.log('END OF WORDS IN THEME');
+            }
 
             if (appState.mode === 'Time Challenge') {
                 appState.soundTimeChallenge.pause();

@@ -371,16 +371,7 @@ export function initializeInputFieldAndHintButton(database) {
                         moveWordToLearnedForThisSection(database, selectedTheme, 'Correct', foundWord.word);
                         
                         if (data.length === 1) {
-                            console.log("ACTIVE WORD: ", activeWord);
-
-                            if (appState.mode === 'Missing Letters')
-                                activeWordText = appState.originalWord
-                            console.log("ACTIVE WORD: ", activeWord);
-
-
                             activeWord.textContent = 'No words available';
-                            console.log("ACTIVE WORD: ", activeWord);
-
                             inputField.style.display = 'none';
                             inputField.value = '';
                             console.log('END OF WORDS IN THEME');
