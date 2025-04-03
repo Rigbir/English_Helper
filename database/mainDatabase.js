@@ -161,10 +161,12 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 if (!data || data.length === 0) {
                     activeWord.textContent = "No words available";
                     inputField.style.display = 'none';
+                    inputField.style.visibility = 'hidden';
                     console.warn("No data in IndexedDB!");
                     return;
                 } else {
                     inputField.style.display = 'block';
+                    inputField.style.visibility = 'visible';
                 }
     
                 const word = data[Math.floor(Math.random() * data.length)];
