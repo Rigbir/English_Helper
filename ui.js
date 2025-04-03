@@ -411,7 +411,15 @@ export function replaceCurrentWord(data) {
           inputField
      } = elements;
 
-    const filteredData = data.filter(item => item.word !== activeWord.textContent);
+     const activeWordText = activeWord.textContent.trim().toLowerCase();
+     const originalWordText = appState.originalWord?.trim().toLowerCase();
+ 
+     const filteredData = data.filter(item => 
+         item.word.trim().toLowerCase() !== activeWordText &&
+         item.word.trim().toLowerCase() !== originalWordText
+     );
+    
+     //const filteredData = data.filter(item => item.word !== activeWord.textContent.trim().toLowerCase());
     const randomWord = filteredData[Math.floor(Math.random() * filteredData.length)];
 
     if (randomWord) {
@@ -429,6 +437,7 @@ export function replaceCurrentWord(data) {
         Array.isArray(randomWord.translation)
             ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
             : translateWord.textContent = toLowerCaseAll(randomWord.translation);
+            
         appState.countVoiceoverButtonPressed = true;
 
         console.log('New word:', randomWord.word);

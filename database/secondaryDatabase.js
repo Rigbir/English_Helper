@@ -44,6 +44,8 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
             const data = getAllRequest.result;
 
             let wordText = document.querySelector('.word').textContent;
+            console.log("WORD TEXT: ", wordText);
+
             const phoneticVoiceButton = document.getElementById('Phonetic-voice-btn');
             wordContainer.classList.remove('show-translate');
             appState.countHelpButtonPressed = 0;
@@ -80,7 +82,18 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
                 removeWordFromMainDatabase(databaseWords, selectedTheme, foundWord.word)
                     .then(() => {
                         transferWordToLearnedList(databaseLearned, foundWord, selectedTheme);
-                        replaceCurrentWord(data);
+
+                        return new Promise((resolve, reject) => {
+                            const transaction = databaseWords.transaction(selectedTheme, 'readonly');
+                            const store = transaction.objectStore(selectedTheme);
+                            const getAllRequest = store.getAll();
+
+                            getAllRequest.onsuccess = () => resolve(getAllRequest.result);
+                            getAllRequest.onerror = () => reject('Failed to fetch updated words list');
+                        });
+                    })
+                    .then(updateData => {
+                        replaceCurrentWord(updateData);
                     })
                     .catch(error => console.error("Error deleting word:", error));
                 } else {

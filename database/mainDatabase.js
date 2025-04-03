@@ -435,3 +435,20 @@ export function restoreWordToMainDatabase(databaseWords, databaseLearned, word){
             console.log(error);
         });    
 }
+// FOUND WORD:  {word: 'corridor', translation: Array(1), theme: 'House'}theme: "House"translation: ['коридор']word: "corridor"[[Prototype]]: Object
+// mainDatabase.js:390 Word 'corridor' successfully deleted from theme 'House'
+// MissingLetters.js:22 ORIGINAL WORD:  corridor
+// ui.js:434 New word: corridor
+// ui.js:435 New translation:  ['коридор']
+// secondaryDatabase.js:113 Word 'corridor' successfully added to learned under theme 'House'.
+// secondaryDatabase.js:42 click plus
+// secondaryDatabase.js:73 active word:  corridor
+// secondaryDatabase.js:74 original word in store:  corridor
+// secondaryDatabase.js:77 FOUND WORD:  undefined
+// secondaryDatabase.js:87 Word not found
+// secondaryDatabase.js:42 click plus
+// secondaryDatabase.js:73 active word:  corridor
+// secondaryDatabase.js:74 original word in store:  corridor
+// secondaryDatabase.js:77 FOUND WORD:  undefined
+// secondaryDatabase.js:87 Word not found
+// secondaryDatabase.js:42 

@@ -15,6 +15,11 @@ export function handleMissingLettersMode(foundWord) {
 export function replaceWordMissingLettersMode(randomWord) {
     const { activeWord, translateWord } = elements;
 
+    if (randomWord.word.trim().toLowerCase() === appState.originalWord?.trim().toLowerCase()) {
+        console.warn("Random word matches the original word. Skipping...");
+        return; 
+    }
+
     let originalWord = Array.isArray(randomWord.word)
         ? toLowerCaseAll(randomWord.word[Math.floor(Math.random() * randomWord.translation.length)])
         : toLowerCaseAll(randomWord.word)

@@ -1,5 +1,6 @@
 import { toLowerCaseAll } from "../utils.js";
 import { elements } from "../domElements.js";
+import { appState } from "../appState.js";
 
 export function handleDefaultMode(foundWord) { 
     const { translateWord } = elements;
@@ -12,6 +13,11 @@ export function handleDefaultMode(foundWord) {
 
 export function replaceWordDefaultMode(randomWord) {
     const { activeWord } = elements;
+
+    if (randomWord.word.trim().toLowerCase() === appState.originalWord?.trim().toLowerCase()) {
+        console.warn("Random word matches the original word. Skipping...");
+        return; 
+    }
 
     activeWord.textContent = toLowerCaseAll(randomWord.word);
 }
