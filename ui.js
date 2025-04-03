@@ -576,8 +576,8 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
         return;
     }
     
-    listButton.addEventListener('click', () => {
-        loadLearnedWordsFromDatabase(databaseWords, databaseLearned, listWordsContainer);
+    listButton.addEventListener('click', async () => {
+        await loadLearnedWordsFromDatabase(databaseWords, databaseLearned, listWordsContainer);
         mainWindow.classList.add('hidden');
         listWindow.classList.remove('hidden');
     });
