@@ -10,7 +10,8 @@ import { displayAppInfoPopup,
          openSecondaryListWindow,
          selectedThemePopup,
          selectedTimePopup,
-         selectedModePopup
+         selectedModePopup,
+         selectedAchievementPopup
 } from './ui.js';
 import { setupStorageListeners } from './storage.js';
 
@@ -21,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedThemePopup();
     selectedTimePopup();
     selectedModePopup();
+    selectedAchievementPopup();
 
     initializeThemeSettings();
     displayAppInfoPopup();

@@ -32,6 +32,13 @@ export const elements = {
     allModeSelections : document.querySelectorAll('.popup .mode'),
 
     voiceButton : document.getElementById('sound-btn'),
+
+    achievementButton : document.getElementById('achievement-btn'),
+    achievementPopup : document.getElementById('achievement-popup'),
+    achievementOverlay : document.getElementById('overlay'),
+    achievementCloseButtonOverlay : document.getElementById('close-achievement-popup'),
+    
+
     addToListButton : document.getElementById('plus-btn'),
 
     //Theme Buttons

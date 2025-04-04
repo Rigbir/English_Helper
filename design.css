@@ -605,14 +605,14 @@ border: 2px solid grey;
 
 .icon-container {
     display: flex;
-    gap: 23px;
+    gap: 12px;
     justify-content: center;
     margin-top: 21px;
 }
 
 .icon-btn {
-    width: 40px;
-    height: 35px;
+    width: 41px;
+    height: 37px;
     border: none;
     border-radius: 10px;
     background-color: #dcc788;

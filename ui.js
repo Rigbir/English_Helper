@@ -145,6 +145,30 @@ export function selectedModePopup() {
     });
 }
 
+export function selectedAchievementPopup() {
+    const { achievementButton,
+            achievementPopup,
+            achievementOverlay,
+            achievementCloseButtonOverlay
+          } = elements;
+
+    achievementButton.addEventListener('click', () => {
+        console.log("ACHIEVEMENT BUTTON CLICK");
+        achievementPopup.style.display = 'block';
+        achievementOverlay.style.display = 'block';
+    });
+
+    achievementCloseButtonOverlay.addEventListener('click', () => {
+        achievementPopup.style.display = 'none';
+        achievementOverlay.style.display = 'none';
+    });
+
+    achievementOverlay.addEventListener('click', () => {
+        achievementPopup.style.display = 'none';
+        achievementOverlay.style.display = 'none';
+    });
+}
+
 export function initializeNotificationSettings() {
     const { onOffToggleState,
             onOffToggleBackground
