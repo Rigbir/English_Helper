@@ -153,6 +153,12 @@ export function selectedAchievementPopup(databaseLearned) {
           } = elements;
 
     achievementButton.addEventListener('click', () => {
+        const progressFills = document.querySelectorAll('.progress-fill');
+        progressFills.forEach(bar => {
+            bar.dataset.progress = 0; 
+            bar.style.width = `${0}%`;
+        });
+        
         getSecondaryResultAchievement(databaseLearned);
         achievementPopup.style.display = 'block';
         achievementOverlay.style.display = 'block';
