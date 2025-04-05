@@ -37,7 +37,6 @@ export const elements = {
     achievementPopup : document.getElementById('achievement-popup'),
     achievementOverlay : document.getElementById('overlay'),
     achievementCloseButtonOverlay : document.getElementById('close-achievement-popup'),
-    
 
     addToListButton : document.getElementById('plus-btn'),
 

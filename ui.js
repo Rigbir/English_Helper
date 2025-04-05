@@ -149,7 +149,7 @@ export function selectedAchievementPopup(databaseLearned) {
     const { achievementButton,
             achievementPopup,
             achievementOverlay,
-            achievementCloseButtonOverlay
+            achievementCloseButtonOverlay,
           } = elements;
 
     achievementButton.addEventListener('click', () => {
@@ -159,11 +159,23 @@ export function selectedAchievementPopup(databaseLearned) {
     });
 
     achievementCloseButtonOverlay.addEventListener('click', () => {
+        const progressFills = document.querySelectorAll('.progress-fill');
+        progressFills.forEach(bar => {
+            bar.dataset.progress = 0; 
+            bar.style.width = `${0}%`;
+        });
+
         achievementPopup.style.display = 'none';
         achievementOverlay.style.display = 'none';
     });
 
     achievementOverlay.addEventListener('click', () => {
+        const progressFills = document.querySelectorAll('.progress-fill');
+        progressFills.forEach(bar => {
+            bar.dataset.progress = 0; 
+            bar.style.width = `${0}%`;
+        });
+
         achievementPopup.style.display = 'none';
         achievementOverlay.style.display = 'none';
     });
@@ -198,7 +210,6 @@ export function initializeNotificationSettings() {
         console.log(`State changed: ${isState ? 'Enabled' : 'Disabled'}`);
         chrome.storage.local.set({ extensionState: isState });
         
-        // Send message to background.js
         chrome.runtime.sendMessage({ action: 'toggleBackground', state: isState });
     });
 }
@@ -657,14 +668,40 @@ export function getSecondaryResultAchievement(databaseLearned) {
         for (let i in countWordsOfThemeByList){
             console.log('COUNT FIRST', countWordsOfThemeByList[i]);
             console.log('COUNT SECOND', countOnStart[i]);
-            let temp = ((countWordsOfThemeByList[i] / countOnStart[i]) * 100).toFixed(2);
+            let temp = ((countWordsOfThemeByList[i] / countOnStart[i]) * 100).toFixed(1);
             console.log("TEMP: ", temp);
             percentLearnedWords[i] = temp;
         }
+
+        updateProgressBar(percentLearnedWords);
     
         console.log("PERCENT WORDS: ", percentLearnedWords);
     }
 
     getAllRequest.onerror = (event) => {
         console.error("Error opening database 'learned'", event.target.error);    }
+}
+
+function updateProgressBar(percentLearnedWords) {
+    for (let theme in percentLearnedWords) {
+        const container = document.querySelector(`.theme-progress[data-theme="${theme}"]`);
+        if (container) {
+            const progressFills = container.querySelectorAll('.progress-fill');
+            const progressText = container.querySelector('.progress-text-current');
+            const progressValue = percentLearnedWords[theme];
+
+            if (progressFills.length > 0 && progressText) {
+                progressFills.forEach(bar => {
+                    setTimeout(() => {
+                        bar.dataset.progress = progressValue; 
+                        bar.style.width = `${progressValue}%`;
+                    }, 100);
+                });
+
+                progressText.textContent = `${progressValue}%`;  
+            } else {
+                console.error('Elements not found: progressFills or progressText is null');
+            }
+        }
+    }
 }
