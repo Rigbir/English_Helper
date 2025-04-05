@@ -3,7 +3,7 @@ import { appState } from "../appState.js";
 import { replaceCharacter, toLowerCaseAll } from "../utils.js";
 import { replaceCurrentWord } from "../ui.js";
 
-export function initializeMainDatabase(){
+export function initializeMainDatabase() {
     const { inputField,
             activeWord,
           } = elements;
@@ -156,6 +156,7 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
             const transaction = database.transaction(theme, "readonly");
             const store = transaction.objectStore(theme);
             const getAllRequest = store.getAll();
+            console.log('database: ', getAllRequest);
     
             getAllRequest.onsuccess = () => {
                 const data = getAllRequest.result;

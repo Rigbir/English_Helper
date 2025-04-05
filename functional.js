@@ -8,6 +8,7 @@ import { displayAppInfoPopup,
          playWordPronunciation, 
          saveNotificationTime, 
          openSecondaryListWindow,
+         getSecondaryResultAchievement,
          selectedThemePopup,
          selectedTimePopup,
          selectedModePopup,
@@ -22,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedThemePopup();
     selectedTimePopup();
     selectedModePopup();
-    selectedAchievementPopup();
 
     initializeThemeSettings();
     displayAppInfoPopup();
@@ -41,8 +41,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const databaseLearned = event.target.result;
             console.log("Database 'learned_words' successfully opened", databaseLearned);
 
+            selectedAchievementPopup(databaseLearned); 
             addWordToSecondaryDatabase(databaseWords, databaseLearned);
             openSecondaryListWindow(databaseWords, databaseLearned);
+            getSecondaryResultAchievement(databaseLearned);
         };
         
         requestList.onerror = (error) => {

@@ -145,7 +145,7 @@ export function selectedModePopup() {
     });
 }
 
-export function selectedAchievementPopup() {
+export function selectedAchievementPopup(databaseLearned) {
     const { achievementButton,
             achievementPopup,
             achievementOverlay,
@@ -153,7 +153,7 @@ export function selectedAchievementPopup() {
           } = elements;
 
     achievementButton.addEventListener('click', () => {
-        console.log("ACHIEVEMENT BUTTON CLICK");
+        getSecondaryResultAchievement(databaseLearned);
         achievementPopup.style.display = 'block';
         achievementOverlay.style.display = 'block';
     });
@@ -616,4 +616,55 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
         appState.countHelpButtonPressed = 0;
         fetchRandomWordFromDatabase(databaseWords, selectedTheme);
     });
+}
+
+export function getSecondaryResultAchievement(databaseLearned) {
+    let countOnStart = {
+        'AllWords': 6882,
+        'Human': 115,
+        'Food': 113,
+        'House': 31,
+        'Sport': 86,
+        'Profession': 49,
+        'Money': 124,
+        'Cinema': 140,
+        'Nature': 206,
+        'Traveling': 123,
+        'IT': 42
+    }
+    
+    let countWordsOfThemeByList = Object.fromEntries(
+        Object.keys(countOnStart).map(key => [key, 0])
+    );
+
+    const transaction = databaseLearned.transaction('learned', 'readonly');
+    const store = transaction.objectStore('learned');
+    const getAllRequest = store.getAll();
+    console.log('WORD IN LIST: ', getAllRequest);
+
+    getAllRequest.onsuccess = () => {
+        const data = getAllRequest.result;
+
+        data.forEach(item => {
+            if (countWordsOfThemeByList.hasOwnProperty(item.theme)) {
+                ++countWordsOfThemeByList[item.theme];
+            }
+            console.log('ITEM IN LEARNED: ', item.theme);
+        });
+
+        let percentLearnedWords = {};
+    
+        for (let i in countWordsOfThemeByList){
+            console.log('COUNT FIRST', countWordsOfThemeByList[i]);
+            console.log('COUNT SECOND', countOnStart[i]);
+            let temp = ((countWordsOfThemeByList[i] / countOnStart[i]) * 100).toFixed(2);
+            console.log("TEMP: ", temp);
+            percentLearnedWords[i] = temp;
+        }
+    
+        console.log("PERCENT WORDS: ", percentLearnedWords);
+    }
+
+    getAllRequest.onerror = (event) => {
+        console.error("Error opening database 'learned'", event.target.error);    }
 }
