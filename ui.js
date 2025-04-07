@@ -637,7 +637,7 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
 
 export function getSecondaryResultAchievement(databaseLearned) {
     let countOnStart = {
-        'AllWords': 6882,
+        'All Words': 6882,
         'Human': 115,
         'Food': 113,
         'House': 31,
