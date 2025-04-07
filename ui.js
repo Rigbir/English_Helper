@@ -631,7 +631,7 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
         console.log('SELECTED THEME: ', selectedTheme);
         wordContainer.classList.remove('show-translate');
         appState.countHelpButtonPressed = 0;
-        fetchRandomWordFromDatabase(databaseWords, selectedTheme);
+        //fetchRandomWordFromDatabase(databaseWords, selectedTheme);
     });
 }
 
