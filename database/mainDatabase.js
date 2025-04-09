@@ -1,7 +1,7 @@
 import { elements } from "../domElements.js";
 import { appState } from "../appState.js";
 import { replaceCharacter, toLowerCaseAll } from "../utils.js";
-import { replaceCurrentWord } from "../ui.js";
+import { getFoundWordFromDatabase, replaceCurrentWord } from "../ui.js";
 
 export function initializeMainDatabase() {
     const { inputField,
@@ -113,7 +113,7 @@ export function loadJsonFileIntoDB(database) {
                 transaction.onerror = (event) => {
                     console.error(`Transaction error in theme '${theme}':`, event.target.error);
                 };
-            }
+            } 
         });
     })
     .catch(error => {
@@ -121,9 +121,77 @@ export function loadJsonFileIntoDB(database) {
     });
 }
 
+export function loadUploadJsonFileIntoDB(database, jsonData) {
+    if (!database || !database.objectStoreNames) {
+        console.error("Database not properly initialized.");
+        return;
+    }
+    Object.keys(jsonData).forEach(theme => {
+        if (database.objectStoreNames.contains(theme)) {
+            const transaction = database.transaction(theme, "readwrite");
+            const store = transaction.objectStore(theme);
+
+            jsonData[theme].forEach(item => {
+                if (!Array.isArray(item.translation)) {
+                    item.translation = [item.translation];
+                }
+                store.put(item);
+            });
+
+            transaction.oncomplete = () => {
+                console.log(`Data for theme '${theme}' successfully added!`);
+            };
+
+            transaction.onerror = (event) => {
+                console.error(`Transaction error in theme '${theme}':`, event.target.error);
+            };
+        } else {
+            console.log('new json');
+            createNewThemeStore(database, theme, jsonData);
+        }
+    });
+}
+
+function createNewThemeStore(database, theme, jsonData) {
+    const version = database.version + 1;
+    const request = indexedDB.open("words", version);
+
+    request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        console.log('new database: ', db);
+
+        if (!db.objectStoreNames.contains(theme)) {
+            const store = db.createObjectStore(theme, { keyPath: "word" });
+            console.log(`Created new store for theme: '${theme}'`);
+
+            const transaction = event.target.transaction;
+            const storeForNewTheme = transaction.objectStore(theme);
+
+            jsonData[theme].forEach(item => {
+                if (!Array.isArray(item.translation)) {
+                    item.translation = [item.translation];
+                }
+                storeForNewTheme.put(item); 
+            });
+        }
+    };
+
+    request.onsuccess = (event) => {
+        const db = event.target.result;
+        console.log(`Database opened successfully, new store created for theme: '${theme}'`);
+
+        loadUploadJsonFileIntoDB(db, jsonData);  
+    };
+
+    request.onerror = (event) => {
+        console.error('Error opening the database:', event.target.error);
+    };
+}
+
 export function hideLetters(word) {
     if (word.length <= 2) return word;
 
+    word = word.trim().toLowerCase();
     let wordArray = word.split('');
     let hiddenCount = Math.max(1, Math.floor(word.length * 0.4));
 

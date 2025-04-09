@@ -1,7 +1,7 @@
 import { elements } from './domElements.js';
 import { appState } from './appState.js';
 import { toLowerCaseAll, replaceCharacter } from './utils.js';
-import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
+import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase, loadUploadJsonFileIntoDB } from './database/mainDatabase.js';
 import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
 import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.js';
 import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
@@ -287,10 +287,11 @@ export function initializeInputFieldAndHintButton(database) {
             let activeWordText = '';
         
             appState.mode === 'Missing Letters'
-                ? activeWordText = appState.originalWord
-                : activeWordText = activeWord?.textContent?.trim()
+                ? activeWordText = appState.originalWord.trim().toLowerCase()
+                : activeWordText = activeWord?.textContent?.trim().toLowerCase()
             
-            console.log('ACTIVE WORD: ', activeWordText);
+            console.log('ACTIVE WORD:', activeWordText);
+            
 
             let foundWord = getFoundWordFromDatabase(data, activeWordText);
 
@@ -714,4 +715,41 @@ function updateProgressBar(percentLearnedWords) {
             }
         }
     }
+}
+
+export function uploadFile(databaseWords) {
+    const { uploadButton,
+            uploadWindow
+          } = elements;
+    
+    uploadButton.addEventListener('click', () => {
+        uploadWindow.click();
+    });
+
+    uploadWindow.addEventListener('change', (event) => {
+        const files = event.target.files;
+
+        if (files.length > 0) {
+            const file = files[0];
+            console.log('File Name: ', file.name);
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const jsonData = JSON.parse(e.target.result);
+                    console.log('Parsed JSON:', jsonData);
+
+                    const themeName = Object.keys(jsonData);
+                    themeName.forEach(theme => {
+                        console.log('Name of theme: ', theme);
+                    });
+
+                    loadUploadJsonFileIntoDB(databaseWords, jsonData);
+                } catch (err) {
+                    console.error('Wrong parse JSON file:', err);
+                }
+            };
+            reader.readAsText(file);
+        }
+    });
 }

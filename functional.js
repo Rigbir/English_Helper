@@ -12,7 +12,8 @@ import { displayAppInfoPopup,
          selectedThemePopup,
          selectedTimePopup,
          selectedModePopup,
-         selectedAchievementPopup
+         selectedAchievementPopup,
+         uploadFile
 } from './ui.js';
 import { setupStorageListeners } from './storage.js';
 
@@ -35,6 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         generateNewRandomWord(databaseWords);
         initializeInputFieldAndHintButton(databaseWords);
+        uploadFile(databaseWords);
         
         const requestList = indexedDB.open('learned_words', 1);
         requestList.onsuccess = (event) => {

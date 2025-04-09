@@ -66,6 +66,8 @@ export const elements = {
     allTimeSelections : document.querySelectorAll('.popup .time'),
 
     //Footer Button
+    uploadButton : document.querySelector('.upload-btn'),
+    uploadWindow : document.querySelector('.upload-file-window'),
     listButton : document.querySelector('.list-check-btn'),
     returnFromList : document.querySelector('.return-btn'),
     listHorizontalLines : document.querySelectorAll('.list-line'),
