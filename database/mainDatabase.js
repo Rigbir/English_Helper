@@ -16,7 +16,7 @@ export function initializeMainDatabase() {
     request.onupgradeneeded = (event) => {
         const database = event.target.result;
         const jsonThemes = ['All Words', 'Human', 'Food', 'House', 'Sport', 
-                            'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT', 'Correct'];
+                            'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT', 'Idioms', 'Correct'];
 
         jsonThemes.forEach(theme => {
             if (!database.objectStoreNames.contains(theme)) {
@@ -32,6 +32,7 @@ export function initializeMainDatabase() {
             if (isEmpty) {
                 console.log("IndexedDB is empty, loading JSON");
                 activeWord.innerHTML = "Enjoy<br>and<br>Learn!";
+                inputField.style.display = 'none';
                 inputField.style.visibility = 'hidden'; 
 
                 loadJsonFileIntoDB(database);

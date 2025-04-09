@@ -44,6 +44,7 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
             const data = getAllRequest.result;
 
             let wordText = document.querySelector('.word').textContent;
+            wordText = wordText.trim().toLowerCase();
             console.log("WORD TEXT: ", wordText);
 
             const phoneticVoiceButton = document.getElementById('Phonetic-voice-btn');

@@ -605,7 +605,8 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
             wordContainer,
             listButton,
             returnFromList,
-            listWordsContainer
+            listWordsContainer,
+            activeWord
           } = elements;
 
     if (!listButton) {
@@ -631,7 +632,9 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
         console.log('SELECTED THEME: ', selectedTheme);
         wordContainer.classList.remove('show-translate');
         appState.countHelpButtonPressed = 0;
-        //fetchRandomWordFromDatabase(databaseWords, selectedTheme);
+        if (activeWord.textContent === 'No words available') {
+            fetchRandomWordFromDatabase(databaseWords, selectedTheme);
+        }
     });
 }
 
@@ -647,7 +650,8 @@ export function getSecondaryResultAchievement(databaseLearned) {
         'Cinema': 140,
         'Nature': 206,
         'Traveling': 123,
-        'IT': 42
+        'IT': 42,
+        'Idioms': 81
     }
     
     let countWordsOfThemeByList = Object.fromEntries(

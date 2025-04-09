@@ -115,7 +115,7 @@ export function initializeThemeAndTimeSettings() {
         nextThemeButton,
         textFieldTheme,
         ['All Words', 'Human', 'Food', 'House', 'Sport', 
-         'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT'],
+         'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT', 'Idioms'],
         'themeIndex',
         'selectedTheme'
     );
