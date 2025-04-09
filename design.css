@@ -787,7 +787,7 @@ border: 2px solid grey;
 }
 
 .new-learned-word {
-    min-height: 60px;
+    min-height: 80px;
     height: auto;
     display: flex;
     width: 100%;
@@ -801,7 +801,7 @@ border: 2px solid grey;
     width: 150px;
     color: #1a2e3b;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 .learned-translate {
@@ -810,7 +810,7 @@ border: 2px solid grey;
     word-break: break-word;
     color: #1a2e3b;
     font-weight: bold;
-    font-size: 20px;
+    font-size: 18px;
 }
 
 #return-word-btn {
