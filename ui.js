@@ -1,7 +1,7 @@
 import { elements } from './domElements.js';
 import { appState } from './appState.js';
 import { toLowerCaseAll, replaceCharacter } from './utils.js';
-import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase, loadUploadJsonFileIntoDB } from './database/mainDatabase.js';
+import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
 import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
 import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.js';
 import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
@@ -690,7 +690,8 @@ export function getSecondaryResultAchievement(databaseLearned) {
     }
 
     getAllRequest.onerror = (event) => {
-        console.error("Error opening database 'learned'", event.target.error);    }
+        console.error("Error opening database 'learned'", event.target.error);    
+    }
 }
 
 function updateProgressBar(percentLearnedWords) {
@@ -744,12 +745,115 @@ export function uploadFile(databaseWords) {
                         console.log('Name of theme: ', theme);
                     });
 
-                    loadUploadJsonFileIntoDB(databaseWords, jsonData);
+                    Object.keys(jsonData).forEach((themeName) => {
+                        const words = jsonData[themeName];
+                        addThemeToDatabase(databaseWords, themeName, words);
+                    });
                 } catch (err) {
                     console.error('Wrong parse JSON file:', err);
                 }
             };
             reader.readAsText(file);
         }
+    });
+}
+
+function addThemeToDatabase(database, themeName, words) {
+    if (!database.objectStoreNames.contains(themeName)) {
+        const version = database.version + 1;
+        console.log(`Closing current database to upgrade to version: ${version}`);
+        database.close();
+
+        const request = indexedDB.open('words', version);
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            console.log(`Creating Object Store for theme: ${themeName}`);
+            db.createObjectStore(themeName, { keyPath: "word" });
+        };
+
+        request.onsuccess = (event) => {
+            const db = event.target.result;
+            console.log(`Object Store "${themeName}" created successfully.`);
+            addWordsToStore(db, themeName, words);
+            updateThemePopup(themeName);
+        };
+
+        request.onerror = (event) => {
+            console.error('Error during database upgrade:', event.target.error);
+        };
+
+        request.onblocked = () => {
+            console.warn('Database upgrade is blocked. Please close other tabs or connections.');
+        };
+    } else {
+        console.log(`Object Store "${themeName}" already exists. Adding words.`);
+        addWordsToStore(database, themeName, words);
+        updateThemePopup(themeName);
+    }
+}
+
+function addWordsToStore(database, themeName, words) {
+    const transaction = database.transaction(themeName, 'readwrite');
+    const store = transaction.objectStore(themeName);
+
+    words.forEach((word) => {
+        store.add(word);
+    });
+
+    transaction.oncomplete = () => {
+        console.log(`Theme "${themeName}" successfully added to the database.`);
+    };
+
+    transaction.onerror = (event) => {
+        console.error(`Error adding theme "${themeName}":`, event.target.error);
+    };
+}
+
+function updateThemePopup(themeName) {
+    const { themePopup } = elements;
+    const themeList = document.createElement('p');
+
+    themeList.classList.add('theme');
+    themeList.textContent = themeName;
+
+    themePopup.insertBefore(themeList, document.getElementById('close-theme-popup'));
+    console.log('NEW THEME ADDED');
+
+    appState.themeArray.push(themeName);
+    console.log("NOW THEME LIST: ", appState.theme);
+
+    localStorage.setItem('themeArray', JSON.stringify(appState.themeArray));
+    console.log("NOW THEME LIST: ", appState.themeArray);
+}
+
+export function loadThemeFromStorage() {
+    const savedTheme = localStorage.getItem('themeArray');
+    if (savedTheme) {
+        appState.themeArray = JSON.parse(savedTheme);
+        console.log('Themes loaded from localStorage:', appState.themeArray);
+    
+        refreshThemePopup();
+    }
+}
+
+function refreshThemePopup() {
+    const { themePopup } = elements;
+
+    const existingThemes = themePopup.querySelectorAll('.theme');
+    existingThemes.forEach(theme => theme.remove());
+
+    appState.themeArray.forEach(themeName => {
+        const themeList = document.createElement('p');
+        themeList.classList.add('theme');
+        themeList.textContent = themeName;
+
+        themePopup.insertBefore(themeList, document.getElementById('close-theme-popup'));
+        
+        themeList.addEventListener('click', () => {
+            const themeField = document.getElementById('text-field-theme');
+            themeField.value = themeName;  
+            chrome.storage.local.set({ selectedTheme: themeName }); 
+        });
     });
 }

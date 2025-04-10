@@ -114,8 +114,7 @@ export function initializeThemeAndTimeSettings() {
         previousThemeButton,
         nextThemeButton,
         textFieldTheme,
-        ['All Words', 'Human', 'Food', 'House', 'Sport', 
-         'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT', 'Idioms'],
+        appState.themeArray,
         'themeIndex',
         'selectedTheme'
     );
@@ -124,7 +123,7 @@ export function initializeThemeAndTimeSettings() {
         previousTimeButton,
         nextTimeButton,
         textFieldTime,
-        ['10 minutes', '20 minutes', '30 minutes', '60 minutes', '180 minutes'],
+        appState.timeArray,
         'timeIndex',
         'selectedTime'
     );

@@ -1,55 +1,34 @@
 import { elements } from "../domElements.js";
 import { appState } from "../appState.js";
 import { replaceCharacter, toLowerCaseAll } from "../utils.js";
-import { getFoundWordFromDatabase, replaceCurrentWord } from "../ui.js";
 
-export function initializeMainDatabase() {
+export function initializeMainDatabase(database) {
     const { inputField,
             activeWord,
           } = elements;
+
     let { textFieldTheme,
           selectedTheme
         } = elements;
 
-    const request = indexedDB.open("words", 1);
+    isDatabaseEmpty(database).then(isEmpty => {
+        if (isEmpty) {
+            console.log("IndexedDB is empty, loading JSON");
+            activeWord.innerHTML = "Enjoy<br>and<br>Learn!";
+            inputField.style.display = 'none';
+            inputField.style.visibility = 'hidden'; 
 
-    request.onupgradeneeded = (event) => {
-        const database = event.target.result;
-        const jsonThemes = ['All Words', 'Human', 'Food', 'House', 'Sport', 
-                            'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT', 'Idioms', 'Correct'];
+            loadJsonFileIntoDB(database);
+        } else {
+            inputField.style.visibility = 'visible';
+            console.log("IndexedDB already contains data");
 
-        jsonThemes.forEach(theme => {
-            if (!database.objectStoreNames.contains(theme)) {
-                database.createObjectStore(theme, { keyPath: "word" });
-            }
-        });
-    };
-    
-    request.onsuccess = (event) => {
-        const database = event.target.result;
-
-        isDatabaseEmpty(database).then(isEmpty => {
-            if (isEmpty) {
-                console.log("IndexedDB is empty, loading JSON");
-                activeWord.innerHTML = "Enjoy<br>and<br>Learn!";
-                inputField.style.display = 'none';
-                inputField.style.visibility = 'hidden'; 
-
-                loadJsonFileIntoDB(database);
-            } else {
-                inputField.style.visibility = 'visible';
-                console.log("IndexedDB already contains data");
-
-                selectedTheme = textFieldTheme.value;
-                console.log("selectedTheme: ", selectedTheme);
-                fetchRandomWordFromDatabase(database, selectedTheme); 
-            }
-        });
-    };
-    
-    request.onerror = (event) => {
-        console.error("Error opening the database:", event.target.error);
-    };    
+            console.log('textfieldTheme: ',textFieldTheme.value);
+            selectedTheme = textFieldTheme.value;
+            console.log("selectedTheme: ", selectedTheme);
+            fetchRandomWordFromDatabase(database, selectedTheme); 
+        }
+    });
 }
 
 export function isDatabaseEmpty(database) {
@@ -113,79 +92,12 @@ export function loadJsonFileIntoDB(database) {
                 transaction.onerror = (event) => {
                     console.error(`Transaction error in theme '${theme}':`, event.target.error);
                 };
-            } 
+            }
         });
     })
     .catch(error => {
         console.error('Failed to load JSON', error);
     });
-}
-
-export function loadUploadJsonFileIntoDB(database, jsonData) {
-    if (!database || !database.objectStoreNames) {
-        console.error("Database not properly initialized.");
-        return;
-    }
-    Object.keys(jsonData).forEach(theme => {
-        if (database.objectStoreNames.contains(theme)) {
-            const transaction = database.transaction(theme, "readwrite");
-            const store = transaction.objectStore(theme);
-
-            jsonData[theme].forEach(item => {
-                if (!Array.isArray(item.translation)) {
-                    item.translation = [item.translation];
-                }
-                store.put(item);
-            });
-
-            transaction.oncomplete = () => {
-                console.log(`Data for theme '${theme}' successfully added!`);
-            };
-
-            transaction.onerror = (event) => {
-                console.error(`Transaction error in theme '${theme}':`, event.target.error);
-            };
-        } else {
-            console.log('new json');
-            createNewThemeStore(database, theme, jsonData);
-        }
-    });
-}
-
-function createNewThemeStore(database, theme, jsonData) {
-    const version = database.version + 1;
-    const request = indexedDB.open("words", version);
-
-    request.onupgradeneeded = (event) => {
-        const db = event.target.result;
-        console.log('new database: ', db);
-
-        if (!db.objectStoreNames.contains(theme)) {
-            const store = db.createObjectStore(theme, { keyPath: "word" });
-            console.log(`Created new store for theme: '${theme}'`);
-
-            const transaction = event.target.transaction;
-            const storeForNewTheme = transaction.objectStore(theme);
-
-            jsonData[theme].forEach(item => {
-                if (!Array.isArray(item.translation)) {
-                    item.translation = [item.translation];
-                }
-                storeForNewTheme.put(item); 
-            });
-        }
-    };
-
-    request.onsuccess = (event) => {
-        const db = event.target.result;
-        console.log(`Database opened successfully, new store created for theme: '${theme}'`);
-
-        loadUploadJsonFileIntoDB(db, jsonData);  
-    };
-
-    request.onerror = (event) => {
-        console.error('Error opening the database:', event.target.error);
-    };
 }
 
 export function hideLetters(word) {

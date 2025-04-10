@@ -43,7 +43,23 @@ export function setupStorageListeners() {
         }
     
         if (changes.selectedMode) {
-            initializeMainDatabase();
+            const initialRequest = indexedDB.open('words');
+
+            initialRequest.onsuccess = (event) => {
+                const tempDb = event.target.result;
+                const currentVersion = tempDb.version;
+                tempDb.close(); 
+        
+                const requestWords = indexedDB.open('words', currentVersion);
+
+                requestWords.onsuccess = (event) => {
+                    const database = event.target.result;
+                    initializeMainDatabase(database);
+                };
+                requestWords.onerror = () => {
+                    console.error("Error opened new databse: ", error)
+                };
+            }
         }
 
         if (changes.themeIndex) {
@@ -53,19 +69,27 @@ export function setupStorageListeners() {
     
             const newTheme = jsonThemes[newThemeIndex];
             console.log("newTheme: ", newTheme);
-    
-            initializeMainDatabase();
-    
-            const request = indexedDB.open("words", 1);
-            request.onsuccess = (event) => {
-                const database = event.target.result;
-                console.log("database opened", database);
-                initializeInputFieldAndHintButton(database);
-                generateNewRandomWord(database);
-            };
-            request.onerror = () => {
-                console.error("Error opened new databse: ", error)
-            };
+
+            const initialRequest = indexedDB.open('words');
+
+            initialRequest.onsuccess = (event) => {
+                const tempDb = event.target.result;
+                const currentVersion = tempDb.version;
+                tempDb.close(); 
+        
+                const requestWords = indexedDB.open('words', currentVersion);
+
+                requestWords.onsuccess = (event) => {
+                    const database = event.target.result;
+                    initializeMainDatabase(database);
+
+                    initializeInputFieldAndHintButton(database);
+                    generateNewRandomWord(database);
+                };
+                requestWords.onerror = () => {
+                    console.error("Error opened new databse: ", error)
+                };
+            }
         }
     
         if (changes.timeIndex) {
