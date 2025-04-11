@@ -5,6 +5,7 @@ import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificat
 function updateSelection(changes, key, selector, className) {
     if (changes[key]) {
         const currentValue = changes[key].newValue;
+        console.log("NOW LOAD UPDATE SELECTION: ", currentValue);
         const allSelections = document.querySelectorAll(selector);
         allSelections.forEach(selection => {
             if (selection.textContent === currentValue) {
@@ -18,9 +19,9 @@ function updateSelection(changes, key, selector, className) {
     }
 }
 
-function loadInitialSelection(key, selector, className) {
+function loadInitialSelection(key, defaultValue, selector, className) {
     chrome.storage.local.get(key, (data) => {
-        const currentValue = data[key];
+        const currentValue = data[key] || defaultValue;
         const allSelections = document.querySelectorAll(selector);
         allSelections.forEach(selection => {
             if (selection.textContent === currentValue) {
@@ -32,6 +33,20 @@ function loadInitialSelection(key, selector, className) {
 }
 
 export function setupStorageListeners() {
+
+    chrome.storage.local.get(['selectedTheme', 'selectedTime', 'selectedMode'], (data) => {
+        if (!data.selectedTheme) {
+            chrome.storage.local.set({ selectedTheme: 'All Words' });
+        }
+        if (!data.selectedTime) {
+            chrome.storage.local.set({ selectedTime: '10 minutes' });
+        }
+        if (!data.selectedMode) {
+            chrome.storage.local.set({ selectedMode: 'Default' });
+        }
+    });
+
+
     chrome.storage.onChanged.addListener((changes) => {
         if (changes.themeIndex || changes.timeIndex) {
             initializeThemeAndTimeSettings();
@@ -101,7 +116,7 @@ export function setupStorageListeners() {
         updateSelection(changes, 'selectedMode', '.popup .mode', 'selected-mode');
     }); 
 
-    loadInitialSelection('selectedTheme', '.popup .theme', 'selected-theme');
-    loadInitialSelection('selectedTime', '.popup .time', 'selected-time');
-    loadInitialSelection('selectedMode', '.popup .mode', 'selected-mode');
+    loadInitialSelection('selectedTheme', 'Default', '.popup .theme', 'selected-theme');
+    loadInitialSelection('selectedTime', 'All Words', '.popup .time', 'selected-time');
+    loadInitialSelection('selectedMode', '10 minutes', '.popup .mode', 'selected-mode');
 }
