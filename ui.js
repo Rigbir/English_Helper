@@ -9,6 +9,7 @@ import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
 import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMode.js';
 import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
 import { handleMissingLettersMode, replaceWordMissingLettersMode } from './modes/MissingLetters.js';
+import { setupStorageListeners } from './storage.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -825,6 +826,8 @@ function updateThemePopup(themeName) {
 
     localStorage.setItem('themeArray', JSON.stringify(appState.themeArray));
     console.log("NOW THEME LIST: ", appState.themeArray);
+
+    refreshThemePopup();
 }
 
 export function loadThemeFromStorage() {
@@ -856,4 +859,6 @@ function refreshThemePopup() {
             chrome.storage.local.set({ selectedTheme: themeName }); 
         });
     });
+
+    setupStorageListeners();
 }

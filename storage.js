@@ -33,7 +33,6 @@ function loadInitialSelection(key, defaultValue, selector, className) {
 }
 
 export function setupStorageListeners() {
-
     chrome.storage.local.get(['selectedTheme', 'selectedTime', 'selectedMode'], (data) => {
         if (!data.selectedTheme) {
             chrome.storage.local.set({ selectedTheme: 'All Words' });
@@ -45,7 +44,6 @@ export function setupStorageListeners() {
             chrome.storage.local.set({ selectedMode: 'Default' });
         }
     });
-
 
     chrome.storage.onChanged.addListener((changes) => {
         if (changes.themeIndex || changes.timeIndex) {
