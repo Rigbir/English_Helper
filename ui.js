@@ -9,7 +9,7 @@ import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
 import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMode.js';
 import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
 import { handleMissingLettersMode, replaceWordMissingLettersMode } from './modes/MissingLetters.js';
-import { setupStorageListeners } from './storage.js';
+import { updateSelection, loadInitialSelection } from './storage.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -860,5 +860,13 @@ function refreshThemePopup() {
         });
     });
 
-    setupStorageListeners();
+    chrome.storage.onChanged.addListener((changes) => {
+        updateSelection(changes, 'selectedTheme', '.popup .theme', 'selected-theme');
+        updateSelection(changes, 'selectedTime', '.popup .time', 'selected-time');
+        updateSelection(changes, 'selectedMode', '.popup .mode', 'selected-mode');
+    });
+
+    loadInitialSelection('selectedTheme', 'Default', '.popup .theme', 'selected-theme');
+    loadInitialSelection('selectedTime', 'All Words', '.popup .time', 'selected-time');
+    loadInitialSelection('selectedMode', '10 minutes', '.popup .mode', 'selected-mode');
 }

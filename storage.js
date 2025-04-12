@@ -2,10 +2,10 @@ import { initializeMainDatabase } from './database/mainDatabase.js';
 import { initializeThemeAndTimeSettings } from './theme.js';
 import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime } from './ui.js';
 
-function updateSelection(changes, key, selector, className) {
+export function updateSelection(changes, key, selector, className) {
     if (changes[key]) {
         const currentValue = changes[key].newValue;
-        console.log("NOW LOAD UPDATE SELECTION: ", currentValue);
+        console.log('KEY: ', changes[key]);
         const allSelections = document.querySelectorAll(selector);
         allSelections.forEach(selection => {
             if (selection.textContent === currentValue) {
@@ -19,7 +19,7 @@ function updateSelection(changes, key, selector, className) {
     }
 }
 
-function loadInitialSelection(key, defaultValue, selector, className) {
+export function loadInitialSelection(key, defaultValue, selector, className) {
     chrome.storage.local.get(key, (data) => {
         const currentValue = data[key] || defaultValue;
         const allSelections = document.querySelectorAll(selector);
@@ -78,7 +78,7 @@ export function setupStorageListeners() {
         if (changes.themeIndex) {
             const newThemeIndex = changes.themeIndex.newValue;
             const jsonThemes = ['All Words', 'Human', 'Food', 'House', 'Sport', 
-                                'Profession', 'Money', 'Cinema', 'Nature', 'Traveling'];
+                                'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 'IT', 'Idioms'];
     
             const newTheme = jsonThemes[newThemeIndex];
             console.log("newTheme: ", newTheme);
