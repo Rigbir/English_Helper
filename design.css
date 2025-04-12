@@ -508,7 +508,7 @@ html.no-transition, body.no-transition {
 }
 
 .list-check-btn {
-    width: 93.17px;
+    width: 118.17px;
     font-weight: bold;
     display: inline-block;
     padding: 0.75rem 1.25rem;
@@ -516,8 +516,8 @@ html.no-transition, body.no-transition {
     border-radius: 10rem;
     color: #fff;
     text-transform: uppercase;
-    font-size: 1rem;
-    letter-spacing: 0.15rem;
+    font-size: 1.03rem;
+    letter-spacing: 0.35rem;
     transition: all 0.3s;
     position: relative;
     overflow: hidden;
