@@ -68,6 +68,10 @@ export const elements = {
     //Footer Button
     uploadButton : document.querySelector('.upload-btn'),
     uploadWindow : document.querySelector('.upload-file-window'),
+    uploadOverlay : document.getElementById('overlay'),
+    uploadPopup : document.getElementById('upload-popup'),
+    uploadCloseOverlayButton : document.getElementById('close-upload-popup'),
+    
     listButton : document.querySelector('.list-check-btn'),
     returnFromList : document.querySelector('.return-btn'),
     listHorizontalLines : document.querySelectorAll('.list-line'),

@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeNotificationSettings();
 
     const initialRequest = indexedDB.open('words');
+    console.log("Opening database 'words' version: ", initialRequest.version);
 
     initialRequest.onupgradeneeded = (event) => {   
         const db = event.target.result;
@@ -45,7 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initialRequest.onsuccess = (event) => {
         const tempDb = event.target.result;
-        const currentVersion = tempDb.version;
+        const currentVersion = tempDb.version || 1;
+        console.log("current version: ", currentVersion);
         tempDb.close(); 
 
         const requestWords = indexedDB.open('words', currentVersion);

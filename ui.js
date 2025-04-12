@@ -721,11 +721,26 @@ function updateProgressBar(percentLearnedWords) {
 
 export function uploadFile(databaseWords) {
     const { uploadButton,
-            uploadWindow
+            uploadWindow,
+            uploadOverlay,
+            uploadPopup,
+            uploadCloseOverlayButton
           } = elements;
     
     uploadButton.addEventListener('click', () => {
+        uploadOverlay.style.display = 'block';
+        uploadPopup.style.display = 'block';
+    });
+
+    uploadCloseOverlayButton.addEventListener('click', () => {
+        uploadOverlay.style.display = 'none';
+        uploadPopup.style.display = 'none';
         uploadWindow.click();
+    });
+
+    uploadOverlay.addEventListener('click', () => {
+        uploadOverlay.style.display = 'none';
+        uploadPopup.style.display = 'none';
     });
 
     uploadWindow.addEventListener('change', (event) => {
@@ -761,18 +776,17 @@ export function uploadFile(databaseWords) {
 
 function addThemeToDatabase(database, themeName, words) {
     if (!database.objectStoreNames.contains(themeName)) {
-        const version = database.version + 1;
-        console.log(`Closing current database to upgrade to version: ${version}`);
+        const newersion = database.version + 1;
         database.close();
+        console.log(`Closing current database to upgrade to version: ${newersion}`);
 
-        const request = indexedDB.open('words', version);
+        const request = indexedDB.open('words', newersion); 
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
             console.log(`Creating Object Store for theme: ${themeName}`);
             db.createObjectStore(themeName, { keyPath: "word" });
         };
-
         request.onsuccess = (event) => {
             const db = event.target.result;
             console.log(`Object Store "${themeName}" created successfully.`);
@@ -783,9 +797,11 @@ function addThemeToDatabase(database, themeName, words) {
         request.onerror = (event) => {
             console.error('Error during database upgrade:', event.target.error);
         };
-
         request.onblocked = () => {
             console.warn('Database upgrade is blocked. Please close other tabs or connections.');
+            const activeWord = document.querySelector('.word');
+            activeWord.style.fontSize = '33px';
+            activeWord.textContent = 'Restart the extension and Retry uploading the file';
         };
     } else {
         console.log(`Object Store "${themeName}" already exists. Adding words.`);

@@ -630,6 +630,37 @@
             <div class="footer-main">            
                 <div class="upload-container">
                     <button class="upload-btn">upload</button>
+
+                    <div id="overlay" class="overlay"></div>
+                    <div id="upload-popup" class="popup">
+                        <p class="upload-text">
+                            Вы можете загрузить свою тему. Для этого требуется файл в формате <strong>JSON</strong>.
+                        </p></br>
+                        
+                        <p class="upload-text">
+                            Пример файла:
+                        </p></br>
+                        
+                        <p class="upload-example">
+                        <p class="name-text-example-block">"Name-Theme": [</p>
+                        <p class="brace">{</p>
+                                <p class="text-example-block">"word": "hello",</p>
+                                <p class="text-example-block">"translate": "привет"</p>
+                        <p class="brace">},</p>
+                        <p class="brace">{</p>
+                                <p class="text-example-block">"word": "one",</p>
+                                <p class="text-example-block">"translate": "один"</p>
+                        <p class="brace">},</p>
+                        <p class="brace">{</p>
+                            <p class="text-example-block">"word": "two",</p>
+                            <p class="text-example-block">"translate": "два"</p>
+                        <p class="brace">},</p>
+                        <p class="end-brace">]</p>
+                        </p></br>
+
+                        <button id="close-upload-popup">Close</button>
+                    </div>
+
                     <input type="file" class="upload-file-window" accept=".json" style="display: none;" multiple>
                 </div>
                 <div class="list-container">

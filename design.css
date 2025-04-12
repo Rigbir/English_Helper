@@ -483,6 +483,23 @@ html.no-transition, body.no-transition {
     width: 100%;
 }
 
+.name-text-example-block, .brace, .end-brace {
+    text-align: justify;
+}
+
+.brace {
+    margin-left: 17px;
+}
+
+.text-example-block {
+    text-align: justify;
+    margin-left: 30px;
+}
+
+#close-upload-popup {
+    margin-top: 27px;
+}
+
 .list-container {
     display: flex;
     justify-content: center;
