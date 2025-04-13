@@ -19,4 +19,18 @@ export const appState = {
             'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 
             'IT', 'Idioms'],
     timeArray: ['10 minutes', '20 minutes', '30 minutes', '60 minutes', '180 minutes'],
+    countOnStart: {
+        'All Words': 6882,
+        'Human': 115,
+        'Food': 113,
+        'House': 31,
+        'Sport': 86,
+        'Profession': 49,
+        'Money': 124,
+        'Cinema': 140,
+        'Nature': 206,
+        'Traveling': 123,
+        'IT': 42,
+        'Idioms': 81
+    },
 };

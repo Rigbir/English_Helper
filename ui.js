@@ -642,23 +642,15 @@ export function openSecondaryListWindow(databaseWords, databaseLearned) {
 }
 
 export function getSecondaryResultAchievement(databaseLearned) {
-    let countOnStart = {
-        'All Words': 6882,
-        'Human': 115,
-        'Food': 113,
-        'House': 31,
-        'Sport': 86,
-        'Profession': 49,
-        'Money': 124,
-        'Cinema': 140,
-        'Nature': 206,
-        'Traveling': 123,
-        'IT': 42,
-        'Idioms': 81
+    const savedCountOnStart = localStorage.getItem('countOnStart');
+    console.log('SAVED COUNT ON LOCAL STORAGE', savedCountOnStart);
+    if (savedCountOnStart) {
+        appState.countOnStart = JSON.parse(savedCountOnStart);
+        console.log("NOW countOnStart LIST: ", appState.countOnStart);
     }
-    
+
     let countWordsOfThemeByList = Object.fromEntries(
-        Object.keys(countOnStart).map(key => [key, 0])
+        Object.keys(appState.countOnStart).map(key => [key, 0])
     );
 
     const transaction = databaseLearned.transaction('learned', 'readonly');
@@ -680,8 +672,8 @@ export function getSecondaryResultAchievement(databaseLearned) {
     
         for (let i in countWordsOfThemeByList){
             console.log('COUNT FIRST', countWordsOfThemeByList[i]);
-            console.log('COUNT SECOND', countOnStart[i]);
-            let temp = ((countWordsOfThemeByList[i] / countOnStart[i]) * 100).toFixed(1);
+            console.log('COUNT SECOND', appState.countOnStart[i]);
+            let temp = ((countWordsOfThemeByList[i] / appState.countOnStart[i]) * 100).toFixed(1);
             console.log("TEMP: ", temp);
             percentLearnedWords[i] = temp;
         }
@@ -821,6 +813,11 @@ export function uploadFile(databaseWords) {
 
                 Object.keys(jsonData).forEach((themeName) => {
                     const words = jsonData[themeName];
+
+                    appState.countOnStart[themeName] = words.length;
+                    localStorage.setItem('countOnStart', JSON.stringify(appState.countOnStart));
+                    console.log("NOW countOnStart LIST: ", appState.countOnStart);
+
                     addThemeToDatabase(databaseWords, themeName, words);
                 });
             } catch (err) {
