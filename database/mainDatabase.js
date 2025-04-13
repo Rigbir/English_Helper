@@ -153,7 +153,8 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     inputField.style.visibility = 'visible';
                 }
     
-                const word = data[Math.floor(Math.random() * data.length)];
+                const filtered = data.filter(item => item.word !== activeWord.textContent);
+                const word = filtered[Math.floor(Math.random() * filtered.length)];
 
                 const existingButton = document.getElementById('Phonetic-voice-btn');
                 if (existingButton) {

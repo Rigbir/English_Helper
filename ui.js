@@ -861,8 +861,6 @@ function addThemeToDatabase(database, themeName, words) {
         const activeWord = document.querySelector('.word');
         activeWord.style.fontSize = '30px';
         activeWord.textContent = 'This theme has already been uploaded. Choose another one.';
-        //addWordsToStore(database, themeName, words);
-        //updateThemePopup(themeName);
     }
 }
 
