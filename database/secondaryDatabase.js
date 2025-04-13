@@ -154,7 +154,7 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
         const getAllRequest = store.getAll();
     
         chrome.storage.local.get('theme', (data) => {
-            appState.theme = data.theme;
+            appState.theme = data.theme || 'dark';
             console.log('current theme: ', appState.theme);
         });
     
