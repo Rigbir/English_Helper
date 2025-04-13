@@ -1,8 +1,8 @@
 import { elements } from './domElements.js';
 import { appState } from './appState.js';
 import { toLowerCaseAll, replaceCharacter } from './utils.js';
-import { initializeMainDatabase, moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
-import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
+import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
+import { addWordToSecondaryDatabase, loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
 import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.js';
 import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
 import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
@@ -911,6 +911,8 @@ function updateThemePopup(themeName) {
             chrome.storage.local.set({ selectedTheme: themeName }); 
         });
     });
+
+    refreshDatabase();
 }
 
 export function loadThemeFromStorage() {
@@ -954,23 +956,45 @@ function refreshThemePopup() {
     loadInitialSelection('selectedMode', '10 minutes', '.popup .mode', 'selected-mode');
 }
 
-// function refreshDatabase() {
-//     const initialRequest = indexedDB.open('words');
+function refreshDatabase() {
+    const initialRequest = indexedDB.open('words');
     
-//     initialRequest.onsuccess = (event) => {
-//         const tempDb = event.target.result;
-//         const currentVersion = tempDb.version;
-//         console.log("VERSION DB", currentVersion);
-//         tempDb.close(); 
+    initialRequest.onsuccess = (event) => {
+        const tempDb = event.target.result;
+        const currentVersion = tempDb.version;
+        console.log("VERSION DB", currentVersion);
+        tempDb.close(); 
 
-//         const requestWords = indexedDB.open('words', currentVersion);
+        const requestWords = indexedDB.open('words', currentVersion);
 
-//         requestWords.onsuccess = (event) => {
-//             const database = event.target.result;
-//             initializeMainDatabase(database);
+        requestWords.onsuccess = (event) => {
+            const databaseWords = event.target.result;
+            console.log("Database 'words' successfully opened", databaseWords);
 
-//             initializeInputFieldAndHintButton(database);
-//             generateNewRandomWord(database);
-//         }
-//     }
-// }
+            const initialRequestList = indexedDB.open('learned_words');
+
+            initialRequestList.onsuccess = (event) => {
+                const tempDBList = event.target.result;
+                const currentVersionList = tempDBList.version;
+                console.log("VERSION DB", currentVersionList);
+                tempDBList.close(); 
+
+                const requestList = indexedDB.open('learned_words', currentVersionList);
+
+                requestList.onsuccess = (event) => {
+                    const databaseLearned = event.target.result;
+                    console.log("Database 'learned_words' successfully opened", databaseLearned);
+    
+                    addWordToSecondaryDatabase(databaseWords, databaseLearned);
+                };
+                requestList.onerror = (error) => {
+                    console.error("Error opening database 'learned_words'", error);
+                };
+            }
+        };
+
+        requestWords.onerror = (error) => {
+            console.error("Error opening database 'words'", error);
+        };
+    }
+}
