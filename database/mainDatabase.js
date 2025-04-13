@@ -154,7 +154,6 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 }
     
                 const filtered = data.filter(item => item.word !== activeWord.textContent);
-                console.log("FILTERED ", filtered);
                 const word = filtered[Math.floor(Math.random() * filtered.length)];
 
                 const existingButton = document.getElementById('Phonetic-voice-btn');

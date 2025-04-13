@@ -1,7 +1,7 @@
 import { elements } from './domElements.js';
 import { appState } from './appState.js';
 import { toLowerCaseAll, replaceCharacter } from './utils.js';
-import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
+import { initializeMainDatabase, moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
 import { loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
 import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.js';
 import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
@@ -881,23 +881,14 @@ function addWordsToStore(database, themeName, words) {
     };
 }
 
-function updateThemePopup(themeName) {
-    const { themePopup } = elements;
-    const themeList = document.createElement('p');
-
-    themeList.classList.add('theme');
-    themeList.textContent = themeName;
-
-    themePopup.insertBefore(themeList, document.getElementById('close-theme-popup'));
-    console.log('NEW THEME ADDED');
-
+async function updateThemePopup(themeName) {
     appState.themeArray.push(themeName);
-    console.log("NOW THEME LIST: ", appState.theme);
 
     localStorage.setItem('themeArray', JSON.stringify(appState.themeArray));
     console.log("NOW THEME LIST: ", appState.themeArray);
 
-    refreshThemePopup();
+    await refreshThemePopup();
+    refreshDatabase();
 }
 
 export function loadThemeFromStorage() {
@@ -910,33 +901,58 @@ export function loadThemeFromStorage() {
     }
 }
 
-function refreshThemePopup() {
-    const { themePopup } = elements;
+async function refreshThemePopup() {
+    return new Promise((resolve) => {
+        const { themePopup } = elements;
 
-    const existingThemes = themePopup.querySelectorAll('.theme');
-    existingThemes.forEach(theme => theme.remove());
-
-    appState.themeArray.forEach(themeName => {
-        const themeList = document.createElement('p');
-        themeList.classList.add('theme');
-        themeList.textContent = themeName;
-
-        themePopup.insertBefore(themeList, document.getElementById('close-theme-popup'));
-        
-        themeList.addEventListener('click', () => {
-            const themeField = document.getElementById('text-field-theme');
-            themeField.value = themeName;  
-            chrome.storage.local.set({ selectedTheme: themeName }); 
+        const existingThemes = themePopup.querySelectorAll('.theme');
+        existingThemes.forEach(theme => theme.remove());
+    
+        appState.themeArray.forEach(themeName => {
+            const themeList = document.createElement('p');
+            themeList.classList.add('theme');
+            themeList.textContent = themeName;
+    
+            themePopup.insertBefore(themeList, document.getElementById('close-theme-popup'));
+            
+            themeList.addEventListener('click', () => {
+                const themeField = document.getElementById('text-field-theme');
+                themeField.value = themeName;  
+                chrome.storage.local.set({ selectedTheme: themeName }); 
+            });
         });
+    
+        chrome.storage.onChanged.addListener((changes) => {
+            updateSelection(changes, 'selectedTheme', '.popup .theme', 'selected-theme');
+            updateSelection(changes, 'selectedTime', '.popup .time', 'selected-time');
+            updateSelection(changes, 'selectedMode', '.popup .mode', 'selected-mode');
+        });
+    
+        loadInitialSelection('selectedTheme', 'Default', '.popup .theme', 'selected-theme');
+        loadInitialSelection('selectedTime', 'All Words', '.popup .time', 'selected-time');
+        loadInitialSelection('selectedMode', '10 minutes', '.popup .mode', 'selected-mode');
+        
+        resolve();
     });
+}
 
-    chrome.storage.onChanged.addListener((changes) => {
-        updateSelection(changes, 'selectedTheme', '.popup .theme', 'selected-theme');
-        updateSelection(changes, 'selectedTime', '.popup .time', 'selected-time');
-        updateSelection(changes, 'selectedMode', '.popup .mode', 'selected-mode');
-    });
+function refreshDatabase() {
+    const initialRequest = indexedDB.open('words');
+    
+    initialRequest.onsuccess = (event) => {
+        const tempDb = event.target.result;
+        const currentVersion = tempDb.version;
+        console.log("VERSION DB", currentVersion);
+        tempDb.close(); 
 
-    loadInitialSelection('selectedTheme', 'Default', '.popup .theme', 'selected-theme');
-    loadInitialSelection('selectedTime', 'All Words', '.popup .time', 'selected-time');
-    loadInitialSelection('selectedMode', '10 minutes', '.popup .mode', 'selected-mode');
+        const requestWords = indexedDB.open('words', currentVersion);
+
+        requestWords.onsuccess = (event) => {
+            const database = event.target.result;
+            initializeMainDatabase(database);
+
+            initializeInputFieldAndHintButton(database);
+            generateNewRandomWord(database);
+        }
+    }
 }
