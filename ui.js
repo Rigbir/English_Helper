@@ -160,6 +160,7 @@ export function selectedAchievementPopup(databaseLearned) {
             bar.style.width = `${0}%`;
         });
         
+        loadCustomThemesIntoAchievements();
         getSecondaryResultAchievement(databaseLearned);
         achievementPopup.style.display = 'block';
         achievementOverlay.style.display = 'block';
@@ -975,5 +976,41 @@ export async function refreshDatabase() {
         addWordToSecondaryDatabase(databaseWords, databaseLearned);
     } catch (error) {
         console.error("Error opening databases:", error);
+    }
+}
+
+function createThemeProgressElement(themeName) {
+    const container = document.createElement('div');
+    container.className = 'theme-progress';
+    container.dataset.theme = themeName;
+
+    container.innerHTML = `
+        <div class="theme-row">
+            <img src="https://cdn-icons-png.flaticon.com/512/5002/5002093.png" alt="${themeName} Icon" class="theme-icon">
+            <strong>${themeName}</strong>
+        </div>
+        <div class="progress-bar-container">
+            <div class="progress-fill" data-progress="0"></div>
+            <div class="progress-text-current">0%</div>
+            <div class="progress-text-end"></div>
+        </div>
+    `;
+
+    return container;
+}
+
+function loadCustomThemesIntoAchievements() {
+    const { achievementPopup } = elements;
+
+    for (let i = 0; i < appState.themeArray.length; ++i) {
+        const tempName = appState.themeArray[i];
+        console.log('TEMP NAME: ', tempName);
+
+        const alreadyExists = achievementPopup.querySelector(`.theme-progress[data-theme="${tempName}"]`);
+        if (!alreadyExists) {
+            const newContainer = createThemeProgressElement(tempName);
+            achievementPopup.insertBefore(newContainer, document.getElementById('close-achievement-popup'));
+            console.log("CREATE NEW DIV");
+        }
     }
 }
