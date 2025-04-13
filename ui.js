@@ -857,8 +857,12 @@ function addThemeToDatabase(database, themeName, words) {
         };
     } else {
         console.log(`Object Store "${themeName}" already exists. Adding words.`);
-        addWordsToStore(database, themeName, words);
-        updateThemePopup(themeName);
+
+        const activeWord = document.querySelector('.word');
+        activeWord.style.fontSize = '30px';
+        activeWord.textContent = 'This theme has already been uploaded. Choose another one.';
+        //addWordsToStore(database, themeName, words);
+        //updateThemePopup(themeName);
     }
 }
 
