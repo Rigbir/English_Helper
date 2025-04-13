@@ -956,45 +956,24 @@ function refreshThemePopup() {
     loadInitialSelection('selectedMode', '10 minutes', '.popup .mode', 'selected-mode');
 }
 
-function refreshDatabase() {
-    const initialRequest = indexedDB.open('words');
-    
-    initialRequest.onsuccess = (event) => {
-        const tempDb = event.target.result;
-        const currentVersion = tempDb.version;
-        console.log("VERSION DB", currentVersion);
-        tempDb.close(); 
+function openDatabase(name) {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(name);
+        request.onsuccess = (event) => resolve(event.target.result);
+        request.onerror = (event) => reject(event.target.error);
+    });
+}
 
-        const requestWords = indexedDB.open('words', currentVersion);
+export async function refreshDatabase() {
+    try {
+        const databaseWords = await openDatabase('words');
+        console.log("Database 'words' successfully opened", databaseWords);
 
-        requestWords.onsuccess = (event) => {
-            const databaseWords = event.target.result;
-            console.log("Database 'words' successfully opened", databaseWords);
+        const databaseLearned = await openDatabase('learned_words');
+        console.log("Database 'learned_words' successfully opened", databaseLearned);
 
-            const initialRequestList = indexedDB.open('learned_words');
-
-            initialRequestList.onsuccess = (event) => {
-                const tempDBList = event.target.result;
-                const currentVersionList = tempDBList.version;
-                console.log("VERSION DB", currentVersionList);
-                tempDBList.close(); 
-
-                const requestList = indexedDB.open('learned_words', currentVersionList);
-
-                requestList.onsuccess = (event) => {
-                    const databaseLearned = event.target.result;
-                    console.log("Database 'learned_words' successfully opened", databaseLearned);
-    
-                    addWordToSecondaryDatabase(databaseWords, databaseLearned);
-                };
-                requestList.onerror = (error) => {
-                    console.error("Error opening database 'learned_words'", error);
-                };
-            }
-        };
-
-        requestWords.onerror = (error) => {
-            console.error("Error opening database 'words'", error);
-        };
+        addWordToSecondaryDatabase(databaseWords, databaseLearned);
+    } catch (error) {
+        console.error("Error opening databases:", error);
     }
 }
