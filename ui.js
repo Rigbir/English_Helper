@@ -731,6 +731,14 @@ export function uploadFile(databaseWords) {
             dragAndDropUploadFileButton,
             dragAndDropCloseOverlayButton
           } = elements;
+
+    const closeAllPopups = () => {
+        uploadOverlay.style.display = 'none';
+        uploadPopup.style.display = 'none';
+        dragAndDropOverlay.style.display = 'none';
+        dragAndDropPopup.style.display = 'none';
+        dragAndDropOverlay.classList.remove('dragging');
+    };
     
     uploadButton.addEventListener('click', () => {
         uploadOverlay.style.display = 'block';
@@ -764,6 +772,18 @@ export function uploadFile(databaseWords) {
         dragAndDropZone.classList.remove('dragover');
     });
 
+    dragAndDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dragAndDropZone.classList.remove('dragover');
+
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleFile(files[0]);
+        }
+
+        closeAllPopups();
+    });
+
     dragAndDropUploadFileButton.addEventListener('click', () => {
         uploadWindow.click();
     });
@@ -775,33 +795,35 @@ export function uploadFile(databaseWords) {
 
     uploadWindow.addEventListener('change', (event) => {
         const files = event.target.files;
-
         if (files.length > 0) {
-            const file = files[0];
-            console.log('File Name: ', file.name);
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                try {
-                    const jsonData = JSON.parse(e.target.result);
-                    console.log('Parsed JSON:', jsonData);
-
-                    const themeName = Object.keys(jsonData);
-                    themeName.forEach(theme => {
-                        console.log('Name of theme: ', theme);
-                    });
-
-                    Object.keys(jsonData).forEach((themeName) => {
-                        const words = jsonData[themeName];
-                        addThemeToDatabase(databaseWords, themeName, words);
-                    });
-                } catch (err) {
-                    console.error('Wrong parse JSON file:', err);
-                }
-            };
-            reader.readAsText(file);
+            handleFile(files[0]);
         }
+
+        closeAllPopups();
     });
+
+    function handleFile(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const jsonData = JSON.parse(e.target.result);
+                console.log('Parsed JSON:', jsonData);
+
+                const themeName = Object.keys(jsonData);
+                themeName.forEach(theme => {
+                    console.log('Name of theme: ', theme);
+                });
+
+                Object.keys(jsonData).forEach((themeName) => {
+                    const words = jsonData[themeName];
+                    addThemeToDatabase(databaseWords, themeName, words);
+                });
+            } catch (err) {
+                console.error('Wrong parse JSON file:', err);
+            }
+        };
+        reader.readAsText(file);
+    }
 }
 
 function addThemeToDatabase(database, themeName, words) {
