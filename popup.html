@@ -654,14 +654,23 @@
                         <p class="brace">{</p>
                             <p class="text-example-block">"word": "two",</p>
                             <p class="text-example-block">"translate": "два"</p>
-                        <p class="brace">},</p>
-                        <p class="end-brace">]</p>
-                        </p></br>
+                        <p class="brace">}</p>
+                        <p class="end-brace">]</p> 
 
                         <button id="close-upload-popup">Close</button>
                     </div>
 
-                    <input type="file" class="upload-file-window" accept=".json" style="display: none;" multiple>
+                    <div id="drag-and-drop-popup" class="popup">
+                        <div id="drop-zone">
+                            <p class="drag-and-drop-text">Перетащите файл сюда</p>
+                            <p class="or-text">или</p>
+                            <button id="upload-file-button">Выберите файл</button>
+    
+                            <input type="file" class="upload-file-window" accept=".json" style="display: none;" multiple>
+                        </div>
+                        
+                        <button id="close-drag-and-drop-popup">Close</button>
+                    </div>
                 </div>
                 <div class="list-container">
                     <button class="list-check-btn">list</button>

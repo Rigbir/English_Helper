@@ -724,7 +724,12 @@ export function uploadFile(databaseWords) {
             uploadWindow,
             uploadOverlay,
             uploadPopup,
-            uploadCloseOverlayButton
+            uploadCloseOverlayButton,
+            dragAndDropZone,
+            dragAndDropPopup,
+            dragAndDropOverlay,
+            dragAndDropUploadFileButton,
+            dragAndDropCloseOverlayButton
           } = elements;
     
     uploadButton.addEventListener('click', () => {
@@ -735,12 +740,37 @@ export function uploadFile(databaseWords) {
     uploadCloseOverlayButton.addEventListener('click', () => {
         uploadOverlay.style.display = 'none';
         uploadPopup.style.display = 'none';
-        uploadWindow.click();
+
+        dragAndDropOverlay.style.display = 'block';
+        dragAndDropPopup.style.display = 'block';
     });
 
     uploadOverlay.addEventListener('click', () => {
         uploadOverlay.style.display = 'none';
         uploadPopup.style.display = 'none';
+    });
+
+    dragAndDropOverlay.addEventListener('click', () => {
+        dragAndDropOverlay.style.display = 'none';
+        dragAndDropPopup.style.display = 'none';
+    });
+
+    dragAndDropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dragAndDropZone.classList.add('dragover');
+    });
+
+    dragAndDropZone.addEventListener('dragleave', () => {
+        dragAndDropZone.classList.remove('dragover');
+    });
+
+    dragAndDropUploadFileButton.addEventListener('click', () => {
+        uploadWindow.click();
+    });
+
+    dragAndDropCloseOverlayButton.addEventListener('click', () => {
+        dragAndDropOverlay.style.display = 'none';
+        dragAndDropPopup.style.display = 'none';
     });
 
     uploadWindow.addEventListener('change', (event) => {

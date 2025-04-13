@@ -71,7 +71,13 @@ export const elements = {
     uploadOverlay : document.getElementById('overlay'),
     uploadPopup : document.getElementById('upload-popup'),
     uploadCloseOverlayButton : document.getElementById('close-upload-popup'),
-    
+
+    dragAndDropZone : document.getElementById('drop-zone'),
+    dragAndDropPopup : document.getElementById('drag-and-drop-popup'),
+    dragAndDropOverlay : document.getElementById('overlay'),
+    dragAndDropUploadFileButton : document.getElementById('upload-file-button'),
+    dragAndDropCloseOverlayButton : document.getElementById('close-drag-and-drop-popup'),
+
     listButton : document.querySelector('.list-check-btn'),
     returnFromList : document.querySelector('.return-btn'),
     listHorizontalLines : document.querySelectorAll('.list-line'),
