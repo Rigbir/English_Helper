@@ -437,7 +437,7 @@ html.no-transition, body.no-transition {
 }
 
 #upload-popup {
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .upload-btn {
@@ -520,11 +520,6 @@ html.no-transition, body.no-transition {
     margin-bottom: 20px;
     box-sizing: border-box;
 }
-
-/* #drop-zone.dragover {
-    background-color: #e3e3e3;
-    border-color: #888;
-} */
 
 #drop-zone.dragover {
     background-color: #eaeaea;

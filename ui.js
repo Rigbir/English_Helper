@@ -990,9 +990,39 @@ function createThemeProgressElement(themeName) {
     container.className = 'theme-progress';
     container.dataset.theme = themeName;
 
+    const savedImages = localStorage.getItem('imagesForUserTheme');
+    if (savedImages) {
+        appState.imagesForUserTheme = JSON.parse(savedImages);
+    }
+
+    const savedThemeToImage = localStorage.getItem('themeToImage');
+    if (savedThemeToImage) {
+        appState.themeToImage = JSON.parse(savedThemeToImage);
+    } else {
+        appState.themeToImage = {};
+    }
+
+    let imageLink;
+
+    if (appState.themeToImage[themeName]) {
+        imageLink = appState.themeToImage[themeName];
+    }else {
+        const arrayLink = Object.entries(appState.imagesForUserTheme)
+        .filter(([key, value]) => value === true)
+        .map(([key]) => key);
+
+        imageLink = arrayLink[Math.floor(Math.random() * arrayLink.length)];
+
+        appState.imagesForUserTheme[imageLink] = false;
+        appState.themeToImage[themeName] = imageLink;
+
+        localStorage.setItem('imagesForUserTheme', JSON.stringify(appState.imagesForUserTheme));
+        localStorage.setItem('themeToImage', JSON.stringify(appState.themeToImage));
+    }
+
     container.innerHTML = `
         <div class="theme-row">
-            <img src="https://cdn-icons-png.flaticon.com/512/5002/5002093.png" alt="${themeName} Icon" class="theme-icon">
+            <img src="${imageLink}" alt="${themeName} Icon" class="theme-icon">
             <strong>${themeName}</strong>
         </div>
         <div class="progress-bar-container">
