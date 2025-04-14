@@ -10,6 +10,7 @@ export const appState = {
     inputFieldClickHandler: null,
     updateWordHandler: null,
     handlerForMixedMode: null,
+    currentDatabaseVersion: null,
     soundTimeChallenge: new Audio('sound/TimeChallenge.mp3'),
     originalWord: '',
     jsonThemes: ['All Words', 'Human', 'Food', 'House', 'Sport', 

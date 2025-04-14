@@ -437,7 +437,7 @@ html.no-transition, body.no-transition {
 }
 
 #upload-popup {
-    /* overflow: hidden; */
+    overflow: hidden;
 }
 
 .upload-btn {

@@ -839,11 +839,11 @@ export function uploadFile(databaseWords) {
 
 function addThemeToDatabase(database, themeName, words) {
     if (!database.objectStoreNames.contains(themeName)) {
-        const newersion = database.version + 1;
+        const newVersion = (appState.currentDatabaseVersion ?? database.version) + 1;
         database.close();
-        console.log(`Closing current database to upgrade to version: ${newersion}`);
+        console.log(`Closing current database to upgrade to version: ${newVersion}`);
 
-        const request = indexedDB.open('words', newersion); 
+        const request = indexedDB.open('words', newVersion); 
 
         request.onupgradeneeded = (event) => {
             const db = event.target.result;
@@ -852,6 +852,7 @@ function addThemeToDatabase(database, themeName, words) {
         };
         request.onsuccess = (event) => {
             const db = event.target.result;
+            appState.currentDatabaseVersion = db.version;
             console.log(`Object Store "${themeName}" created successfully.`);
             addWordsToStore(db, themeName, words);
             updateThemePopup(themeName);
@@ -879,8 +880,8 @@ function addWordsToStore(database, themeName, words) {
     const transaction = database.transaction(themeName, 'readwrite');
     const store = transaction.objectStore(themeName);
 
-    words.forEach((wordObj) => {
-        store.add(wordObj);
+    words.forEach((word) => {
+        store.add(word);
     });
 
     transaction.oncomplete = () => {
