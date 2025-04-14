@@ -770,6 +770,11 @@ export function uploadFile(databaseWords) {
         dragAndDropZone.classList.remove('dragover');
 
         const files = e.dataTransfer.files;
+        if (files.length > 1) {
+            alert("Пожалуйста, перетащите только один файл.");
+            return;
+        }
+
         if (files.length > 0) {
             handleFile(files[0]);
         }
@@ -812,20 +817,21 @@ export function uploadFile(databaseWords) {
                 });
 
                 Object.keys(jsonData).forEach((themeName) => {
-                    const words = jsonData[themeName];
+                    const themeData = jsonData[themeName];
+                    const words = themeData.map(item => item.word);
 
                     appState.countOnStart[themeName] = words.length;
                     localStorage.setItem('countOnStart', JSON.stringify(appState.countOnStart));
                     console.log("NOW countOnStart LIST: ", appState.countOnStart);
 
-                    addThemeToDatabase(databaseWords, themeName, words);
+                    addThemeToDatabase(databaseWords, themeName, themeData);
                 });
             } catch (err) {
                 console.error('Wrong parse JSON file:', err);
             }
         };
         reader.readAsText(file);
-    }
+    }   
 }
 
 function addThemeToDatabase(database, themeName, words) {
@@ -870,8 +876,8 @@ function addWordsToStore(database, themeName, words) {
     const transaction = database.transaction(themeName, 'readwrite');
     const store = transaction.objectStore(themeName);
 
-    words.forEach((word) => {
-        store.add(word);
+    words.forEach((wordObj) => {
+        store.add(wordObj);
     });
 
     transaction.oncomplete = () => {
