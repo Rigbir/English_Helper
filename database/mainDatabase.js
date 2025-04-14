@@ -129,6 +129,10 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
         randomButton.removeEventListener('click', appState.updateWordHandler);
     }
 
+    if (activeWord.style.fontSize !== '40px') {
+        activeWord.style.fontSize = '40px';
+    }
+
     chrome.storage.local.get({ selectedMode: 'Default' }, (data) => {
         appState.mode = data.selectedMode || 'Default';
         console.log("NOW MODE APP", appState.mode);

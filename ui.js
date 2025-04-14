@@ -502,6 +502,10 @@ export function generateNewRandomWord(database) {
     }
 
     appState.generateRandomWordButtonClickHandler = (event) => {
+        if (activeWord.style.fontSize != '40px') {
+            activeWord.style.fontSize = '40px';
+        }
+
         const selectedTheme = document.getElementById('text-field-theme').value;
 
         const transaction = database.transaction(selectedTheme, 'readonly');
@@ -817,14 +821,13 @@ export function uploadFile(databaseWords) {
                 });
 
                 Object.keys(jsonData).forEach((themeName) => {
-                    const themeData = jsonData[themeName];
-                    const words = themeData.map(item => item.word);
+                    const words = jsonData[themeName];
 
                     appState.countOnStart[themeName] = words.length;
                     localStorage.setItem('countOnStart', JSON.stringify(appState.countOnStart));
                     console.log("NOW countOnStart LIST: ", appState.countOnStart);
 
-                    addThemeToDatabase(databaseWords, themeName, themeData);
+                    addThemeToDatabase(databaseWords, themeName, words);
                 });
             } catch (err) {
                 console.error('Wrong parse JSON file:', err);
