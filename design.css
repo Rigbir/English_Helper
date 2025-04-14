@@ -530,35 +530,6 @@ html.no-transition, body.no-transition {
     box-sizing: border-box;
 }
 
-/* #drop-zone.dragover {
-    animation: pulseDragover 0.6s infinite alternate;
-    border-color: #666;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-}
-
-@keyframes pulseDragover {
-    from {
-        background-color: #f0f0f0;
-        transform: scale(1);
-    }
-    to {
-        background-color: #e0e0e0;
-        transform: scale(1.03);
-    }
-} */
-
-/* #drop-zone.dragover {
-    animation: glowPulse 1s infinite ease-in-out;
-    border-color: #999;
-    box-shadow: 0 0 15px rgba(100, 100, 255, 0.4);
-}
-
-@keyframes glowPulse {
-    0%   { background-color: #f0f0f0; box-shadow: 0 0 5px rgba(100, 100, 255, 0.2); }
-    50%  { background-color: #e6e6ff; box-shadow: 0 0 20px rgba(100, 100, 255, 0.5); }
-    100% { background-color: #f0f0f0; box-shadow: 0 0 5px rgba(100, 100, 255, 0.2); }
-} */
-
 #drop-zone.dragover {
     background-color: #dcdcdc;
     border-color: #888;
