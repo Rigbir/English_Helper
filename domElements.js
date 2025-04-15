@@ -38,6 +38,10 @@ export const elements = {
     achievementOverlay : document.getElementById('overlay'),
     achievementCloseButtonOverlay : document.getElementById('close-achievement-popup'),
 
+    allImagesForThemesOverlay : document.getElementById('overlay'),
+    allImagesForThemesPopup : document.getElementById('allImagesForThemes-popup'),
+    allImagesForThemesPopupCloseButton : document.getElementById('close-allImagesForThemes-popup'),
+
     addToListButton : document.getElementById('plus-btn'),
 
     //Theme Buttons

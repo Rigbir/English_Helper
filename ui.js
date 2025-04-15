@@ -162,6 +162,7 @@ export function selectedAchievementPopup(databaseLearned) {
         
         loadCustomThemesIntoAchievements();
         getSecondaryResultAchievement(databaseLearned);
+        themeDivSelection();
         achievementPopup.style.display = 'block';
         achievementOverlay.style.display = 'block';
     });
@@ -1050,4 +1051,39 @@ function loadCustomThemesIntoAchievements() {
             console.log("CREATE NEW DIV");
         }
     }
+}
+
+function themeDivSelection() {
+    const { allImagesForThemesOverlay,
+            allImagesForThemesPopup,
+            allImagesForThemesPopupCloseButton,
+            achievementPopup,
+            achievementOverlay
+          } = elements;
+
+    const themeProgressLine = document.querySelectorAll('.theme-progress');
+
+    themeProgressLine.forEach(theme => {   
+        theme.addEventListener('click', () => {
+            console.log('themeProgressLine CLICK', theme);
+            achievementPopup.style.display = 'none';
+            achievementOverlay.style.display = 'none';
+
+            allImagesForThemesOverlay.style.display = 'block';
+            allImagesForThemesPopup.style.display = 'grid';
+        });
+    });
+
+    allImagesForThemesOverlay.addEventListener('click', () => {
+        allImagesForThemesOverlay.style.display = 'none';
+        allImagesForThemesPopup.style.display = 'none';
+    });
+
+    allImagesForThemesPopupCloseButton.addEventListener('click', () => {
+        allImagesForThemesPopup.style.display = 'none';
+        allImagesForThemesOverlay.style.display = 'none';
+
+        achievementPopup.style.display = 'block';
+        achievementOverlay.style.display = 'block';
+    });
 }

@@ -14,7 +14,7 @@ import { displayAppInfoPopup,
          selectedModePopup,
          selectedAchievementPopup,
          uploadFile,
-         loadThemeFromStorage,
+         loadThemeFromStorage
 } from './ui.js';
 import { setupStorageListeners } from './storage.js';
 import { appState } from './appState.js';
