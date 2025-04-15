@@ -1062,6 +1062,8 @@ function themeDivSelection() {
           } = elements;
 
     const themeProgressLine = document.querySelectorAll('.theme-progress');
+    const customImages = document.querySelectorAll('.customImage');
+    let themeImage = document.querySelector('.theme-icon');
 
     themeProgressLine.forEach(theme => {   
         theme.addEventListener('click', () => {
@@ -1071,6 +1073,25 @@ function themeDivSelection() {
 
             allImagesForThemesOverlay.style.display = 'block';
             allImagesForThemesPopup.style.display = 'grid';
+
+            themeImage = theme.querySelector('.theme-icon');
+            console.log("THEME IMAGE", themeImage);
+        });
+    });
+
+    customImages.forEach(image => {
+        image.addEventListener('click', () => {
+            if (themeImage) {
+                console.log("IMAGE TURN", image);
+            
+                themeImage.src = image.src;
+    
+                allImagesForThemesPopup.style.display = 'none';
+                allImagesForThemesOverlay.style.display = 'none';
+    
+                achievementPopup.style.display = 'block';
+                achievementOverlay.style.display = 'block';
+            }
         });
     });
 
