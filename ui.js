@@ -163,6 +163,7 @@ export function selectedAchievementPopup(databaseLearned) {
         loadCustomThemesIntoAchievements();
         getSecondaryResultAchievement(databaseLearned);
         themeDivSelection();
+        getAndSetCustomImage();
         achievementPopup.style.display = 'block';
         achievementOverlay.style.display = 'block';
     });
@@ -1085,10 +1086,19 @@ function themeDivSelection() {
                 console.log("IMAGE TURN", image);
             
                 themeImage.src = image.src;
+                console.log("THEME IMAGE ALT: ", themeImage.alt);
+
+                const themeImageData = {
+                    src: themeImage.src,
+                    alt: themeImage.alt,
+                }
+
+                let storedImages = JSON.parse(localStorage.getItem('customThemeImages')) || [];
+                storedImages.push(themeImageData);
+                localStorage.setItem('customThemeImages', JSON.stringify(storedImages));
     
                 allImagesForThemesPopup.style.display = 'none';
                 allImagesForThemesOverlay.style.display = 'none';
-    
                 achievementPopup.style.display = 'block';
                 achievementOverlay.style.display = 'block';
             }
@@ -1107,4 +1117,19 @@ function themeDivSelection() {
         achievementPopup.style.display = 'block';
         achievementOverlay.style.display = 'block';
     });
+}
+
+function getAndSetCustomImage() {
+    const getCustomThemeImage = localStorage.getItem('customThemeImages');
+
+    if (getCustomThemeImage) {
+        const parseData = JSON.parse(getCustomThemeImage);
+
+        parseData.forEach(item => {
+            let themeImage = document.querySelector(`.theme-icon[alt="${item.alt}"]`);
+            if (themeImage) {
+                themeImage.src = item.src;
+            }
+        })
+    }
 }
