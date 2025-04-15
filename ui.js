@@ -1023,7 +1023,7 @@ function createThemeProgressElement(themeName) {
 
     container.innerHTML = `
         <div class="theme-row">
-            <img src="${imageLink}" alt="${themeName} Icon" class="theme-icon">
+            <img src="${imageLink}" alt="${themeName} Icon" draggable="false"  class="theme-icon">
             <strong>${themeName}</strong>
         </div>
         <div class="progress-bar-container">
