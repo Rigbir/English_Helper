@@ -49,6 +49,9 @@ export const appState = {
         'https://cdn-icons-png.flaticon.com/512/9985/9985129.png': true,
         'https://cdn-icons-png.flaticon.com/512/2716/2716051.png': true,
         'https://cdn-icons-png.flaticon.com/512/6426/6426661.png': true,
-        'https://cdn-icons-png.flaticon.com/512/2267/2267471.png': true 
+        'https://cdn-icons-png.flaticon.com/512/2267/2267471.png': true,
+        'https://cdn-icons-png.flaticon.com/512/5037/5037496.png': true,
+        'https://cdn-icons-png.flaticon.com/512/18746/18746773.png': true,
+        'https://cdn-icons-png.flaticon.com/512/3655/3655716.png': true,
     },
 };
