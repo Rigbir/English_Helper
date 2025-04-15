@@ -161,16 +161,10 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 const word = filtered[Math.floor(Math.random() * filtered.length)];
 
                 const existingButton = document.getElementById('Phonetic-voice-btn');
-                const existingSpeakButton = document.getElementById('Speak-voice-btn');
                 if (existingButton) {
                     existingButton.remove();
                     activeWord.style.visibility = 'visible';   
                 } 
-                if (existingSpeakButton){
-                    existingSpeakButton.remove();
-                    inputField.style.visibility = 'visible';
-                    inputField.style.display = 'block';
-                }
 
                 if (appState.mode === 'Default') {
                     console.log("Word object:", word);
@@ -288,71 +282,7 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     translateWord.textContent = originalWord;
                     appState.originalWord = originalWord;
                     console.log("SIXTH MODE");
-                } else if (appState.mode === 'Speak') {
-                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
-
-                    Array.isArray(word.translation)
-                        ? translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation"
-                        : translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"
-                
-                    translateWord.style.visibility = 'hidden';
-                    inputField.style.visibility = 'hidden';
-                    inputField.style.display = 'none';
-
-                    const parantClassWord = document.querySelector('.translate-container');
-
-                    const speakVoiceButton = document.createElement('button');
-                    speakVoiceButton.id = 'Speak-voice-btn';
-                    speakVoiceButton.classList.add('icon-btn');
-
-                    const img = document.createElement('img');
-                    img.src = 'image/sound.png';
-                    img.alt = '';
-                    img.draggable = false;
-                    img.style.display = 'block';
-        
-                    speakVoiceButton.appendChild(img);
-                    parantClassWord.appendChild(speakVoiceButton);
-
-                    speakVoiceButton.classList.add('pulse-animation');
-                    setTimeout(() => {
-                        speakVoiceButton.classList.remove('pulse-animation');
-                    }, 1000);
-                  
-                    speakVoiceButton.addEventListener('click', () => {
-                        console.log('SPEAK BUTTON CLICK');
-                        if (window.SpeechRecognition) {
-                            const translateElement = document.querySelector('.translate');
-                            if (!translateElement || !translateElement.textContent.trim()){
-                                console.log('No word to pronounce');
-                                return;
-                            }
-
-                            const recognition = new window.SpeechRecognition;
-                            recognition.lang = 'en-US';
-                            recognition.continuous = false;
-                            recognition.interimResults = false;
-
-                            recognition.onresult = (event) => {
-                                const textResult = event.results[0][0].transcript;
-                                console.log("Recognized:", textResult);
-                                recognition.stop();
-                            }
-
-                            recognition.onerror = (event) => {
-                                console.error("❌ Wrong Recognized:", event.error);
-                            };                        
-
-                            recognition.start();
-
-                            appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
-                            console.log(wordElement);
-                        }
-                    });
-
-                    console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
-                    console.log("SEVENTH MODE");
-                }
+                } 
             };
     
             getAllRequest.onerror = (event) => {
