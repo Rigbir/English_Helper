@@ -1063,7 +1063,6 @@ function themeDivSelection() {
           } = elements;
 
     const themeProgressLine = document.querySelectorAll('.theme-progress');
-    const customImages = document.querySelectorAll('.customImage');
     let themeImage = document.querySelector('.theme-icon');
 
     themeProgressLine.forEach(theme => {   
@@ -1077,14 +1076,45 @@ function themeDivSelection() {
 
             themeImage = theme.querySelector('.theme-icon');
             console.log("THEME IMAGE", themeImage);
+
+            handleCustomImageSelection(themeImage);
         });
     });
 
+    allImagesForThemesOverlay.addEventListener('click', () => {
+        allImagesForThemesOverlay.style.display = 'none';
+        allImagesForThemesPopup.style.display = 'none';
+    });
+
+    allImagesForThemesPopupCloseButton.addEventListener('click', () => {
+        allImagesForThemesPopup.style.display = 'none';
+        allImagesForThemesOverlay.style.display = 'none';
+
+        achievementPopup.style.display = 'block';
+        achievementOverlay.style.display = 'block';
+    });
+}
+
+function handleCustomImageSelection(themeImage) {
+    const { allImagesForThemesOverlay,
+            allImagesForThemesPopup,
+            achievementPopup,
+            achievementOverlay
+      } = elements;
+
+    const customImages = document.querySelectorAll('.customImage');
+
     customImages.forEach(image => {
+        const newImage = image.cloneNode(true);
+        image.parentNode.replaceChild(newImage, image);
+    });    
+
+    const updateCutsomImages = document.querySelectorAll('.customImage');
+    updateCutsomImages.forEach(image => {
         image.addEventListener('click', () => {
-            if (themeImage) {
+            if (themeImage.alt) {
                 console.log("IMAGE TURN", image);
-            
+
                 themeImage.src = image.src;
                 console.log("THEME IMAGE ALT: ", themeImage.alt);
 
@@ -1104,23 +1134,11 @@ function themeDivSelection() {
             }
         });
     });
-
-    allImagesForThemesOverlay.addEventListener('click', () => {
-        allImagesForThemesOverlay.style.display = 'none';
-        allImagesForThemesPopup.style.display = 'none';
-    });
-
-    allImagesForThemesPopupCloseButton.addEventListener('click', () => {
-        allImagesForThemesPopup.style.display = 'none';
-        allImagesForThemesOverlay.style.display = 'none';
-
-        achievementPopup.style.display = 'block';
-        achievementOverlay.style.display = 'block';
-    });
 }
 
 function getAndSetCustomImage() {
     const getCustomThemeImage = localStorage.getItem('customThemeImages');
+    console.log('IN LOCAL STORAGE IMAGES: ', getCustomThemeImage);
 
     if (getCustomThemeImage) {
         const parseData = JSON.parse(getCustomThemeImage);
