@@ -63,7 +63,6 @@ function addNewThemeToDatabase(database, themeName) {
 export function isDatabaseEmpty(database) {
     return new Promise(resolve => {
         const storeNames = Array.from(database.objectStoreNames);
-        console.log("STORE LENGTH AND NAMES: ", storeNames);
         if (storeNames.length === 0) {
             resolve(true); 
             return;
@@ -84,12 +83,10 @@ export function isDatabaseEmpty(database) {
         storeNames.forEach(theme => {
             const store = transaction.objectStore(theme);
             const request = store.count();
-            console.log("STORE COUNT:", request );
 
             request.onsuccess = () => {
                 if (request.result > 0) {
                     isEmpty = false;
-                    console.log("THIS BLOCK");
                 }
                 checkedStores++;
                 if (checkedStores === storeNames.length) {
