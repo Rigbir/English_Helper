@@ -1,6 +1,6 @@
 import { elements } from "../domElements.js";
 import { appState } from "../appState.js";
-import { replaceCharacter, toLowerCaseAll } from "../utils.js";
+import { toLowerCaseAll } from "../utils.js";
 
 export function initializeMainDatabase(database) {
     const { inputField,
@@ -26,14 +26,44 @@ export function initializeMainDatabase(database) {
             console.log('textfieldTheme: ',textFieldTheme.value);
             selectedTheme = textFieldTheme.value;
             console.log("selectedTheme: ", selectedTheme);
+
             fetchRandomWordFromDatabase(database, selectedTheme); 
         }
     });
 }
 
+function addNewThemeToDatabase(database, themeName) {
+    const newVersion = (appState.currentDatabaseVersion ?? database.version) + 1;
+    database.close();
+    console.log(`Closing current database to upgrade to version: ${newVersion}`);
+
+    const request = indexedDB.open('words', newVersion); 
+
+    request.onupgradeneeded = (event) => {
+        const db = event.target.result;
+        console.log(`Creating Object Store for theme: ${themeName}`);
+        db.createObjectStore(themeName, { keyPath: "word" });
+    };
+    request.onsuccess = (event) => {
+        const db = event.target.result;
+        appState.currentDatabaseVersion = db.version;
+        console.log(`Object Store "${themeName}" created successfully.`);
+        loadJsonFileIntoDB(db);
+    };
+
+    request.onerror = (event) => {
+        console.error("Error upgrading database:", event.target.error);
+    };
+
+    request.onblocked = () => {
+        console.warn("Database upgrade is blocked. Please close other tabs or connections.");
+    }; 
+}
+
 export function isDatabaseEmpty(database) {
     return new Promise(resolve => {
         const storeNames = Array.from(database.objectStoreNames);
+        console.log("STORE LENGTH AND NAMES: ", storeNames);
         if (storeNames.length === 0) {
             resolve(true); 
             return;
@@ -43,13 +73,23 @@ export function isDatabaseEmpty(database) {
         let isEmpty = true;
         let checkedStores = 0;
 
+        let missingStores = appState.jsonThemes.filter(theme => !database.objectStoreNames.contains(theme));
+        if (missingStores.length > 0) {
+            console.log("Missing themes: ", missingStores);
+            addNewThemeToDatabase(database, missingStores[0]);
+            resolve(true);
+            return;
+        }
+
         storeNames.forEach(theme => {
             const store = transaction.objectStore(theme);
             const request = store.count();
+            console.log("STORE COUNT:", request );
 
             request.onsuccess = () => {
                 if (request.result > 0) {
                     isEmpty = false;
+                    console.log("THIS BLOCK");
                 }
                 checkedStores++;
                 if (checkedStores === storeNames.length) {
