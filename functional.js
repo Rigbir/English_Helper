@@ -14,7 +14,8 @@ import { displayAppInfoPopup,
          selectedModePopup,
          selectedAchievementPopup,
          uploadFile,
-         loadThemeFromStorage
+         loadThemeFromStorage,
+         settingsPopup
 } from './ui.js';
 import { setupStorageListeners } from './storage.js';
 import { appState } from './appState.js';
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedThemePopup();
     selectedTimePopup();
     selectedModePopup();
+    settingsPopup();
 
     initializeThemeSettings();
     displayAppInfoPopup();

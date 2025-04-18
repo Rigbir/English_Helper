@@ -82,6 +82,11 @@ export const elements = {
     dragAndDropUploadFileButton : document.getElementById('upload-file-button'),
     dragAndDropCloseOverlayButton : document.getElementById('close-drag-and-drop-popup'),
 
+    paletteButton : document.getElementById('palette-btn'),
+    paletteOverlay : document.getElementById('overlay'),
+    palettePopup : document.getElementById('palette-popup'),
+    paletteOverlayCloseButton : document.getElementById('close-palette-popup'),
+
     listButton : document.querySelector('.list-check-btn'),
     returnFromList : document.querySelector('.return-btn'),
     listHorizontalLines : document.querySelectorAll('.list-line'),

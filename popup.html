@@ -9,8 +9,8 @@
         </style>
     </head>
     <body>
-        
         <div id="main-window">
+
             <div class="toggle-container">
                 <input type="checkbox" id="theme-toggle" class="toggle_input">
                 <label for="theme-toggle" class="toggle_label">
@@ -719,6 +719,9 @@
                     <img src="image/arrow-right.png" alt="" draggable="false" style="display: block; width: 100%; height: 100%;">
                 </button>
             </div>
+
+            <!-- <hr class="horizontal-line horizontal-line-second"> -->
+
             <div class="footer-main">            
                 <div class="upload-container">
                     <button class="upload-btn">upload</button>
@@ -766,6 +769,41 @@
                         <button id="close-drag-and-drop-popup">Close</button>
                     </div>
                 </div>
+
+                <div id="overlay" class="overlay"></div>
+                <div id="palette-popup" class="popup">
+                    <div id="color-preview"></div>
+                      
+                    <div class="slider-group">
+                      <div class="slider">
+                        <label for="hue">Hue</label>
+                        <input type="range" id="hue" min="0" max="360" value="180">
+                      </div>
+                      <div class="slider">
+                        <label for="saturation">Saturation</label>
+                        <input type="range" id="saturation" min="0" max="100" value="50">
+                      </div>
+                      <div class="slider">
+                        <label for="lightness">Lightness</label>
+                        <input type="range" id="lightness" min="0" max="50" value="50">
+                      </div>
+                      <div class="slider">
+                        <label for="alpha">Alpha</label>
+                        <input type="range" id="alpha" min="0" max="1" step="0.01" value="1">
+                      </div>
+                    </div>
+                  
+                    <div id="color-code">hsla(...)</div>
+
+                    <div class="button-in-palette-popup">
+                        <button class="copy-btn" id="copy-btn">Скопировать</button>
+                        <button id="close-palette-popup">Close</button>
+                    </div>
+                </div>
+                <button id="palette-btn" class="icon-btn">
+                    <img src="image/palette.png" alt="" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                </button>
+
                 <div class="list-container">
                     <button class="list-check-btn">list</button>
                 </div>

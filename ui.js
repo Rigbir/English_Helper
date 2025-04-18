@@ -1151,3 +1151,65 @@ function getAndSetCustomImage() {
         })
     }
 }
+
+export function settingsPopup() {
+    const { paletteButton,
+            paletteOverlay,
+            palettePopup,
+            paletteOverlayCloseButton
+          } = elements;
+
+    paletteButton.addEventListener('click', () => {
+        paletteOverlay.style.display = 'block';
+        palettePopup.style.display = 'block';
+        
+        toggleNew();
+    });
+
+    paletteOverlay.addEventListener('click', () => {
+        paletteOverlay.style.display = 'none';
+        palettePopup.style.display = 'none';
+    });
+
+    paletteOverlayCloseButton.addEventListener('click', () => {
+        paletteOverlay.style.display = 'none';
+        palettePopup.style.display = 'none';
+    });
+}
+
+function toggleNew() {
+    const preview = document.getElementById("color-preview");
+    const colorCode = document.getElementById("color-code");
+    const copyBtn = document.getElementById("copy-btn");
+    
+    const sliders = {
+      hue: document.getElementById("hue"),
+      saturation: document.getElementById("saturation"),
+      lightness: document.getElementById("lightness"),
+      alpha: document.getElementById("alpha")
+    };
+    
+    function updateColor() {
+      const h = sliders.hue.value;
+      const s = sliders.saturation.value;
+      const l = sliders.lightness.value;
+      const a = sliders.alpha.value;
+    
+      const color = `hsla(${h}, ${s}%, ${l}%, ${a})`;
+      preview.style.backgroundColor = color;
+      colorCode.textContent = color;
+    }
+    
+    Object.values(sliders).forEach(slider => {
+      slider.addEventListener("input", updateColor);
+    });
+    
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(colorCode.textContent).then(() => {
+        copyBtn.textContent = "Скопировано!";
+        setTimeout(() => (copyBtn.textContent = "Скопировать"), 1500);
+      });
+    });
+    
+    updateColor();
+}
