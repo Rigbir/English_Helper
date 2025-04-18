@@ -902,9 +902,21 @@ border: 2px solid grey;
     overflow-y: auto;
 }
 
-#allImagesForThemes-popup img {
+#allImagesForThemes-popup .customImage {
     width: 100%; 
     height: auto; 
+    animation: pop-in 0.6s ease forwards;
+    transition: transform 0.3s ease;
+}
+
+.imageWrapper {
+    transition: transform 0.3s ease;
+    display: inline-block;
+    pointer-events: auto;
+}
+
+.imageWrapper:hover {
+    transform: scale(1.15);
 }
 
 #close-allImagesForThemes-popup {
@@ -912,10 +924,6 @@ border: 2px solid grey;
     padding: 10px;
     margin-top: 10px;
     margin-left: 56px;
-}
-
-.customImage:hover {
-    transform: scale(1.15);
 }
 
 @keyframes pop-in {
