@@ -103,7 +103,6 @@ html.no-transition, body.no-transition {
     fill:#fff;
 }
 
-
 .container {
     background: white;
     padding: 20px;
@@ -175,7 +174,7 @@ html.no-transition, body.no-transition {
     background-color: #cab063;
 }
 
-.information-btn {
+.icon-btn.information-btn {
     margin-top: 10px;
     margin-right: 7px;
     width: 40px;
@@ -189,7 +188,7 @@ html.no-transition, body.no-transition {
     transition: transform 0.3s, background-color 0.3s;
 }
 
-.information-btn:hover {
+.icon-btn.information-btn:hover {
     transform: scale(1.1);
     background-color: #cab063;
 }
@@ -512,6 +511,35 @@ html.no-transition, body.no-transition {
     gap: 15px;
 }
 
+.highlight-target {
+    position: relative;
+    z-index: 1001; 
+    transition: box-shadow 0.3s, transform 0.2s;
+}
+
+.highlight-target:hover {
+    box-shadow: 0 0 10px 4px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+}
+
+.highlight-group {
+    position: relative;
+    transition: box-shadow 0.3s, transform 0.2s;
+    z-index: 1001;
+    box-shadow: 0 0 10px 4px rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+}
+
+.highlight-body {
+    position: relative;
+    z-index: 1001; 
+    transition: box-shadow 0.3s, transform 0.2s;
+}
+
+.highlight-body:hover {
+    box-shadow: inset 0 0 10px 12px rgba(255, 255, 255, 0.8);
+}
+
 .upload-container {
     display: flex;
     justify-content: center;
@@ -538,7 +566,7 @@ html.no-transition, body.no-transition {
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    z-index: 1;
+    background-color: #dcc788;
 }
 
 .upload-btn::after {
@@ -548,7 +576,6 @@ html.no-transition, body.no-transition {
     right: 0;
     width: 100%;
     height: 100%;
-    background-color: #dcc788;
     border-radius: 10rem;
     z-index: -2;
 }
@@ -665,7 +692,8 @@ html.no-transition, body.no-transition {
     position: relative;
     overflow: hidden;
     cursor: pointer;
-    z-index: 1;
+    background-color: #dcc788;
+
 }
     
 .list-check-btn:after {
@@ -675,7 +703,6 @@ html.no-transition, body.no-transition {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #dcc788;
     border-radius: 10rem;
     z-index: -2;
 }
@@ -833,7 +860,7 @@ border: 2px solid grey;
     border-radius: 10px;
     background-color: #dcc788;
     cursor: pointer;
-    transition: transfrom 0.3s, background-color 0.3s;
+    transition: transform 0.3s, background-color 0.3s;
 }
 
 .icon-btn:hover {

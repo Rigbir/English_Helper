@@ -1155,25 +1155,101 @@ function getAndSetCustomImage() {
 export function settingsPopup() {
     const { paletteButton,
             paletteOverlay,
+            firstPaletteOverlay,
             palettePopup,
-            paletteOverlayCloseButton
+            paletteOverlayCloseButton,
+            iconButtons,
+            arrowButtons,
+            mainHorizontalLines
           } = elements;
 
+    const handleMap = new WeakMap();
+
     paletteButton.addEventListener('click', () => {
+        firstPaletteOverlay.style.display = 'block';
+
+        document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+            el.classList.add('highlight-target');
+            el.disabled = true;
+        });
+        
+        document.getElementById('main-window').classList.add('highlight-body');
+
+        growHighlightGroup(iconButtons);
+        growHighlightGroup(arrowButtons);
+        growHighlightGroup(mainHorizontalLines);
+    });
+
+    function growHighlightGroup(element) {
+        element.forEach(el => {
+            const mouseEnterHandler = () => {
+                if (el.classList.contains('icon-btn')) {
+                    el.dataset.prevTransition = el.style.transition; 
+                    el.style.transition = 'none';
+                }
+
+                element.forEach(item => item.classList.add('highlight-group'));
+                document.getElementById('main-window').classList.remove('highlight-body');
+            }
+            const mouseLeaveHandler = () => {
+                if (el.classList.contains('icon-btn')) {
+                    el.style.transition = el.dataset.prevTransition || '';
+                    delete el.dataset.prevTransition;
+                }
+
+                element.forEach(item => item.classList.remove('highlight-group'));
+                document.getElementById('main-window').classList.add('highlight-body');
+            }
+
+            el.addEventListener('mouseenter', mouseEnterHandler);
+            el.addEventListener('mouseleave', mouseLeaveHandler);
+
+            handleMap.set(el, { mouseEnterHandler, mouseLeaveHandler });
+        });
+    }
+
+    function growHighlightGroupDisable(element) {
+        element.forEach(el => {
+            const currentHandle = handleMap.get(el);
+            if (currentHandle) {
+                el.removeEventListener('mouseenter', handleMap.mouseEnterHandler);
+                el.removeEventListener('mouseleave', handleMap.mouseLeaveHandler);
+                handleMap.delete(el);
+            }
+
+            el.classList.remove('highlight-group');
+        });
+    }
+
+    firstPaletteOverlay.addEventListener('click', () => {
+        firstPaletteOverlay.style.display = 'none';
+
         paletteOverlay.style.display = 'block';
         palettePopup.style.display = 'block';
         
         toggleNew();
-    });
+    })
 
     paletteOverlay.addEventListener('click', () => {
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
+        document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+            el.disabled = false;
+        });
+        growHighlightGroupDisable(iconButtons);
+        growHighlightGroupDisable(arrowButtons);
+        growHighlightGroupDisable(mainHorizontalLines);
     });
 
     paletteOverlayCloseButton.addEventListener('click', () => {
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
+        document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+            el.disabled = false;
+        });
+        growHighlightGroupDisable(iconButtons);
+        growHighlightGroupDisable(arrowButtons);
+        growHighlightGroupDisable(mainHorizontalLines);
     });
 }
 

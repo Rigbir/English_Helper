@@ -84,6 +84,7 @@ export const elements = {
 
     paletteButton : document.getElementById('palette-btn'),
     paletteOverlay : document.getElementById('overlay'),
+    firstPaletteOverlay : document.getElementById('first-overlay'),
     palettePopup : document.getElementById('palette-popup'),
     paletteOverlayCloseButton : document.getElementById('close-palette-popup'),
 
