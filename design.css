@@ -885,6 +885,11 @@ border: 2px solid grey;
     flex-direction: row-reverse;
     justify-content: center;
     cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.theme-row:hover {
+    transform: scale(1.05);
 }
 
 .theme-icon {
