@@ -338,7 +338,7 @@ html.no-transition, body.no-transition {
     text-align: center;
     align-content: center;
     cursor: pointer;
-    transition: background-color 0.1s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .popup .mode:not(:last-child) {
@@ -393,7 +393,7 @@ html.no-transition, body.no-transition {
     text-align: center;
     align-content: center;
     cursor: pointer;
-    transition: background-color 0.1s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .popup .theme:not(:last-child) {
@@ -465,7 +465,7 @@ html.no-transition, body.no-transition {
     text-align: center;
     align-content: center;
     cursor: pointer;
-    transition: background-color 0.1s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
 }
 
 .popup .time:not(:last-child) {
