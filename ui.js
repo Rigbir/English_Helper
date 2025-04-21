@@ -1204,20 +1204,26 @@ export function settingsPopup() {
         element.forEach(el => {
             const currentHandle = handleMap.get(el);
             if (currentHandle) {
-                el.removeEventListener('mouseenter', handleMap.mouseEnterHandler);
-                el.removeEventListener('mouseleave', handleMap.mouseLeaveHandler);
+                el.removeEventListener('mouseenter', currentHandle.mouseEnterHandler);
+                el.removeEventListener('mouseleave', currentHandle.mouseLeaveHandler);
                 handleMap.delete(el);
             }
 
             el.classList.remove('highlight-group');
+            el.classList.remove('highlight-target');
         });
+
+        document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+            el.disabled = false;
+        });
+        document.getElementById('main-window').classList.remove('highlight-body');
     }
 
     firstPaletteOverlay.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'none';
-
         paletteOverlay.style.display = 'block';
         palettePopup.style.display = 'block';
+        document.getElementById('main-window').classList.remove('highlight-body');
         
         toggleNew();
     })
@@ -1225,22 +1231,18 @@ export function settingsPopup() {
     paletteOverlay.addEventListener('click', () => {
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
-        document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
-            el.disabled = false;
-        });
         growHighlightGroupDisable(iconButtons);
         growHighlightGroupDisable(arrowButtons);
+        growHighlightGroupDisable(footerButtons);
         growHighlightGroupDisable(mainHorizontalLines);
     });
 
     paletteOverlayCloseButton.addEventListener('click', () => {
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
-        document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
-            el.disabled = false;
-        });
         growHighlightGroupDisable(iconButtons);
         growHighlightGroupDisable(arrowButtons);
+        growHighlightGroupDisable(footerButtons);
         growHighlightGroupDisable(mainHorizontalLines);
     });
 }
