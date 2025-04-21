@@ -1160,7 +1160,8 @@ export function settingsPopup() {
             paletteOverlayCloseButton,
             iconButtons,
             arrowButtons,
-            mainHorizontalLines
+            mainHorizontalLines,
+            footerButtons
           } = elements;
 
     const handleMap = new WeakMap();
@@ -1177,6 +1178,7 @@ export function settingsPopup() {
 
         growHighlightGroup(iconButtons);
         growHighlightGroup(arrowButtons);
+        growHighlightGroup(footerButtons);
         growHighlightGroup(mainHorizontalLines);
     });
 

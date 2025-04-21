@@ -569,6 +569,7 @@ html.no-transition, body.no-transition {
     overflow: hidden;
     cursor: pointer;
     background-color: #dcc788;
+    z-index: 1001;
 }
 
 .upload-btn::after {
@@ -593,6 +594,11 @@ html.no-transition, body.no-transition {
     transition: all 0.3s;
     border-radius: 10rem;
     z-index: -1;
+}
+
+.upload-btn::after,
+.upload-btn::before {
+    pointer-events: none;
 }
 
 .upload-btn:hover::before {
@@ -695,6 +701,7 @@ html.no-transition, body.no-transition {
     overflow: hidden;
     cursor: pointer;
     background-color: #dcc788;
+    z-index: 1001;
 
 }
     
@@ -935,6 +942,7 @@ border: 2px solid grey;
     grid-template-columns: repeat(3, 1fr); 
     grid-gap: 10px; 
     overflow-y: auto;
+    cursor: pointer;
 }
 
 #allImagesForThemes-popup .customImage {

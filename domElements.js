@@ -70,6 +70,8 @@ export const elements = {
     allTimeSelections : document.querySelectorAll('.popup .time'),
 
     //Footer Button
+    footerButtons : document.querySelectorAll('.footer-btn'),
+
     uploadButton : document.querySelector('.upload-btn'),
     uploadWindow : document.querySelector('.upload-file-window'),
     uploadOverlay : document.getElementById('overlay'),
