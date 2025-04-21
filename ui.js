@@ -1183,22 +1183,12 @@ export function settingsPopup() {
     });
 
     function growHighlightGroup(element) {
-        element.forEach(el => {
+        element.forEach(el => { 
             const mouseEnterHandler = () => {
-                if (el.classList.contains('icon-btn')) {
-                    el.dataset.prevTransition = el.style.transition; 
-                    el.style.transition = 'none';
-                }
-
                 element.forEach(item => item.classList.add('highlight-group'));
                 document.getElementById('main-window').classList.remove('highlight-body');
             }
             const mouseLeaveHandler = () => {
-                if (el.classList.contains('icon-btn')) {
-                    el.style.transition = el.dataset.prevTransition || '';
-                    delete el.dataset.prevTransition;
-                }
-
                 element.forEach(item => item.classList.remove('highlight-group'));
                 document.getElementById('main-window').classList.add('highlight-body');
             }

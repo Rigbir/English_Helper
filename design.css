@@ -174,7 +174,7 @@ html.no-transition, body.no-transition {
     background-color: #cab063;
 }
 
-.icon-btn.information-btn {
+#information {
     margin-top: 10px;
     margin-right: 7px;
     width: 40px;
@@ -188,7 +188,7 @@ html.no-transition, body.no-transition {
     transition: transform 0.3s, background-color 0.3s;
 }
 
-.icon-btn.information-btn:hover {
+#information:hover {
     transform: scale(1.1);
     background-color: #cab063;
 }
