@@ -1181,11 +1181,13 @@ export function settingsPopup() {
         growHighlightGroup(arrowButtons);
         growHighlightGroup(footerButtons);
         growHighlightGroup(mainHorizontalLines);
+
+        getClickOnButton(document.querySelectorAll('.image'));
+        getClickOnFooterButton(document.querySelector('.list-check-btn-text'));
+        getClickOnFooterButton(document.querySelector('.upload-btn-text'));
     });
 
     function growHighlightGroup(element) {
-        console.log('Элементы для обработки:', element);
-
         element.forEach(el => { 
             const mouseEnterHandler = () => {
                 element.forEach(item => item.classList.add('highlight-group'));
@@ -1198,26 +1200,19 @@ export function settingsPopup() {
 
             el.addEventListener('mouseenter', mouseEnterHandler);
             el.addEventListener('mouseleave', mouseLeaveHandler);
-            //el.addEventListener('click', clickHandler);
 
             handleMap.set(el, { mouseEnterHandler, mouseLeaveHandler });
-            //clickMap.set(el, clickHandler);
         });
     }
 
     function growHighlightGroupDisable(element) {
         element.forEach(el => {
             const currentHandle = handleMap.get(el);
-            const currentClickHandle = clickMap.get(el);
             if (currentHandle) {
                 el.removeEventListener('mouseenter', currentHandle.mouseEnterHandler);
                 el.removeEventListener('mouseleave', currentHandle.mouseLeaveHandler);
                 handleMap.delete(el);
             }
-            // if (currentClickHandle) {
-            //     el.removeEventListener('click', currentClickHandle);
-            //     clickMap.delete(el);
-            // }
 
             el.classList.remove('highlight-group');
             el.classList.remove('highlight-target');
@@ -1227,6 +1222,57 @@ export function settingsPopup() {
             el.disabled = false;
         });
         document.getElementById('main-window').classList.remove('highlight-body');
+    }
+
+    function getClickOnButton(element) {
+        element.forEach(el => {
+            const handler = () => {
+                firstPaletteOverlay.style.display = 'none';
+                paletteOverlay.style.display = 'block';
+                palettePopup.style.display = 'block';
+                document.getElementById('main-window').classList.remove('highlight-body');
+    
+                toggleNew();
+                growHighlightGroupDisable(iconButtons);
+                growHighlightGroupDisable(arrowButtons);
+                growHighlightGroupDisable(footerButtons);
+                growHighlightGroupDisable(mainHorizontalLines);
+            };
+    
+            el.addEventListener('click', handler);
+            clickMap.set(el, handler);
+        });
+    }
+    
+    function removeClickHandler(element) {
+        element.forEach(el => {
+            const oldHandler = clickMap.get(el);
+
+            if (oldHandler) {
+                el.removeEventListener('click', oldHandler);
+                clickMap.delete(el);
+                console.log("OLD HANDLER: ", oldHandler);
+            }
+        });
+    }
+
+    function getClickOnFooterButton(element) {
+        const handler = () => {
+            firstPaletteOverlay.style.display = 'none';
+            paletteOverlay.style.display = 'block';
+            palettePopup.style.display = 'block';
+            document.getElementById('main-window').classList.remove('highlight-body');
+            
+            toggleNew();
+            growHighlightGroupDisable(iconButtons);
+            growHighlightGroupDisable(arrowButtons);
+            growHighlightGroupDisable(footerButtons);
+            growHighlightGroupDisable(mainHorizontalLines);
+
+            element.removeEventListener('click', handler);
+        }
+
+        element.addEventListener('click', handler);
     }
 
     firstPaletteOverlay.addEventListener('click', () => {
@@ -1249,6 +1295,8 @@ export function settingsPopup() {
         growHighlightGroupDisable(arrowButtons);
         growHighlightGroupDisable(footerButtons);
         growHighlightGroupDisable(mainHorizontalLines);
+
+        removeClickHandler(document.querySelectorAll('.image'));
     });
 
     paletteOverlayCloseButton.addEventListener('click', () => {
@@ -1258,6 +1306,8 @@ export function settingsPopup() {
         growHighlightGroupDisable(arrowButtons);
         growHighlightGroupDisable(footerButtons);
         growHighlightGroupDisable(mainHorizontalLines);
+
+        removeClickHandler(document.querySelectorAll('.image'));
     });
 }
 
