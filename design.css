@@ -494,15 +494,10 @@ html.no-transition, body.no-transition {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 13px;
 }
 
 #palette-btn {
     margin-top: 15px;
-}
-
-#palette-popup {
-    overflow: hidden;
 }
 
 .button-in-palette-popup {
@@ -560,27 +555,21 @@ html.no-transition, body.no-transition {
     padding: 0.75rem 1.25rem;
     border: none;
     border-radius: 10rem;
-    color: #fff;
     text-transform: uppercase;
     font-size: 1rem;
     letter-spacing: 0.15rem;
-    transition: all 0.3s;
     position: relative;
     overflow: hidden;
     cursor: pointer;
     background-color: #dcc788;
-    z-index: 1001;
+    margin-right: 13px;
 }
 
-.upload-btn::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 10rem;
-    z-index: -2;
+.upload-btn-text {
+    position: relative; 
+    color: #fff;
+    z-index: 1;
+    pointer-events: none;
 }
 
 .upload-btn::before {
@@ -590,14 +579,23 @@ html.no-transition, body.no-transition {
     right: 0;
     width: 0%;
     height: 100%;
-    background-color: #cab063; 
-    transition: all 0.3s;
+    background-color: #cab063;
+    transition: width 0.3s;
     border-radius: 10rem;
-    z-index: -1;
+    pointer-events: none;
+    transform-origin: right;
 }
 
-.upload-btn::after,
-.upload-btn::before {
+.upload-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10rem;
+    background-color: transparent;
     pointer-events: none;
 }
 
@@ -692,44 +690,47 @@ html.no-transition, body.no-transition {
     padding: 0.75rem 1.25rem;
     border: none;
     border-radius: 10rem;
-    color: #fff;
     text-transform: uppercase;
     font-size: 1.03rem;
     letter-spacing: 0.35rem;
-    transition: all 0.3s;
     position: relative;
     overflow: hidden;
     cursor: pointer;
     background-color: #dcc788;
-    z-index: 1001;
+    margin-left: 13px;
+}
 
+.list-check-btn-text {
+    position: relative;
+    color: #fff;
+    z-index: 1;
+    pointer-events: none;
 }
-    
-.list-check-btn:after {
+
+.list-check-btn::before {
     content: '';
     position: absolute;
     bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 10rem;
-    z-index: -2;
-}
-    
-.list-check-btn:before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    right: 0;
     width: 0%;
     height: 100%;
-    background-color: #cab063; 
-    transition: all 0.3s;
+    background-color: #cab063;
+    transition: width 0.3s;
     border-radius: 10rem;
-    z-index: -1;
+    pointer-events: none;
+    transform-origin: right;
 }
 
-.list-check-btn:hover:before {
+.list-check-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10rem;
+    background-color: transparent;
+    pointer-events: none;
+}
+
+.list-check-btn:hover::before {
     width: 100%;
 }
 

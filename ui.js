@@ -1165,6 +1165,7 @@ export function settingsPopup() {
           } = elements;
 
     const handleMap = new WeakMap();
+    const clickMap = new WeakMap();
 
     paletteButton.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'block';
@@ -1183,6 +1184,8 @@ export function settingsPopup() {
     });
 
     function growHighlightGroup(element) {
+        console.log('Элементы для обработки:', element);
+
         element.forEach(el => { 
             const mouseEnterHandler = () => {
                 element.forEach(item => item.classList.add('highlight-group'));
@@ -1195,19 +1198,26 @@ export function settingsPopup() {
 
             el.addEventListener('mouseenter', mouseEnterHandler);
             el.addEventListener('mouseleave', mouseLeaveHandler);
+            //el.addEventListener('click', clickHandler);
 
             handleMap.set(el, { mouseEnterHandler, mouseLeaveHandler });
+            //clickMap.set(el, clickHandler);
         });
     }
 
     function growHighlightGroupDisable(element) {
         element.forEach(el => {
             const currentHandle = handleMap.get(el);
+            const currentClickHandle = clickMap.get(el);
             if (currentHandle) {
                 el.removeEventListener('mouseenter', currentHandle.mouseEnterHandler);
                 el.removeEventListener('mouseleave', currentHandle.mouseLeaveHandler);
                 handleMap.delete(el);
             }
+            // if (currentClickHandle) {
+            //     el.removeEventListener('click', currentClickHandle);
+            //     clickMap.delete(el);
+            // }
 
             el.classList.remove('highlight-group');
             el.classList.remove('highlight-target');
@@ -1226,6 +1236,10 @@ export function settingsPopup() {
         document.getElementById('main-window').classList.remove('highlight-body');
         
         toggleNew();
+        growHighlightGroupDisable(iconButtons);
+        growHighlightGroupDisable(arrowButtons);
+        growHighlightGroupDisable(footerButtons);
+        growHighlightGroupDisable(mainHorizontalLines);
     })
 
     paletteOverlay.addEventListener('click', () => {
