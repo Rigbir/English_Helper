@@ -121,6 +121,26 @@ html.no-transition, body.no-transition {
     transition: background-color 0.3s ease;
     box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
 }
+
+#color-previews {
+    -webkit-appearance: none; 
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 100%;
+    border-radius: 12px;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+#color-previews::-webkit-color-swatch-wrapper {
+    border-radius: 12px;
+}
+
+#color-previews::-webkit-color-swatch {
+    border-radius: 12px;
+}
   
 .slider-group {
     display: flex;
@@ -148,13 +168,40 @@ html.no-transition, body.no-transition {
 }
 
 #color-code {
-    margin-top: 15px;
-    font-family: monospace;
-    background: #f4f4f4;
-    padding: 6px 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 230px;
+    margin-top: 19px;
+}
+
+#color-code input {
+    width: 95px; 
+    height: 30px;
     border-radius: 6px;
-    display: inline-block;
+    border: 1px solid #ccc;
     font-size: 13px;
+    padding: 5px;
+    text-align: center;
+}
+
+#color-code input:focus {
+    border-color: #dcc788;
+    outline: none;
+}
+
+#color-code input::placeholder {
+    color: #888;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#input-lightness {
+    margin-left: 25%;
 }
 
 .copy-btn {
@@ -503,9 +550,10 @@ html.no-transition, body.no-transition {
 .button-in-palette-popup {
     display: flex;
     justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 15px;
+    align-items: flex-end;
+    flex-direction: row;
+    gap: 19px;
+    margin-top: 7px;
 }
 
 .highlight-target {

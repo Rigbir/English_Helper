@@ -776,7 +776,9 @@
                 <div id="first-overlay" class="overlay"></div>
                 <div id="overlay" class="palette-overlay"></div>
                 <div id="palette-popup" class="popup">
-                    <div id="color-preview"></div>
+                    <div id="color-preview">
+                        <input type="color" id="color-previews">
+                    </div>
                       
                     <div class="slider-group">
                       <div class="slider">
@@ -791,13 +793,13 @@
                         <label for="lightness">Lightness</label>
                         <input type="range" id="lightness" min="0" max="50" value="50">
                       </div>
-                      <div class="slider">
-                        <label for="alpha">Alpha</label>
-                        <input type="range" id="alpha" min="0" max="1" step="0.01" value="1">
-                      </div>
                     </div>
-                  
-                    <div id="color-code">hsla(...)</div>
+
+                    <div id="color-code">
+                        <input type="number" id="input-hue" value="180" placeholder="Hue" min="0" max="360" >
+                        <input type="number" id="input-color-saturation" value="50" placeholder="Saturation" min="0" max="100" >
+                        <input type="number" id="input-lightness" value="50" placeholder="Lightness" min="0" max="50" >
+                    </div>
 
                     <div class="button-in-palette-popup">
                         <button class="copy-btn" id="copy-btn">Copy</button>

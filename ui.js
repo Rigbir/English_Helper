@@ -1280,38 +1280,84 @@ export function settingsPopup() {
 }
 
 function toggleNew() {
-    const preview = document.getElementById("color-preview");
+    const preview = document.getElementById("color-previews");
     const colorCode = document.getElementById("color-code");
     const copyBtn = document.getElementById("copy-btn");
     
     const sliders = {
-      hue: document.getElementById("hue"),
-      saturation: document.getElementById("saturation"),
-      lightness: document.getElementById("lightness"),
-      alpha: document.getElementById("alpha")
+        hue: document.getElementById("hue"),
+        saturation: document.getElementById("saturation"),
+        lightness: document.getElementById("lightness"),
     };
     
     function updateColor() {
-      const h = sliders.hue.value;
-      const s = sliders.saturation.value;
-      const l = sliders.lightness.value;
-      const a = sliders.alpha.value;
+        const h = sliders.hue.value;
+        const s = sliders.saturation.value;
+        const l = sliders.lightness.value;
     
-      const color = `hsla(${h}, ${s}%, ${l}%, ${a})`;
-      preview.style.backgroundColor = color;
-      colorCode.textContent = color;
+        const color = `hsla(${h}, ${s}%, ${l}%)`;
+        const newColor = hslToHex(h, s, l);
+        console.log("COLOR IN HEX VALUE: ", newColor);
+        preview.value = newColor;
+        //preview.style.backgroundColor = color;
     }
     
+    restrictInput(document.getElementById('input-hue'), 0, 360);
+    restrictInput(document.getElementById('input-color-saturation'), 0, 100);
+    restrictInput(document.getElementById('input-lightness'), 0, 100);
+    
     Object.values(sliders).forEach(slider => {
-      slider.addEventListener("input", updateColor);
+        slider.addEventListener("input", updateColor);
     });
     
     copyBtn.addEventListener("click", () => {
-      navigator.clipboard.writeText(colorCode.textContent).then(() => {
-        copyBtn.textContent = "Скопировано!";
-        setTimeout(() => (copyBtn.textContent = "Скопировать"), 1500);
-      });
+        navigator.clipboard.writeText(colorCode.textContent).then(() => {
+        copyBtn.textContent = "Copy!";
+        setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+        });
     });
     
     updateColor();
 }
+
+function hslToHex(h, s, l) {
+    s /= 100;
+    l /= 100;
+
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = l - c / 2;
+
+    let r = 0, g = 0, b = 0;
+
+    if (h >= 0 && h < 60) {
+        [r, g, b] = [c, x, 0];
+    } else if (h < 120) {
+        [r, g, b] = [x, c, 0];
+    } else if (h < 180) {
+        [r, g, b] = [0, c, x];
+    } else if (h < 240) {
+        [r, g, b] = [0, x, c];
+    } else if (h < 300) {
+        [r, g, b] = [x, 0, c];
+    } else {
+        [r, g, b] = [c, 0, x];
+    }
+
+    const toHex = (v) => {
+        return Math.round((v + m) * 255).toString(16).padStart(2, '0').toUpperCase();
+    };
+
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function restrictInput(input, min, max) {
+    input.addEventListener('input', () => {
+        let value = input.value.replace(/[^\d.]/g, ''); 
+        if (value !== '') {
+            value = Math.min(Math.max(+value, min), max);
+        }
+        input.value = value;
+    });
+}
+
