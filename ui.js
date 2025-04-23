@@ -1280,35 +1280,50 @@ export function settingsPopup() {
 }
 
 function toggleNew() {
-    const preview = document.getElementById("color-previews");
-    const colorCode = document.getElementById("color-code");
-    const copyBtn = document.getElementById("copy-btn");
+    const preview = document.getElementById('color-previews');
+    const colorCode = document.getElementById('color-code');
+    const copyBtn = document.getElementById('copy-btn');
     
     const sliders = {
-        hue: document.getElementById("hue"),
-        saturation: document.getElementById("saturation"),
-        lightness: document.getElementById("lightness"),
+        hue: document.getElementById('hue'),
+        saturation: document.getElementById('saturation'),
+        lightness: document.getElementById('lightness'),
     };
-    
-    function updateColor() {
-        const h = sliders.hue.value;
-        const s = sliders.saturation.value;
-        const l = sliders.lightness.value;
-    
-        const color = `hsla(${h}, ${s}%, ${l}%)`;
-        const newColor = hslToHex(h, s, l);
-        console.log("COLOR IN HEX VALUE: ", newColor);
-        preview.value = newColor;
-        //preview.style.backgroundColor = color;
+
+    const fields = {
+        hue: document.getElementById('input-hue'),
+        saturation: document.getElementById('input-color-saturation'),
+        lightness: document.getElementById('input-lightness'),
+    }
+
+    function getValue(source) {
+        return {
+            h : source.hue.value,
+            s : source.saturation.value,
+            l : source.lightness.value
+        }
     }
     
+    function updateColorFrom(source) {
+        const { h, s, l } = getValue(source);
+
+        const color = hslToHex(h, s, l);
+        console.log("COLOR IN HEX VALUE: ", color);
+        preview.value = color;
+        //preview.style.backgroundColor = color;
+    }
+
     restrictInput(document.getElementById('input-hue'), 0, 360);
     restrictInput(document.getElementById('input-color-saturation'), 0, 100);
     restrictInput(document.getElementById('input-lightness'), 0, 100);
     
     Object.values(sliders).forEach(slider => {
-        slider.addEventListener("input", updateColor);
+        slider.addEventListener('input', () => updateColorFrom(sliders));
     });
+
+    Object.values(fields).forEach(field => {
+        field.addEventListener('input', () => updateColorFrom(fields));
+    })
     
     copyBtn.addEventListener("click", () => {
         navigator.clipboard.writeText(colorCode.textContent).then(() => {
@@ -1317,7 +1332,7 @@ function toggleNew() {
         });
     });
     
-    updateColor();
+    updateColorFrom(sliders);
 }
 
 function hslToHex(h, s, l) {
