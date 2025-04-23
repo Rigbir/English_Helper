@@ -95,5 +95,10 @@ export const elements = {
     listHorizontalLines : document.querySelectorAll('.list-line'),
     listHeadWord : document.querySelector('.head-word'),
     listHeadTranslate : document.querySelector('.head-translate'),
-    listWordsContainer : document.querySelector('.all-words')
+    listWordsContainer : document.querySelector('.all-words'),
+
+    //Group Element
+    allIconImage : document.querySelectorAll('.image'),
+    allArrowImage : document.querySelectorAll('.image-arrow'),
+    footerText : document.querySelectorAll('.clickable-text')
 };

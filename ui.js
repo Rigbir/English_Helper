@@ -1161,7 +1161,10 @@ export function settingsPopup() {
             iconButtons,
             arrowButtons,
             mainHorizontalLines,
-            footerButtons
+            footerButtons,
+            allIconImage,
+            allArrowImage,
+            footerText
           } = elements;
 
     const handleMap = new WeakMap();
@@ -1177,16 +1180,8 @@ export function settingsPopup() {
         
         document.getElementById('main-window').classList.add('highlight-body');
 
-        growHighlightGroup(iconButtons);
-        growHighlightGroup(arrowButtons);
-        growHighlightGroup(footerButtons);
-        growHighlightGroup(mainHorizontalLines);
-
-        getClickOnButton(document.querySelectorAll('.image'));
-        getClickOnButton(document.querySelectorAll('.image-arrow'));
-        // getClickOnFooterButton(document.querySelector('.list-check-btn-text'));
-        // getClickOnFooterButton(document.querySelector('.upload-btn-text'));
-        getClickOnButton(document.querySelectorAll('.clickable-text'));
+        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
+        [allIconImage, allArrowImage, footerText].forEach(getClickOnButton);
     });
 
     function growHighlightGroup(element) {
@@ -1237,10 +1232,7 @@ export function settingsPopup() {
                 document.getElementById('main-window').classList.remove('highlight-body');
     
                 toggleNew();
-                growHighlightGroupDisable(iconButtons);
-                growHighlightGroupDisable(arrowButtons);
-                growHighlightGroupDisable(footerButtons);
-                growHighlightGroupDisable(mainHorizontalLines);
+                [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
             };
     
             el.addEventListener('click', handler);
@@ -1267,36 +1259,23 @@ export function settingsPopup() {
         document.getElementById('main-window').classList.remove('highlight-body');
         
         toggleNew();
-        growHighlightGroupDisable(iconButtons);
-        growHighlightGroupDisable(arrowButtons);
-        growHighlightGroupDisable(footerButtons);
-        growHighlightGroupDisable(mainHorizontalLines);
+        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
     })
 
     paletteOverlay.addEventListener('click', () => {
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
-        growHighlightGroupDisable(iconButtons);
-        growHighlightGroupDisable(arrowButtons);
-        growHighlightGroupDisable(footerButtons);
-        growHighlightGroupDisable(mainHorizontalLines);
 
-        removeClickHandler(document.querySelectorAll('.image'));
-        removeClickHandler(document.querySelectorAll('.image-arrow'));
-        removeClickHandler(document.querySelectorAll('.clickable-text'));
+        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
     });
 
     paletteOverlayCloseButton.addEventListener('click', () => {
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
-        growHighlightGroupDisable(iconButtons);
-        growHighlightGroupDisable(arrowButtons);
-        growHighlightGroupDisable(footerButtons);
-        growHighlightGroupDisable(mainHorizontalLines);
 
-        removeClickHandler(document.querySelectorAll('.image'));
-        removeClickHandler(document.querySelectorAll('.image-arrow'));
-        removeClickHandler(document.querySelectorAll('.clickable-text'));
+        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
     });
 }
 
