@@ -1183,8 +1183,10 @@ export function settingsPopup() {
         growHighlightGroup(mainHorizontalLines);
 
         getClickOnButton(document.querySelectorAll('.image'));
-        getClickOnFooterButton(document.querySelector('.list-check-btn-text'));
-        getClickOnFooterButton(document.querySelector('.upload-btn-text'));
+        getClickOnButton(document.querySelectorAll('.image-arrow'));
+        // getClickOnFooterButton(document.querySelector('.list-check-btn-text'));
+        // getClickOnFooterButton(document.querySelector('.upload-btn-text'));
+        getClickOnButton(document.querySelectorAll('.clickable-text'));
     });
 
     function growHighlightGroup(element) {
@@ -1227,6 +1229,8 @@ export function settingsPopup() {
     function getClickOnButton(element) {
         element.forEach(el => {
             const handler = () => {
+                console.log("CLICK ON ELEMENT: ", element);
+
                 firstPaletteOverlay.style.display = 'none';
                 paletteOverlay.style.display = 'block';
                 palettePopup.style.display = 'block';
@@ -1256,25 +1260,6 @@ export function settingsPopup() {
         });
     }
 
-    function getClickOnFooterButton(element) {
-        const handler = () => {
-            firstPaletteOverlay.style.display = 'none';
-            paletteOverlay.style.display = 'block';
-            palettePopup.style.display = 'block';
-            document.getElementById('main-window').classList.remove('highlight-body');
-            
-            toggleNew();
-            growHighlightGroupDisable(iconButtons);
-            growHighlightGroupDisable(arrowButtons);
-            growHighlightGroupDisable(footerButtons);
-            growHighlightGroupDisable(mainHorizontalLines);
-
-            element.removeEventListener('click', handler);
-        }
-
-        element.addEventListener('click', handler);
-    }
-
     firstPaletteOverlay.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'none';
         paletteOverlay.style.display = 'block';
@@ -1297,6 +1282,8 @@ export function settingsPopup() {
         growHighlightGroupDisable(mainHorizontalLines);
 
         removeClickHandler(document.querySelectorAll('.image'));
+        removeClickHandler(document.querySelectorAll('.image-arrow'));
+        removeClickHandler(document.querySelectorAll('.clickable-text'));
     });
 
     paletteOverlayCloseButton.addEventListener('click', () => {
@@ -1308,6 +1295,8 @@ export function settingsPopup() {
         growHighlightGroupDisable(mainHorizontalLines);
 
         removeClickHandler(document.querySelectorAll('.image'));
+        removeClickHandler(document.querySelectorAll('.image-arrow'));
+        removeClickHandler(document.querySelectorAll('.clickable-text'));
     });
 }
 
