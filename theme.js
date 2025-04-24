@@ -16,7 +16,8 @@ export function initializeThemeSettings() {
             arrowButtons,
             footerButtons,
             listButton,
-            uploadButton
+            uploadButton,
+            returnFromList
           } = elements;
 
     const applyTheme = (isDark) => {        
@@ -39,12 +40,14 @@ export function initializeThemeSettings() {
             }
             if (colorMap['footer-btn']) {
                 footerButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
-                
+                returnFromList.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788';
+
                 const baseColor = colorMap['footer-btn'];
                 const darkerColor = shadeColor(baseColor, -20);
 
                 listButton.style.setProperty('--before-color', darkerColor);    
-                uploadButton.style.setProperty('--before-color', darkerColor);        
+                uploadButton.style.setProperty('--before-color', darkerColor);    
+                returnFromList.style.setProperty('--before-color', darkerColor);
             }
             
             console.log("IN CRHOME: ", colorMap); 
