@@ -45,9 +45,9 @@ export function initializeThemeSettings() {
                 const baseColor = colorMap['footer-btn'];
                 const darkerColor = shadeColor(baseColor, -20);
 
-                listButton.style.setProperty('--before-color', darkerColor);    
-                uploadButton.style.setProperty('--before-color', darkerColor);    
-                returnFromList.style.setProperty('--before-color', darkerColor);
+                [listButton, uploadButton, returnFromList].forEach(btn => {
+                    btn.style.setProperty('--before-color', isDark ? darkerColor : '#cab063');
+                })
             }
             
             console.log("IN CRHOME: ", colorMap); 
