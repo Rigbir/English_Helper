@@ -1,3 +1,5 @@
+import { settingsPopup } from "./ui.js";
+
 export const appState = {
     theme: 'dark',
     count: 0,
@@ -56,4 +58,5 @@ export const appState = {
         'https://cdn-icons-png.flaticon.com/512/18746/18746773.png': true,
         'https://cdn-icons-png.flaticon.com/512/3655/3655716.png': true,
     },
+    arraySelectedElementPalette: {},
 };

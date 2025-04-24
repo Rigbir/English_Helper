@@ -11,7 +11,10 @@ export function initializeThemeSettings() {
             mainHorizontalLines, 
             listHorizontalLines, 
             listHeadWord, 
-            listHeadTranslate 
+            listHeadTranslate,
+            iconButtons,
+            arrowButtons,
+            footerButtons
           } = elements;
 
     const applyTheme = (isDark) => {        
@@ -22,6 +25,22 @@ export function initializeThemeSettings() {
         listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
         listHeadWord.style.color = isDark ? 'white' : 'black';
         listHeadTranslate.style.color = isDark ? 'white' : 'black';
+
+        chrome.storage.local.get('paletteColors', (data) => {
+            const colorMap = data.paletteColors;
+            
+            if (colorMap['image']) {
+                iconButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788'});
+            }
+            if (colorMap['image-arrow']) {
+                arrowButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image-arrow'] : '#dcc788'});
+            }
+            if (colorMap['footer-btn']) {
+                footerButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
+            }
+            
+            console.log("IN CRHOME: ", colorMap); 
+        });
     }
 
     chrome.storage.local.get('theme', (data) => {

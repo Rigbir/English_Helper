@@ -204,7 +204,7 @@ input::-webkit-inner-spin-button {
     margin-left: 25%;
 }
 
-.copy-btn {
+.apply-btn {
     margin-top: 10px;
     background-color: #dcc788;
     color: white;
@@ -216,7 +216,7 @@ input::-webkit-inner-spin-button {
     transition: transform 0.3s, background-color 0.3s;
 }
   
-.copy-btn:hover {
+.apply-btn:hover {
     transform: scale(1.1);
     background-color: #cab063;
 }
@@ -553,7 +553,7 @@ input::-webkit-inner-spin-button {
     align-items: flex-end;
     flex-direction: row;
     gap: 19px;
-    margin-top: 7px;
+    margin-top: 19px;
 }
 
 .highlight-target {

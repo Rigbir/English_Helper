@@ -10,6 +10,7 @@ import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMod
 import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
 import { handleMissingLettersMode, replaceWordMissingLettersMode } from './modes/MissingLetters.js';
 import { updateSelection, loadInitialSelection } from './storage.js';
+import { initializeThemeSettings } from './theme.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -1152,8 +1153,12 @@ function getAndSetCustomImage() {
     }
 }
 
+const handleMap = new WeakMap();
+const clickMap = new WeakMap();
+
 export function settingsPopup() {
-    const { paletteButton,
+    const { mainWindow,
+            paletteButton,
             paletteOverlay,
             firstPaletteOverlay,
             palettePopup,
@@ -1167,8 +1172,8 @@ export function settingsPopup() {
             footerText
           } = elements;
 
-    const handleMap = new WeakMap();
-    const clickMap = new WeakMap();
+    // const handleMap = new WeakMap();
+    // const clickMap = new WeakMap();
 
     paletteButton.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'block';
@@ -1202,29 +1207,31 @@ export function settingsPopup() {
         });
     }
 
-    function growHighlightGroupDisable(element) {
-        element.forEach(el => {
-            const currentHandle = handleMap.get(el);
-            if (currentHandle) {
-                el.removeEventListener('mouseenter', currentHandle.mouseEnterHandler);
-                el.removeEventListener('mouseleave', currentHandle.mouseLeaveHandler);
-                handleMap.delete(el);
-            }
+    // function growHighlightGroupDisable(element) {
+    //     element.forEach(el => {
+    //         const currentHandle = handleMap.get(el);
+    //         if (currentHandle) {
+    //             el.removeEventListener('mouseenter', currentHandle.mouseEnterHandler);
+    //             el.removeEventListener('mouseleave', currentHandle.mouseLeaveHandler);
+    //             handleMap.delete(el);
+    //         }
 
-            el.classList.remove('highlight-group');
-            el.classList.remove('highlight-target');
-        });
+    //         el.classList.remove('highlight-group');
+    //         el.classList.remove('highlight-target');
+    //     });
 
-        document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
-            el.disabled = false;
-        });
-        document.getElementById('main-window').classList.remove('highlight-body');
-    }
+    //     document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+    //         el.disabled = false;
+    //     });
+    //     document.getElementById('main-window').classList.remove('highlight-body');
+    // }
 
     function getClickOnButton(element) {
         element.forEach(el => {
             const handler = () => {
-                console.log("CLICK ON ELEMENT: ", element);
+                console.log('click on element: ', el)
+                appState.arraySelectedElementPalette = [el];
+                console.log("ELEMENT IN ARRAY: ", appState.arraySelectedElementPalette);
 
                 firstPaletteOverlay.style.display = 'none';
                 paletteOverlay.style.display = 'block';
@@ -1240,17 +1247,16 @@ export function settingsPopup() {
         });
     }
     
-    function removeClickHandler(element) {
-        element.forEach(el => {
-            const oldHandler = clickMap.get(el);
+    // function removeClickHandler(element) {
+    //     element.forEach(el => {
+    //         const oldHandler = clickMap.get(el);
 
-            if (oldHandler) {
-                el.removeEventListener('click', oldHandler);
-                clickMap.delete(el);
-                console.log("OLD HANDLER: ", oldHandler);
-            }
-        });
-    }
+    //         if (oldHandler) {
+    //             el.removeEventListener('click', oldHandler);
+    //             clickMap.delete(el);
+    //         }
+    //     });
+    // }
 
     firstPaletteOverlay.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'none';
@@ -1277,12 +1283,57 @@ export function settingsPopup() {
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
     });
+
+    return {
+        growHighlightGroupDisable,
+        removeClickHandler
+    }
+}
+
+function growHighlightGroupDisable(element) {
+    element.forEach(el => {
+        const currentHandle = handleMap.get(el);
+        if (currentHandle) {
+            el.removeEventListener('mouseenter', currentHandle.mouseEnterHandler);
+            el.removeEventListener('mouseleave', currentHandle.mouseLeaveHandler);
+            handleMap.delete(el);
+        }
+
+        el.classList.remove('highlight-group');
+        el.classList.remove('highlight-target');
+    });
+
+    document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+        el.disabled = false;
+    });
+    document.getElementById('main-window').classList.remove('highlight-body');
+}
+
+function removeClickHandler(element) {
+    element.forEach(el => {
+        const oldHandler = clickMap.get(el);
+
+        if (oldHandler) {
+            el.removeEventListener('click', oldHandler);
+            clickMap.delete(el);
+        }
+    });
 }
 
 function toggleNew() {
     const preview = document.getElementById('color-previews');
-    const colorCode = document.getElementById('color-code');
-    const copyBtn = document.getElementById('copy-btn');
+    const applyButton = document.getElementById('apply-btn');
+
+    const { paletteOverlay,
+            palettePopup,
+            iconButtons,
+            arrowButtons,
+            mainHorizontalLines,
+            footerButtons,
+            allIconImage,
+            allArrowImage,
+            footerText
+          } = elements;
     
     const sliders = {
         hue: document.getElementById('hue'),
@@ -1296,6 +1347,8 @@ function toggleNew() {
         lightness: document.getElementById('input-lightness'),
     }
 
+    let color = "";
+
     function getValue(source) {
         return {
             h : source.hue.value,
@@ -1307,7 +1360,7 @@ function toggleNew() {
     function updateColorFrom(source) {
         const { h, s, l } = getValue(source);
 
-        const color = hslToHex(h, s, l);
+        color = hslToHex(h, s, l);
         console.log("COLOR IN HEX VALUE: ", color);
         preview.value = color;
         //preview.style.backgroundColor = color;
@@ -1325,13 +1378,39 @@ function toggleNew() {
         field.addEventListener('input', () => updateColorFrom(fields));
     })
     
-    copyBtn.addEventListener("click", () => {
-        navigator.clipboard.writeText(colorCode.textContent).then(() => {
-        copyBtn.textContent = "Copy!";
-        setTimeout(() => (copyBtn.textContent = "Copy"), 1500);
+    const handler = () => {
+        console.log("COLOR APPLY CLICK");       
+        console.log('COLOR: ', color);
+
+        const getElement = appState.arraySelectedElementPalette;
+
+        chrome.storage.local.get('paletteColors', (result) => {
+            const palette = result.paletteColors || {};
+
+            getElement.forEach(el => {
+                const name = el.className;
+                console.log("NAME: ", name);
+
+                if (name.includes('upload-btn-text') || name.includes('list-check-btn-text')) {
+                    palette['footer-btn'] = color; 
+                } else {
+                    palette[name] = color;
+                }
+            });
+
+            chrome.storage.local.set({ paletteColors: palette });
         });
-    });
-    
+
+        paletteOverlay.style.display = 'none';
+        palettePopup.style.display = 'none';
+
+        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+
+        initializeThemeSettings();
+    }
+    applyButton.addEventListener('click', handler);
+
     updateColorFrom(sliders);
 }
 
