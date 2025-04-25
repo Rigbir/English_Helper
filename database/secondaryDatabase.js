@@ -205,6 +205,7 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
 
                     if (colorMap['image']) {
                         newButton.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788';
+                        newContainer.style.setProperty('--before-color', isDark ? colorMap['image'] : '#afaf41');
                     }
         
                     const img = document.createElement('img');

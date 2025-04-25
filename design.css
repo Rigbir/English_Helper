@@ -1140,8 +1140,8 @@ border: 2px solid grey;
     display: flex;
     width: 100%;
     align-items: center;
-    /* border-top: 1px solid #afaf41;
-    border-bottom: 1px solid #afaf41; */
+    border-top: 1px solid var(--before-color, #afaf41);
+    border-bottom: 1px solid var(--before-color, #afaf41);
 }
 
 .learned-word { 
