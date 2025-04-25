@@ -1,5 +1,3 @@
-import { settingsPopup } from "./ui.js";
-
 export const appState = {
     theme: 'dark',
     count: 0,

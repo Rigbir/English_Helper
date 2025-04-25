@@ -3,6 +3,7 @@ import { appState } from "../appState.js";
 import { replaceCharacter, toLowerCaseAll } from "../utils.js";
 import { replaceCurrentWord, getFoundWordFromDatabase } from "../ui.js";
 import { removeWordFromMainDatabase, restoreWordToMainDatabase } from "./mainDatabase.js";
+import { initializeThemeSettings } from "../theme.js";
 
 export function initializeSecondaryDatabase() {
     const requestList = indexedDB.open('learned_words', 1);
@@ -146,6 +147,8 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
             console.log('DB Learned not found');
             return  reject();
         }
+
+        const { themeToggleState } = elements;
     
         listWordsContainer.innerHTML = '';
     
@@ -158,74 +161,83 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
             console.log('current theme: ', appState.theme);
         });
     
-        getAllRequest.onsuccess = () => {
-            const words = getAllRequest.result;
+        const isDark = themeToggleState.checked;
+        chrome.storage.local.get('paletteColors', (data) => {
+            const colorMap = data.paletteColors;
 
-            let heightAllWordsContainer = listWordsContainer.clientHeight;
-            let heightVerticalCenterLine = document.querySelector('.vertical-center-line');
-        
-            (heightAllWordsContainer > 0) 
-                ? heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px'
-                : heightVerticalCenterLine.style.height = '40px'
-    
-            console.log('Words loaded from Learned: ', words);
-            console.log('get-main-cont', listWordsContainer);
-        
-            words.forEach((item, index) => {
-                const newContainer = document.createElement('div');
-                newContainer.classList.add('new-learned-word');
-                
-                if (appState.theme === 'dark') {
-                    newContainer.style.backgroundColor = index % 2 === 0 ? '#9a9a9a' : '#8fa3b0';
-                    console.log("STYLE SET FOR DARK");
-                }
-                else if (appState.theme === 'light') {
-                    newContainer.style.backgroundColor = index % 2 === 0 ? '#f0e8e4' : '#d6c7c3';
-                    console.log("STYLE SET FOR LIGHT");
-                }
-    
-                const newWord = document.createElement('p');
-                newWord.classList.add('learned-word');
-                newWord.textContent = item.word;
+            getAllRequest.onsuccess = () => {
+                const words = getAllRequest.result;
+
+                let heightAllWordsContainer = listWordsContainer.clientHeight;
+                let heightVerticalCenterLine = document.querySelector('.vertical-center-line');
             
-                const newTranslation = document.createElement('p');
-                newTranslation.classList.add('learned-translate');
-                newTranslation.textContent = item.translation;
-    
-                const newButton = document.createElement('button');
-                newButton.id = 'return-word-btn';
-                newButton.classList.add('icon-btn');
-    
-                const img = document.createElement('img');
-                img.src = 'image/return.png';
-                img.alt = '';
-                img.draggable = false;
-                img.style.display = 'block';
-                img.style.width = '100%';
-                img.style.height = 'auto';
-    
-                newButton.appendChild(img);
-    
-                newButton.addEventListener('click', () => {
-                    restoreWordToMainDatabase(databaseWords, databaseLearned, item);
-                    newContainer.remove();
-                    console.log('click return-btn', newButton);
-    
+                (heightAllWordsContainer > 0) 
+                    ? heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px'
+                    : heightVerticalCenterLine.style.height = '40px'
+        
+                console.log('Words loaded from Learned: ', words);
+                console.log('get-main-cont', listWordsContainer);
+            
+                words.forEach((item, index) => {
+                    const newContainer = document.createElement('div');
+                    newContainer.classList.add('new-learned-word');
+                    
+                    if (appState.theme === 'dark') {
+                        newContainer.style.backgroundColor = index % 2 === 0 ? '#9a9a9a' : '#8fa3b0';
+                        console.log("STYLE SET FOR DARK");
+                    }
+                    else if (appState.theme === 'light') {
+                        newContainer.style.backgroundColor = index % 2 === 0 ? '#f0e8e4' : '#d6c7c3';
+                        console.log("STYLE SET FOR LIGHT");
+                    }
+        
+                    const newWord = document.createElement('p');
+                    newWord.classList.add('learned-word');
+                    newWord.textContent = item.word;
+                
+                    const newTranslation = document.createElement('p');
+                    newTranslation.classList.add('learned-translate');
+                    newTranslation.textContent = item.translation;
+        
+                    const newButton = document.createElement('button');
+                    newButton.id = 'return-word-btn';
+                    newButton.classList.add('icon-btn');
+
+                    if (colorMap['image']) {
+                        newButton.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788';
+                    }
+        
+                    const img = document.createElement('img');
+                    img.src = 'image/return.png';
+                    img.alt = '';
+                    img.draggable = false;
+                    img.style.display = 'block';
+                    img.style.width = '100%';
+                    img.style.height = 'auto';
+        
+                    newButton.appendChild(img);
+        
+                    newButton.addEventListener('click', () => {
+                        restoreWordToMainDatabase(databaseWords, databaseLearned, item);
+                        newContainer.remove();
+                        console.log('click return-btn', newButton);
+        
+                        requestAnimationFrame(updateVerticalCenterLineHeight);
+                    });
+                
+                    newContainer.appendChild(newWord);
+                    newContainer.appendChild(newTranslation);
+                    newContainer.appendChild(newButton);
+                
+                    listWordsContainer.appendChild(newContainer);
+                    console.log('final', newContainer);
+        
                     requestAnimationFrame(updateVerticalCenterLineHeight);
                 });
-            
-                newContainer.appendChild(newWord);
-                newContainer.appendChild(newTranslation);
-                newContainer.appendChild(newButton);
-            
-                listWordsContainer.appendChild(newContainer);
-                console.log('final', newContainer);
-    
-                requestAnimationFrame(updateVerticalCenterLineHeight);
-            });
 
-            resolve();
-        }
+                resolve();
+            }
+        });
 
         function updateVerticalCenterLineHeight() {
             const heightAllWordsContainer = listWordsContainer.clientHeight;

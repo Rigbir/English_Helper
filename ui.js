@@ -1169,7 +1169,7 @@ export function settingsPopup() {
             footerButtons,
             allIconImage,
             allArrowImage,
-            footerText
+            footerText,
           } = elements;
 
     // const handleMap = new WeakMap();
@@ -1186,7 +1186,7 @@ export function settingsPopup() {
         document.getElementById('main-window').classList.add('highlight-body');
 
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
-        [allIconImage, allArrowImage, footerText].forEach(getClickOnButton);
+        [allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
     });
 
     function growHighlightGroup(element) {
@@ -1393,6 +1393,8 @@ function toggleNew() {
 
                 if (name.includes('upload-btn-text') || name.includes('list-check-btn-text')) {
                     palette['footer-btn'] = color; 
+                } else if (name.includes('horizontal-line') || name.includes('list-line')) {
+                    palette['line'] = color;
                 } else {
                     palette[name] = color;
                 }

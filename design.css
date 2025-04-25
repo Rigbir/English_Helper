@@ -543,6 +543,10 @@ input::-webkit-inner-spin-button {
     align-items: center;
 }
 
+#palette-popup {
+    overflow: hidden;
+}
+
 #palette-btn {
     margin-top: 15px;
 }
@@ -1136,8 +1140,8 @@ border: 2px solid grey;
     display: flex;
     width: 100%;
     align-items: center;
-    border-top: 1px solid #afaf41;
-    border-bottom: 1px solid #afaf41;
+    /* border-top: 1px solid #afaf41;
+    border-bottom: 1px solid #afaf41; */
 }
 
 .learned-word { 
