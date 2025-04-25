@@ -22,22 +22,28 @@ export function initializeThemeSettings() {
 
     const applyTheme = (isDark) => {        
         document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
-        //mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+        mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+        listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
         activeWord.style.color = isDark ? 'white' : 'black';
         translateWord.style.color = isDark ? '#1DB954' : '#1DB954'
-        //listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
         listHeadWord.style.color = isDark ? 'white' : 'black';
         listHeadTranslate.style.color = isDark ? 'white' : 'black';
 
         chrome.storage.local.get('paletteColors', (data) => {
-            const colorMap = data.paletteColors;
+            const colorMap = data.paletteColors || [];
             
             if (colorMap['image']) {
                 iconButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788'});
+            } else {
+                iconButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
             }
+
             if (colorMap['image-arrow']) {
                 arrowButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image-arrow'] : '#dcc788'});
+            } else {
+                arrowButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
             }
+
             if (colorMap['footer-btn']) {
                 footerButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
                 returnFromList.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788';
@@ -48,10 +54,22 @@ export function initializeThemeSettings() {
                 [listButton, uploadButton, returnFromList].forEach(btn => {
                     btn.style.setProperty('--before-color', isDark ? darkerColor : '#cab063');
                 })
+            } else {
+                footerButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
+                console.log("THIS");
+                returnFromList.style.backgroundColor = '#dcc788';
+
+                [listButton, uploadButton, returnFromList].forEach(btn => {
+                    btn.style.setProperty('--before-color', '#cab063');
+                })
             }
+
             if (colorMap['line']) {
                 mainHorizontalLines.forEach(mainLine => {mainLine.style.backgroundColor = isDark ? colorMap['line'] : '#afaf41'});
                 listHorizontalLines.forEach(listLine => {listLine.style.backgroundColor = isDark ? colorMap['line'] : '#afaf41'});
+            } else {
+                mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+                listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
             }
             
             console.log("IN CRHOME: ", colorMap); 
