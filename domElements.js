@@ -96,6 +96,9 @@ export const elements = {
     inputHue : document.getElementById('input-hue'),
     inputSaturation : document.getElementById('input-saturation'),
     inputLightness : document.getElementById('input-lightness'),
+    hueBar: document.getElementById('hue'),
+    saturationBar: document.getElementById('saturation'),
+    lightnessBar: document.getElementById('lightness'),
 
     //ListPopup
     listButton : document.querySelector('.list-check-btn'),

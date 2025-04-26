@@ -1180,21 +1180,22 @@ export function settingsPopup() {
             el.disabled = true;
         });
         
-        document.getElementById('main-window').classList.add('highlight-body');
+        mainWindow.classList.add('highlight-body');
 
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
         [allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
+        getClickOnButton(mainWindow);
     });
 
     function growHighlightGroup(element) {
         element.forEach(el => { 
             const mouseEnterHandler = () => {
                 element.forEach(item => item.classList.add('highlight-group'));
-                document.getElementById('main-window').classList.remove('highlight-body');
+                mainWindow.classList.remove('highlight-body');
             }
             const mouseLeaveHandler = () => {
                 element.forEach(item => item.classList.remove('highlight-group'));
-                document.getElementById('main-window').classList.add('highlight-body');
+                mainWindow.classList.add('highlight-body');
             }
 
             el.addEventListener('mouseenter', mouseEnterHandler);
@@ -1203,33 +1204,57 @@ export function settingsPopup() {
             handleMap.set(el, { mouseEnterHandler, mouseLeaveHandler });
         });
     }
-
+    
     function getClickOnButton(element) {
-        element.forEach(el => {
-            const handler = () => {
-                console.log('click on element: ', el)
-                appState.arraySelectedElementPalette = [el];
-                console.log("ELEMENT IN ARRAY: ", appState.arraySelectedElementPalette);
-
-                firstPaletteOverlay.style.display = 'none';
-                paletteOverlay.style.display = 'block';
-                palettePopup.style.display = 'block';
-                document.getElementById('main-window').classList.remove('highlight-body');
+        if (element instanceof NodeList || Array.isArray(element)) {
+            element.forEach(el => {
+                const handler = () => {
+                    console.log('click on element: ', el)
+                    appState.arraySelectedElementPalette = [el];
+                    console.log("ELEMENT IN ARRAY: ", appState.arraySelectedElementPalette);
     
-                toggleNew();
-                [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-            };
-    
-            el.addEventListener('click', handler);
-            clickMap.set(el, handler);
-        });
+                    firstPaletteOverlay.style.display = 'none';
+                    paletteOverlay.style.display = 'block';
+                    palettePopup.style.display = 'block';
+                    mainWindow.classList.remove('highlight-body');
+        
+                    toggleNew();
+                    [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+                };
+        
+                el.addEventListener('click', handler);
+                clickMap.set(el, handler);
+            });
+        } else if (element instanceof HTMLElement) {
+            //addClickHandler(element);
+        }
     }
+
+    function addClickHandler(el) {
+        const handler = () => {
+            console.log('click on element: ', el);
+            appState.arraySelectedElementPalette = [el];
+            console.log("ELEMENT IN ARRAY: ", appState.arraySelectedElementPalette);
+    
+            firstPaletteOverlay.style.display = 'none';
+            paletteOverlay.style.display = 'block';
+            palettePopup.style.display = 'block';
+            mainWindow.classList.remove('highlight-body');
+    
+            toggleNew();
+            [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        };
+    
+        el.addEventListener('click', handler);
+        clickMap.set(el, handler);
+    }
+    
     
     firstPaletteOverlay.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'none';
         paletteOverlay.style.display = 'block';
         palettePopup.style.display = 'block';
-        document.getElementById('main-window').classList.remove('highlight-body');
+        mainWindow.classList.remove('highlight-body');
         
         toggleNew();
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
@@ -1250,11 +1275,6 @@ export function settingsPopup() {
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
     });
-
-    return {
-        growHighlightGroupDisable,
-        removeClickHandler
-    }
 }
 
 function growHighlightGroupDisable(element) {
@@ -1299,15 +1319,18 @@ function toggleNew() {
             allIconImage,
             allArrowImage,
             footerText,
+            hueBar,
+            saturationBar,
+            lightnessBar,
             inputHue,
             inputSaturation,
             inputLightness
           } = elements;
     
     const sliders = {
-        hue: document.getElementById('hue'),
-        saturation: document.getElementById('saturation'),
-        lightness: document.getElementById('lightness'),
+        hue: hueBar,
+        saturation: saturationBar,
+        lightness: lightnessBar,
     };
 
     const fields = {
@@ -1333,6 +1356,7 @@ function toggleNew() {
         console.log("COLOR IN HEX VALUE: ", color);
         console.log(`COLOR HSL ${h}, ${s}, ${l}`);
         preview.value = color;
+
         //preview.style.backgroundColor = color;
         inputHue.value = h;
         inputSaturation.value = s;
@@ -1349,7 +1373,16 @@ function toggleNew() {
 
     Object.values(fields).forEach(field => {
         field.addEventListener('input', () => updateColorFrom(fields));
-    })
+    });
+
+    preview.addEventListener('input', (event) => {
+        const hexValue = event.target.value;
+        const { h, s, l } = hexToHsl(hexValue);
+        
+        [hueBar, inputHue].forEach(el => el.value = h);
+        [saturationBar, inputSaturation].forEach(el => el.value = s);
+        [lightnessBar, inputLightness].forEach(el => el.value = l);
+    });
     
     const handler = () => {
         console.log("COLOR APPLY CLICK");       
@@ -1418,6 +1451,43 @@ function hslToHex(h, s, l) {
     };
 
     return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+function hexToHsl(hex) {
+    hex = hex.replace(/^#/, '');
+
+    let r = parseInt(hex.substring(0, 2), 16) / 255;
+    let g = parseInt(hex.substring(2, 4), 16) / 255;
+    let b = parseInt(hex.substring(4, 6), 16) / 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h, s, l = (max + min) / 2;
+
+    if (max === min) {
+        h = s = 0; 
+    } else {
+        const d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
+        }
+        h *= 60;
+    }
+
+    return { 
+        h: Math.round(h),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100)
+    };
 }
 
 function restrictInput(input, min, max) {
