@@ -1332,7 +1332,10 @@ function toggleNew() {
             footerButtons,
             allIconImage,
             allArrowImage,
-            footerText
+            footerText,
+            inputHue,
+            inputSaturation,
+            inputLightness
           } = elements;
     
     const sliders = {
@@ -1342,9 +1345,9 @@ function toggleNew() {
     };
 
     const fields = {
-        hue: document.getElementById('input-hue'),
-        saturation: document.getElementById('input-color-saturation'),
-        lightness: document.getElementById('input-lightness'),
+        hue: inputHue,
+        saturation: inputSaturation,
+        lightness: inputLightness,
     }
 
     let color = "";
@@ -1362,13 +1365,17 @@ function toggleNew() {
 
         color = hslToHex(h, s, l);
         console.log("COLOR IN HEX VALUE: ", color);
+        console.log(`COLOR HSL ${h}, ${s}, ${l}`);
         preview.value = color;
         //preview.style.backgroundColor = color;
+        inputHue.value = h;
+        inputSaturation.value = s;
+        inputLightness.value = l;
     }
 
-    restrictInput(document.getElementById('input-hue'), 0, 360);
-    restrictInput(document.getElementById('input-color-saturation'), 0, 100);
-    restrictInput(document.getElementById('input-lightness'), 0, 100);
+    restrictInput(inputHue, 0, 360);
+    restrictInput(inputSaturation, 0, 100);
+    restrictInput(inputLightness, 0, 100);
     
     Object.values(sliders).forEach(slider => {
         slider.addEventListener('input', () => updateColorFrom(sliders));

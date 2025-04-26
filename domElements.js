@@ -90,6 +90,12 @@ export const elements = {
     palettePopup : document.getElementById('palette-popup'),
     paletteOverlayCloseButton : document.getElementById('close-palette-popup'),
 
+    preview : document.getElementById('color-previews'),
+    applyButton : document.getElementById('apply-btn'),
+    inputHue : document.getElementById('input-hue'),
+    inputSaturation : document.getElementById('input-saturation'),
+    inputLightness : document.getElementById('input-lightness'),
+
     listButton : document.querySelector('.list-check-btn'),
     returnFromList : document.querySelector('.return-btn'),
     listHorizontalLines : document.querySelectorAll('.list-line'),
