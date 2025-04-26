@@ -1358,9 +1358,9 @@ function toggleNew() {
         preview.value = color;
 
         //preview.style.backgroundColor = color;
-        inputHue.value = h;
-        inputSaturation.value = s;
-        inputLightness.value = l;
+        [hueBar, inputHue].forEach(el => el.value = h);
+        [saturationBar, inputSaturation].forEach(el => el.value = s);
+        [lightnessBar, inputLightness].forEach(el => el.value = l);
     }
 
     restrictInput(inputHue, 0, 360);
