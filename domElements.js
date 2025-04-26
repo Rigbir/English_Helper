@@ -84,6 +84,7 @@ export const elements = {
     dragAndDropUploadFileButton : document.getElementById('upload-file-button'),
     dragAndDropCloseOverlayButton : document.getElementById('close-drag-and-drop-popup'),
 
+    //PalettePopup
     paletteButton : document.getElementById('palette-btn'),
     paletteOverlay : document.getElementById('overlay'),
     firstPaletteOverlay : document.getElementById('first-overlay'),
@@ -96,6 +97,7 @@ export const elements = {
     inputSaturation : document.getElementById('input-saturation'),
     inputLightness : document.getElementById('input-lightness'),
 
+    //ListPopup
     listButton : document.querySelector('.list-check-btn'),
     returnFromList : document.querySelector('.return-btn'),
     listHorizontalLines : document.querySelectorAll('.list-line'),

@@ -1172,9 +1172,6 @@ export function settingsPopup() {
             footerText,
           } = elements;
 
-    // const handleMap = new WeakMap();
-    // const clickMap = new WeakMap();
-
     paletteButton.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'block';
 
@@ -1207,25 +1204,6 @@ export function settingsPopup() {
         });
     }
 
-    // function growHighlightGroupDisable(element) {
-    //     element.forEach(el => {
-    //         const currentHandle = handleMap.get(el);
-    //         if (currentHandle) {
-    //             el.removeEventListener('mouseenter', currentHandle.mouseEnterHandler);
-    //             el.removeEventListener('mouseleave', currentHandle.mouseLeaveHandler);
-    //             handleMap.delete(el);
-    //         }
-
-    //         el.classList.remove('highlight-group');
-    //         el.classList.remove('highlight-target');
-    //     });
-
-    //     document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
-    //         el.disabled = false;
-    //     });
-    //     document.getElementById('main-window').classList.remove('highlight-body');
-    // }
-
     function getClickOnButton(element) {
         element.forEach(el => {
             const handler = () => {
@@ -1247,17 +1225,6 @@ export function settingsPopup() {
         });
     }
     
-    // function removeClickHandler(element) {
-    //     element.forEach(el => {
-    //         const oldHandler = clickMap.get(el);
-
-    //         if (oldHandler) {
-    //             el.removeEventListener('click', oldHandler);
-    //             clickMap.delete(el);
-    //         }
-    //     });
-    // }
-
     firstPaletteOverlay.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'none';
         paletteOverlay.style.display = 'block';
@@ -1321,10 +1288,9 @@ function removeClickHandler(element) {
 }
 
 function toggleNew() {
-    const preview = document.getElementById('color-previews');
-    const applyButton = document.getElementById('apply-btn');
-
-    const { paletteOverlay,
+    const { preview,
+            applyButton,
+            paletteOverlay,
             palettePopup,
             iconButtons,
             arrowButtons,
