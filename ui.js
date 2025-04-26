@@ -1175,16 +1175,14 @@ export function settingsPopup() {
     paletteButton.addEventListener('click', () => {
         firstPaletteOverlay.style.display = 'block';
 
-        document.querySelectorAll('.information-btn, .main, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+        document.querySelectorAll('.information-btn, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
             el.classList.add('highlight-target');
             el.disabled = true;
         });
         
-        mainWindow.classList.add('highlight-body');
-
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
         [allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
-        getClickOnButton(mainWindow);
+        getClickOnButton(firstPaletteOverlay);
     });
 
     function growHighlightGroup(element) {
@@ -1226,7 +1224,7 @@ export function settingsPopup() {
                 clickMap.set(el, handler);
             });
         } else if (element instanceof HTMLElement) {
-            //addClickHandler(element);
+            addClickHandler(element);
         }
     }
 

@@ -21,9 +21,9 @@ export function initializeThemeSettings() {
           } = elements;
 
     const applyTheme = (isDark) => {        
-        document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
-        mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
-        listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+        // document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
+        // mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+        // listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
         activeWord.style.color = isDark ? 'white' : 'black';
         translateWord.style.color = isDark ? '#1DB954' : '#1DB954'
         listHeadWord.style.color = isDark ? 'white' : 'black';
@@ -31,6 +31,16 @@ export function initializeThemeSettings() {
 
         chrome.storage.local.get('paletteColors', (data) => {
             const colorMap = data.paletteColors || [];
+
+            if (colorMap['overlay']) {
+                document.body.style.backgroundColor = isDark ? colorMap['overlay'] : '#f5f4f4';
+
+                const baseColor = colorMap['overlay'];
+                const darkerColor = shadeColor(baseColor, -25);
+
+                themeToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
+                onOffToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
+            }
             
             if (colorMap['image']) {
                 iconButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788'});
