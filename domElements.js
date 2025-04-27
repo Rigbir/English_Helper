@@ -111,5 +111,6 @@ export const elements = {
     //Group Element
     allIconImage : document.querySelectorAll('.image'),
     allArrowImage : document.querySelectorAll('.image-arrow'),
-    footerText : document.querySelectorAll('.clickable-text')
+    footerText : document.querySelectorAll('.clickable-text'),
+    allPopupButton : document.querySelectorAll('.close-popup-button'),
 };

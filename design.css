@@ -204,19 +204,19 @@ input::-webkit-inner-spin-button {
     margin-left: 25%;
 }
 
-.apply-btn {
+#apply-btn {
     margin-top: 10px;
     background-color: #dcc788;
     color: white;
     border: none;
     padding: 8px 14px;
-    border-radius: 6px;
+    /* border-radius: 6px; */
     cursor: pointer;
     font-size: 14px;
     transition: transform 0.3s, background-color 0.3s;
 }
   
-.apply-btn:hover {
+#apply-btn:hover {
     transform: scale(1.1);
     background-color: #cab063;
 }

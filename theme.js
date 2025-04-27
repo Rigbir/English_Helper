@@ -17,7 +17,8 @@ export function initializeThemeSettings() {
             footerButtons,
             listButton,
             uploadButton,
-            returnFromList
+            returnFromList,
+            allPopupButton
           } = elements;
 
     const applyTheme = (isDark) => {        
@@ -54,6 +55,7 @@ export function initializeThemeSettings() {
 
             if (colorMap['footer-btn']) {
                 footerButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
+                allPopupButton.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
                 returnFromList.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788';
 
                 const baseColor = colorMap['footer-btn'];
