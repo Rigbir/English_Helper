@@ -10,7 +10,7 @@ import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMod
 import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
 import { handleMissingLettersMode, replaceWordMissingLettersMode } from './modes/MissingLetters.js';
 import { updateSelection, loadInitialSelection } from './storage.js';
-import { initializeThemeSettings } from './theme.js';
+import { initializeThemeAndTimeSettings, initializeThemeSettings } from './theme.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -194,7 +194,6 @@ export function selectedAchievementPopup(databaseLearned) {
 
 export function initializeNotificationSettings() {
     const { onOffToggleState,
-            onOffToggleBackground
           } = elements;
 
     chrome.storage.local.get(['extensionState', 'theme'], function (data) {
@@ -205,12 +204,7 @@ export function initializeNotificationSettings() {
         console.log(`State on load: ${isOnMode ? 'Enabled' : 'Disabled'}`);
 
         console.log('THEME: ', appState.theme);
-        if (appState.theme === 'light') {
-            onOffToggleBackground.style.backgroundColor = '#f5f4f4';
-        } else if (appState.theme === 'dark') {
-            onOffToggleBackground.style.backgroundColor = '#242424';
-        }
-
+        
         if (data.extensionState === undefined) {
             chrome.storage.local.set({ extensionState: true });
         }

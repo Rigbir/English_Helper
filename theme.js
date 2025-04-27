@@ -21,9 +21,6 @@ export function initializeThemeSettings() {
           } = elements;
 
     const applyTheme = (isDark) => {        
-        // document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
-        // mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
-        // listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
         activeWord.style.color = isDark ? 'white' : 'black';
         translateWord.style.color = isDark ? '#1DB954' : '#1DB954'
         listHeadWord.style.color = isDark ? 'white' : 'black';
@@ -38,6 +35,7 @@ export function initializeThemeSettings() {
                 const baseColor = colorMap['overlay'];
                 const darkerColor = shadeColor(baseColor, -25);
 
+                console.log("TOGGLE NEW: ");
                 themeToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
                 onOffToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
             }
