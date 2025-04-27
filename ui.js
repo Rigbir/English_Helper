@@ -204,7 +204,7 @@ export function initializeNotificationSettings() {
         console.log(`State on load: ${isOnMode ? 'Enabled' : 'Disabled'}`);
 
         console.log('THEME: ', appState.theme);
-        
+
         if (data.extensionState === undefined) {
             chrome.storage.local.set({ extensionState: true });
         }
@@ -1370,6 +1370,7 @@ function toggleNew() {
     preview.addEventListener('input', (event) => {
         const hexValue = event.target.value;
         const { h, s, l } = hexToHsl(hexValue);
+        color = hslToHex(h, s, l);
         
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
