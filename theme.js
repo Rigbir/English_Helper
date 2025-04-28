@@ -34,7 +34,7 @@ export function initializeThemeSettings() {
                 document.body.style.backgroundColor = isDark ? colorMap['overlay'] : '#f5f4f4';
 
                 const baseColor = colorMap['overlay'];
-                const darkerColor = shadeColor(baseColor, -25);
+                const darkerColor = shadeColor(baseColor, -20);
 
                 console.log("TOGGLE NEW: ");
                 themeToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
