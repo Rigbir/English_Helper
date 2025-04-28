@@ -39,6 +39,10 @@ export function initializeThemeSettings() {
                 console.log("TOGGLE NEW: ");
                 themeToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
                 onOffToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
+            } else {
+                document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
+                themeToggleBackground.style.backgroundColor = isDark ? '#242424' : '#f5f4f4';
+                onOffToggleBackground.style.backgroundColor = isDark ? '#242424' : '#f5f4f4';
             }
             
             if (colorMap['image']) {
