@@ -92,13 +92,15 @@ export const elements = {
     paletteOverlayCloseButton : document.getElementById('close-palette-popup'),
 
     preview : document.getElementById('color-previews'),
-    applyButton : document.getElementById('apply-btn'),
-    inputHue : document.getElementById('input-hue'),
-    inputSaturation : document.getElementById('input-saturation'),
-    inputLightness : document.getElementById('input-lightness'),
     hueBar: document.getElementById('hue'),
     saturationBar: document.getElementById('saturation'),
     lightnessBar: document.getElementById('lightness'),
+    inputHue : document.getElementById('input-hue'),
+    inputSaturation : document.getElementById('input-saturation'),
+    inputLightness : document.getElementById('input-lightness'),
+    resetColorButton : document.getElementById('reset-color'),
+    historyColorButton : document.getElementById('history-color'),
+    applyButton : document.getElementById('apply-btn'),    
 
     //ListPopup
     listButton : document.querySelector('.list-check-btn'),

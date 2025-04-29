@@ -1164,6 +1164,8 @@ export function settingsPopup() {
             allIconImage,
             allArrowImage,
             footerText,
+            resetColorButton,
+            historyColorButton,
           } = elements;
 
     paletteButton.addEventListener('click', () => {
@@ -1250,6 +1252,21 @@ export function settingsPopup() {
         
         toggleNew();
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+    });
+
+    resetColorButton.addEventListener('click', () => {
+        console.log("RESET COLOR");
+        resetColor();
+
+        paletteOverlay.style.display = 'none';
+        palettePopup.style.display = 'none';
+
+        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+    });
+
+    historyColorButton.addEventListener('click', () => {
+        console.log("HISTORY");
     })
 
     paletteOverlay.addEventListener('click', () => {
@@ -1297,6 +1314,11 @@ function removeClickHandler(element) {
             clickMap.delete(el);
         }
     });
+}
+
+function resetColor() {
+    chrome.storage.local.set({ paletteColors: 'default' });
+    initializeThemeSettings();
 }
 
 function toggleNew() {
@@ -1384,7 +1406,12 @@ function toggleNew() {
         const getElement = appState.arraySelectedElementPalette;
 
         chrome.storage.local.get('paletteColors', (result) => {
-            const palette = result.paletteColors || {};
+            let palette = result.paletteColors || {};
+
+            if (typeof palette === 'string' && palette === 'default') {
+                chrome.storage.local.remove('paletteColors', () => {});
+                palette = {}; 
+            } 
 
             getElement.forEach(el => {
                 const name = el.className;

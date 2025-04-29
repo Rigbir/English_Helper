@@ -18,7 +18,9 @@ export function initializeThemeSettings() {
             listButton,
             uploadButton,
             returnFromList,
-            allPopupButton
+            allPopupButton,
+            resetColorButton,
+            historyColorButton,
           } = elements;
 
     const applyTheme = (isDark) => {        
@@ -30,63 +32,91 @@ export function initializeThemeSettings() {
         chrome.storage.local.get('paletteColors', (data) => {
             const colorMap = data.paletteColors || [];
 
-            if (colorMap['overlay']) {
-                document.body.style.backgroundColor = isDark ? colorMap['overlay'] : '#f5f4f4';
-
-                const baseColor = colorMap['overlay'];
-                const darkerColor = shadeColor(baseColor, -20);
-
-                console.log("TOGGLE NEW: ");
-                themeToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
-                onOffToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
-            } else {
+            if (colorMap._reset) {
+                const isDark = themeToggleState.checked;
+                console.log('MODE WITH RESET: ', isDark);
+        
                 document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
                 themeToggleBackground.style.backgroundColor = isDark ? '#242424' : '#f5f4f4';
                 onOffToggleBackground.style.backgroundColor = isDark ? '#242424' : '#f5f4f4';
-            }
-            
-            if (colorMap['image']) {
-                iconButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788'});
-            } else {
+        
                 iconButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
-            }
-
-            if (colorMap['image-arrow']) {
-                arrowButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image-arrow'] : '#dcc788'});
-            } else {
                 arrowButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
-            }
-
-            if (colorMap['footer-btn']) {
-                footerButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
-                allPopupButton.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
-                returnFromList.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788';
-
-                const baseColor = colorMap['footer-btn'];
-                const darkerColor = shadeColor(baseColor, -20);
-
-                [listButton, uploadButton, returnFromList].forEach(btn => {
-                    btn.style.setProperty('--before-color', isDark ? darkerColor : '#cab063');
-                })
-            } else {
+        
                 footerButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
-                console.log("THIS");
+                allPopupButton.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
                 returnFromList.style.backgroundColor = '#dcc788';
-
                 [listButton, uploadButton, returnFromList].forEach(btn => {
                     btn.style.setProperty('--before-color', '#cab063');
-                })
-            }
-
-            if (colorMap['line']) {
-                mainHorizontalLines.forEach(mainLine => {mainLine.style.backgroundColor = isDark ? colorMap['line'] : '#afaf41'});
-                listHorizontalLines.forEach(listLine => {listLine.style.backgroundColor = isDark ? colorMap['line'] : '#afaf41'});
-            } else {
+                });
+        
                 mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
                 listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+        
+                activeWord.style.color = isDark ? 'white' : 'black';
+                translateWord.style.color = isDark ? '#1DB954' : '#1DB954'
+                listHeadWord.style.color = isDark ? 'white' : 'black';
+                listHeadTranslate.style.color = isDark ? 'white' : 'black';
+            } else {
+                if (colorMap['overlay']) {
+                    document.body.style.backgroundColor = isDark ? colorMap['overlay'] : '#f5f4f4';
+    
+                    const baseColor = colorMap['overlay'];
+                    const darkerColor = shadeColor(baseColor, -20);
+    
+                    console.log("TOGGLE NEW: ");
+                    themeToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
+                    onOffToggleBackground.style.backgroundColor = isDark ? darkerColor : '#f5f4f4';
+                } else {
+                    document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
+                    themeToggleBackground.style.backgroundColor = isDark ? '#242424' : '#f5f4f4';
+                    onOffToggleBackground.style.backgroundColor = isDark ? '#242424' : '#f5f4f4';
+                }
+                
+                if (colorMap['image']) {
+                    iconButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788'});
+                    [resetColorButton, historyColorButton].forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788'});
+                } else {
+                    iconButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
+                }
+    
+                if (colorMap['image-arrow']) {
+                    arrowButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['image-arrow'] : '#dcc788'});
+                } else {
+                    arrowButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
+                }
+    
+                if (colorMap['footer-btn']) {
+                    footerButtons.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
+                    allPopupButton.forEach(btn => {btn.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788'});
+                    returnFromList.style.backgroundColor = isDark ? colorMap['footer-btn'] : '#dcc788';
+    
+                    const baseColor = colorMap['footer-btn'];
+                    const darkerColor = shadeColor(baseColor, -20);
+    
+                    [listButton, uploadButton, returnFromList].forEach(btn => {
+                        btn.style.setProperty('--before-color', isDark ? darkerColor : '#cab063');
+                    });
+                } else {
+                    footerButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
+                    allPopupButton.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
+                    returnFromList.style.backgroundColor = '#dcc788';
+    
+                    [listButton, uploadButton, returnFromList].forEach(btn => {
+                        btn.style.setProperty('--before-color', '#cab063');
+                    });
+                }
+    
+                if (colorMap['line']) {
+                    mainHorizontalLines.forEach(mainLine => {mainLine.style.backgroundColor = isDark ? colorMap['line'] : '#afaf41'});
+                    listHorizontalLines.forEach(listLine => {listLine.style.backgroundColor = isDark ? colorMap['line'] : '#afaf41'});
+                } else {
+                    mainHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+                    listHorizontalLines.forEach(line => {line.style.backgroundColor = isDark ? '#afaf41' : 'black'});
+                }
+                
+                console.log("IN CRHOME: ", colorMap); 
             }
-            
-            console.log("IN CRHOME: ", colorMap); 
         });
     }
 

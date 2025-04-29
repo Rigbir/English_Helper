@@ -203,11 +203,15 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                     newButton.id = 'return-word-btn';
                     newButton.classList.add('icon-btn');
 
-                    if (colorMap['image']) {
-                        newButton.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788';
-                        newContainer.style.setProperty('--before-color', isDark ? colorMap['image'] : '#afaf41');
-                    } else {
+                    if (colorMap['default']) {
                         newButton.style.backgroundClip = '#dcc788';
+                    } else {
+                        if (colorMap['image']) {
+                            newButton.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788';
+                            newContainer.style.setProperty('--before-color', isDark ? colorMap['image'] : '#afaf41');
+                        } else {
+                            newButton.style.backgroundClip = '#dcc788';
+                        }
                     }
         
                     const img = document.createElement('img');
