@@ -364,7 +364,7 @@ input::-webkit-inner-spin-button {
 }
 
 .on-off_input:checked + .on-off_label::after {
-    left: 118px;
+    left: 118.78px;
     transform: translateX(-100%);
     background: linear-gradient(180deg,#23541c,#215e22);
 }
