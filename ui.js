@@ -1411,7 +1411,19 @@ function resetColor() {
 }
 
 function setAllHistoryColors() {
-    const { historyColorPopup, historyColorCloseButton } = elements;
+    const { historyColorPopup, 
+            historyColorCloseButton,
+            historyColorOverlay,
+            paletteOverlay,
+            palettePopup,
+            preview,
+            hueBar,
+            saturationBar,
+            lightnessBar,
+            inputHue,
+            inputSaturation,
+            inputLightness
+          } = elements;
     historyColorPopup.style.display = 'grid';
 
     [...historyColorPopup.children].forEach(child => {
@@ -1431,6 +1443,23 @@ function setAllHistoryColors() {
             const colorBox = document.createElement('div');
             colorBox.classList.add('color-box');
             colorBox.style.backgroundColor = color;
+
+            colorBox.addEventListener('click', () => {
+                console.log("CLICK ON THIS COLOR: ", color);
+
+                const { h, s, l } = hexToHsl(color);
+                appState.previewColor = color;
+                preview.value = color;
+                
+                [hueBar, inputHue].forEach(el => el.value = h);
+                [saturationBar, inputSaturation].forEach(el => el.value = s);
+                [lightnessBar, inputLightness].forEach(el => el.value = l);
+
+                historyColorPopup.style.display = 'none';
+                historyColorOverlay.style.display = 'none'; 
+                paletteOverlay.style.display = 'block';
+                palettePopup.style.display = 'block';
+            });
 
             wrapper.appendChild(colorBox);
             historyColorPopup.insertBefore(wrapper, historyColorCloseButton);
@@ -1469,9 +1498,7 @@ function toggleNew() {
         saturation: inputSaturation,
         lightness: inputLightness,
     }
-
-    let color = "";
-
+    
     function getValue(source) {
         return {
             h : source.hue.value,
@@ -1483,12 +1510,11 @@ function toggleNew() {
     function updateColorFrom(source) {
         const { h, s, l } = getValue(source);
 
-        color = hslToHex(h, s, l);
-        console.log("COLOR IN HEX VALUE: ", color);
+        appState.previewColor = hslToHex(h, s, l);
+        console.log("COLOR IN HEX VALUE: ", appState.previewColor);
         console.log(`COLOR HSL ${h}, ${s}, ${l}`);
-        preview.value = color;
+        preview.value = appState.previewColor;
 
-        //preview.style.backgroundColor = color;
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
         [lightnessBar, inputLightness].forEach(el => el.value = l);
@@ -1518,14 +1544,14 @@ function toggleNew() {
     
     const handler = () => {
         console.log("COLOR APPLY CLICK");       
-        console.log('COLOR: ', color);
+        console.log('COLOR: ', appState.previewColor);
 
         const getElement = appState.arraySelectedElementPalette;
-        if (appState.historyColorArray.length < 25 && !appState.historyColorArray.includes(color)) {
-            appState.historyColorArray.push(color);
+        if (appState.historyColorArray.length < 25 && !appState.historyColorArray.includes(appState.previewColor)) {
+            appState.historyColorArray.push(appState.previewColor);
         } else {
             appState.historyColorArray.pop();
-            appState.historyColorArray.unshift(color);
+            appState.historyColorArray.unshift(appState.previewColor);
         }
 
         chrome.storage.local.get('paletteColors', (result) => {
@@ -1541,11 +1567,11 @@ function toggleNew() {
                 console.log("NAME: ", name);
 
                 if (name.includes('upload-btn-text') || name.includes('list-check-btn-text')) {
-                    palette['footer-btn'] = color; 
+                    palette['footer-btn'] = appState.previewColor; 
                 } else if (name.includes('horizontal-line') || name.includes('list-line')) {
-                    palette['line'] = color;
+                    palette['line'] = appState.previewColor;
                 } else {
-                    palette[name] = color;
+                    palette[name] = appState.previewColor;
                 }
             });
 
@@ -1555,8 +1581,8 @@ function toggleNew() {
         chrome.storage.local.get('colorImages', (result) => {
             let colors = result.colorImages || [];
             
-            if (!colors.includes(color)) {
-                colors.push(color);
+            if (!colors.includes(appState.previewColor)) {
+                colors.push(appState.previewColor);
                 chrome.storage.local.set({ colorImages: colors });
             }
         });

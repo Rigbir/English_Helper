@@ -58,4 +58,5 @@ export const appState = {
     },
     arraySelectedElementPalette: {},
     historyColorArray: [],
+    previewColor: "",
 };
