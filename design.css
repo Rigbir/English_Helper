@@ -112,6 +112,28 @@ html.no-transition, body.no-transition {
     text-align: center;
 }
 
+/* 
+.example-full {
+    height: 100%;
+}
+#customColorPicker {
+    width: 95%;
+    height: 150px;
+    border-radius: 16px;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    box-sizing: border-box;
+}
+#clr-color-preview {
+    display: none !important;
+}
+#clr-picker {
+    left: 41px !important;
+    top: auto !important;
+} */
+
+
 #color-preview {
     width: 100%;
     height: 150px;
@@ -165,6 +187,7 @@ html.no-transition, body.no-transition {
     flex: 1;
     margin-left: 10px;
     accent-color: #dcc788;
+    cursor: pointer;
 }
 
 #color-code {
@@ -251,6 +274,7 @@ input::-webkit-inner-spin-button {
 
 #agree-reset-color-popup {
     height: 151px;
+    overflow: hidden;
 }
 
 .agreePopupButtons {
@@ -307,6 +331,17 @@ input::-webkit-inner-spin-button {
     z-index: 1000;
 }
 
+#agreeOvelay, #historyOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+}
+
 .popup {
     display: none;
     position: fixed;
@@ -333,7 +368,7 @@ input::-webkit-inner-spin-button {
     overflow-y: auto;
 }
 
-.popup button {
+.popup button:not([aria-labelledby="clr-open-label"], .icon-btn) {
     width: 100px;
     height: 35px;
     background-color: #dcc788;
@@ -349,7 +384,7 @@ input::-webkit-inner-spin-button {
     transition: transform 0.3s, background-color 0.3s;
 }
 
-.popup button:hover {
+.popup button:hover:not([aria-labelledby="clr-open-label"]) {
     transform: scale(1.1);
     background-color: #cab063;
 }

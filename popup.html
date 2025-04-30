@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="design.css">
+        <link rel="stylesheet" href="colorPicker/coloris.min.css">
+        <link rel="stylesheet" href="./node_modules/@simonwep/pickr/dist/themes/nano.min.css">
         <style>
             .hidden { display: none; }
         </style>
@@ -778,6 +780,10 @@
                 <div id="palette-popup" class="popup">
                     <div id="color-preview">
                         <input type="color" id="color-previews">
+                        <!-- <div class="example-full">
+                            <input id="customColorPicker" type="text" class="coloris instance" data-coloris>
+                        </div> -->
+                        <!-- <input class="color-picker"> -->
                     </div>
                       
                     <div class="slider-group">
@@ -828,7 +834,7 @@
                     </div>
                 </div>
 
-                <div id="overlay" class="overlay"></div>
+                <div id="agreeOverlay" class="overlay"></div>
                 <div id="agree-reset-color-popup" class="popup">
                     <div class="popup-content">
                         <h3 class="popup-title">Reset colors?</h3>
@@ -841,7 +847,7 @@
                         <button id="no-reset-color-popup" class="close-popup-button">no</button>
                     </div>
                 </div>
-                <div id="overlay" class="overlay"></div>
+                <div id="historyOverlay" class="overlay"></div>
                 <div id="history-color-popup" class="popup">
                     <button id="close-historyColor-popup" class="close-popup-button">Back</button>
                 </div>
@@ -890,5 +896,7 @@
         </div>
 
         <script type="module" src="functional.js"></script>
+        <!-- <script src="colorPicker/coloris.min.js"></script> -->
+        <script src="node_modules/@simonwep/pickr/dist/pickr.min.js"></script>
     </body>    
 </html>

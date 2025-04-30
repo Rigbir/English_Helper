@@ -100,13 +100,13 @@ export const elements = {
     inputLightness : document.getElementById('input-lightness'),
 
     resetColorButton : document.getElementById('reset-color'),
-    agreeResetColorOverlay : document.getElementById('overlay'),
+    agreeResetColorOverlay : document.getElementById('agreeOverlay'),
     agreeResetColorPopup : document.getElementById('agree-reset-color-popup'),
     yesButton : document.getElementById('yes-reset-color-popup'),
     noButton : document.getElementById('no-reset-color-popup'),
 
     historyColorButton : document.getElementById('history-color'),
-    historyColorOverlay : document.getElementById('overlay'),
+    historyColorOverlay : document.getElementById('historyOverlay'),
     historyColorPopup : document.getElementById('history-color-popup'),
     historyColorCloseButton : document.getElementById('close-historyColor-popup'),
     applyButton : document.getElementById('apply-btn'),    

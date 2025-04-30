@@ -1257,6 +1257,7 @@ export function settingsPopup() {
         palettePopup.style.display = 'block';
         mainWindow.classList.remove('highlight-body');
         
+        createCustomColorPicker();
         toggleNew();
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
     });
@@ -1269,31 +1270,31 @@ export function settingsPopup() {
 
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
-
-        yesButton.addEventListener('click', () => {
-            console.log("RESET COLOR");
-            agreeResetColorPopup.style.display = 'none';
-            agreeResetColorOverlay.style.display = 'none';
-            palettePopup.style.display = 'none';
-            paletteOverlay.style.display = 'none';
-            resetColor();
-        });
-
-        noButton.addEventListener('click', () => {
-            agreeResetColorPopup.style.display = 'none';
-            agreeResetColorOverlay.style.display = 'none';
-            palettePopup.style.display = 'block';
-            paletteOverlay.style.display = 'block';
-        });
-
-        agreeResetColorOverlay.addEventListener('click', () => {
-            agreeResetColorPopup.style.display = 'none';
-            agreeResetColorOverlay.style.display = 'none';
-            palettePopup.style.display = 'block';
-            paletteOverlay.style.display = 'block';
-        });
     });
 
+    yesButton.addEventListener('click', () => {
+        console.log("RESET COLOR");
+        agreeResetColorOverlay.style.display = 'none';
+        agreeResetColorPopup.style.display = 'none';
+        palettePopup.style.display = 'none';
+        paletteOverlay.style.display = 'none';
+        resetColor();
+    });
+
+    noButton.addEventListener('click', () => {
+        agreeResetColorOverlay.style.display = 'none';
+        agreeResetColorPopup.style.display = 'none';
+        palettePopup.style.display = 'block';
+        paletteOverlay.style.display = 'block';
+    });
+
+    agreeResetColorOverlay.addEventListener('click', () => {
+        agreeResetColorOverlay.style.display = 'none';
+        agreeResetColorPopup.style.display = 'none';
+        palettePopup.style.display = 'block';
+        paletteOverlay.style.display = 'block';
+    });
+    
     historyColorButton.addEventListener('click', () => {
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
@@ -1302,20 +1303,20 @@ export function settingsPopup() {
 
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+    });
 
-        historyColorCloseButton.addEventListener('click', () => {
-            historyColorPopup.style.display = 'none';
-            historyColorOverlay.style.display = 'none'; 
-            paletteOverlay.style.display = 'block';
-            palettePopup.style.display = 'block';
-        });
+    historyColorCloseButton.addEventListener('click', () => {
+        historyColorPopup.style.display = 'none';
+        historyColorOverlay.style.display = 'none'; 
+        paletteOverlay.style.display = 'block';
+        palettePopup.style.display = 'block';
+    });
 
-        historyColorOverlay.addEventListener('click', () => {
-            historyColorPopup.style.display = 'none';
-            historyColorOverlay.style.display = 'none'; 
-            paletteOverlay.style.display = 'block';
-            palettePopup.style.display = 'block';
-        });
+    historyColorOverlay.addEventListener('click', () => {
+        historyColorPopup.style.display = 'none';
+        historyColorOverlay.style.display = 'none'; 
+        paletteOverlay.style.display = 'block';
+        palettePopup.style.display = 'block';
     });
 
     paletteOverlay.addEventListener('click', () => {
@@ -1333,6 +1334,44 @@ export function settingsPopup() {
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
     });
+}
+
+function createCustomColorPicker() {
+    // Coloris({
+    //     parent: '.example-full',
+    //     el: '.coloris',
+    //     theme: 'polaroid',
+    //     themeMode: 'light',
+    //     alpha: false,
+    //     defaultColor: '#ffffff',
+    // });
+
+    // // Simple example, see optional options for more configuration.
+    // const pickr = Pickr.create({
+    //     el: '.color-picker',
+    //     theme: 'nano', // or 'monolith', or 'nano'
+    //     autoReposition: true,
+    //     padding: 8,
+    //     components: {
+
+    //         // Main components
+    //         preview: true,
+    //         opacity: false,
+    //         hue: true,
+
+    //         // Input / output Options
+    //         interaction: {
+    //             hex: false,
+    //             rgba: false,
+    //             hsla: false,
+    //             hsva: false,
+    //             cmyk: false,
+    //             input: false,
+    //             clear: true,
+    //             save: true
+    //         }
+    //     }
+    // });
 }
 
 function growHighlightGroupDisable(element) {
