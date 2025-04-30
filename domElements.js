@@ -98,8 +98,17 @@ export const elements = {
     inputHue : document.getElementById('input-hue'),
     inputSaturation : document.getElementById('input-saturation'),
     inputLightness : document.getElementById('input-lightness'),
+
     resetColorButton : document.getElementById('reset-color'),
+    agreeResetColorOverlay : document.getElementById('overlay'),
+    agreeResetColorPopup : document.getElementById('agree-reset-color-popup'),
+    yesButton : document.getElementById('yes-reset-color-popup'),
+    noButton : document.getElementById('no-reset-color-popup'),
+
     historyColorButton : document.getElementById('history-color'),
+    historyColorOverlay : document.getElementById('overlay'),
+    historyColorPopup : document.getElementById('history-color-popup'),
+    historyColorCloseButton : document.getElementById('close-historyColor-popup'),
     applyButton : document.getElementById('apply-btn'),    
 
     //ListPopup

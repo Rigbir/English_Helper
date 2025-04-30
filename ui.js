@@ -1165,7 +1165,14 @@ export function settingsPopup() {
             allArrowImage,
             footerText,
             resetColorButton,
+            agreeResetColorOverlay,
+            agreeResetColorPopup,
+            yesButton,
+            noButton,
+            historyColorOverlay,
             historyColorButton,
+            historyColorPopup,
+            historyColorCloseButton,
           } = elements;
 
     paletteButton.addEventListener('click', () => {
@@ -1255,19 +1262,61 @@ export function settingsPopup() {
     });
 
     resetColorButton.addEventListener('click', () => {
-        console.log("RESET COLOR");
-        resetColor();
-
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
+        agreeResetColorOverlay.style.display = 'block';
+        agreeResetColorPopup.style.display = 'block';
 
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+
+        yesButton.addEventListener('click', () => {
+            console.log("RESET COLOR");
+            agreeResetColorPopup.style.display = 'none';
+            agreeResetColorOverlay.style.display = 'none';
+            palettePopup.style.display = 'none';
+            paletteOverlay.style.display = 'none';
+            resetColor();
+        });
+
+        noButton.addEventListener('click', () => {
+            agreeResetColorPopup.style.display = 'none';
+            agreeResetColorOverlay.style.display = 'none';
+            palettePopup.style.display = 'block';
+            paletteOverlay.style.display = 'block';
+        });
+
+        agreeResetColorOverlay.addEventListener('click', () => {
+            agreeResetColorPopup.style.display = 'none';
+            agreeResetColorOverlay.style.display = 'none';
+            palettePopup.style.display = 'block';
+            paletteOverlay.style.display = 'block';
+        });
     });
 
     historyColorButton.addEventListener('click', () => {
-        console.log("HISTORY");
-    })
+        paletteOverlay.style.display = 'none';
+        palettePopup.style.display = 'none';
+        historyColorOverlay.style.display = 'block';
+        historyColorPopup.style.display = 'block';
+
+        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+
+        historyColorCloseButton.addEventListener('click', () => {
+            historyColorPopup.style.display = 'none';
+            historyColorOverlay.style.display = 'none'; 
+            paletteOverlay.style.display = 'block';
+            palettePopup.style.display = 'block';
+        });
+
+        historyColorOverlay.addEventListener('click', () => {
+            historyColorPopup.style.display = 'none';
+            historyColorOverlay.style.display = 'none'; 
+            paletteOverlay.style.display = 'block';
+            palettePopup.style.display = 'block';
+        });
+    });
 
     paletteOverlay.addEventListener('click', () => {
         paletteOverlay.style.display = 'none';

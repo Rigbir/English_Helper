@@ -249,6 +249,34 @@ input::-webkit-inner-spin-button {
     margin-bottom: 4px;
 }
 
+#agree-reset-color-popup {
+    height: 151px;
+}
+
+.agreePopupButtons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.popup-content {
+    padding: 0 10px;
+}
+
+.popup-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.popup-text {
+    font-size: 0.95rem;
+    color: #444;
+    line-height: 1.4;
+    margin-top: 8px;
+}
+
 #information {
     margin-top: 10px;
     margin-right: 7px;

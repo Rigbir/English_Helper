@@ -795,12 +795,6 @@
                       </div>
                     </div>
 
-                    <!-- <div id="color-code">
-                        <input type="number" id="input-hue" value="180" placeholder="Hue" min="0" max="360" >
-                        <input type="number" id="input-saturation" value="50" placeholder="Saturation" min="0" max="100" >
-                        <input type="number" id="input-lightness" value="50" placeholder="Lightness" min="0" max="50" >
-                    </div> -->
-
                     <div id="color-code">
                         <div class="row">
                             <div class="input-group">
@@ -821,6 +815,7 @@
                                 <label for="input-lightness">L</label>
                                 <input type="number" id="input-lightness" value="50" placeholder="Lightness" min="0" max="100">
                             </div>
+
                             <button id="history-color" class="icon-btn">
                                 <img src="image/history.png" alt="" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                             </button>
@@ -832,6 +827,25 @@
                         <button id="close-palette-popup" class="close-popup-button">Close</button>
                     </div>
                 </div>
+
+                <div id="overlay" class="overlay"></div>
+                <div id="agree-reset-color-popup" class="popup">
+                    <div class="popup-content">
+                        <h3 class="popup-title">Reset colors?</h3>
+                        <p class="popup-text">
+                            This will restore all color settings to their default values. Are you sure you want to continue?
+                        </p>
+                    </div>
+                    <div class="agreePopupButtons"> 
+                        <button id="yes-reset-color-popup" class="close-popup-button">yes</button>
+                        <button id="no-reset-color-popup" class="close-popup-button">no</button>
+                    </div>
+                </div>
+                <div id="overlay" class="overlay"></div>
+                <div id="history-color-popup" class="popup">
+                    <button id="close-historyColor-popup" class="close-popup-button">Back</button>
+                </div>
+
                 <button id="palette-btn" class="icon-btn">
                     <img src="image/palette.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                 </button>
