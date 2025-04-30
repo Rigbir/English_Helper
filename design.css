@@ -278,6 +278,8 @@ input::-webkit-inner-spin-button {
 
     align-content: start;         
     justify-content: center;   
+    height: 80vh; 
+    padding-bottom: 50px;
 }
 
 .colorWrapper {
@@ -299,11 +301,18 @@ input::-webkit-inner-spin-button {
     transition: transform 0.3s ease;
 }
 
-#close-historyColor-popup {
+/* #close-historyColor-popup {
     grid-column: span 3;
     padding: 10px;
     margin-top: 10px;
     margin-left: 60px;
+} */
+
+.historyPopupButtons {
+    grid-column: span 3; 
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
 }
 
 #reset-color {

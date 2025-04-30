@@ -108,6 +108,8 @@ export const elements = {
     historyColorButton : document.getElementById('history-color'),
     historyColorOverlay : document.getElementById('historyOverlay'),
     historyColorPopup : document.getElementById('history-color-popup'),
+    historyButtons : document.querySelector('.historyPopupButtons'),
+    historyClearPopupButton : document.getElementById('clear-historyColor-popup'),
     historyColorCloseButton : document.getElementById('close-historyColor-popup'),
     applyButton : document.getElementById('apply-btn'),    
 

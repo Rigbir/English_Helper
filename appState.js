@@ -57,6 +57,5 @@ export const appState = {
         'https://cdn-icons-png.flaticon.com/512/3655/3655716.png': true,
     },
     arraySelectedElementPalette: {},
-    historyColorArray: [],
     previewColor: "",
 };

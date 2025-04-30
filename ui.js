@@ -1412,6 +1412,8 @@ function resetColor() {
 
 function setAllHistoryColors() {
     const { historyColorPopup, 
+            historyButtons,
+            historyClearPopupButton,
             historyColorCloseButton,
             historyColorOverlay,
             paletteOverlay,
@@ -1427,13 +1429,13 @@ function setAllHistoryColors() {
     historyColorPopup.style.display = 'grid';
 
     [...historyColorPopup.children].forEach(child => {
-        if (child !== historyColorCloseButton) {
+        if (child !== historyButtons) {
             historyColorPopup.removeChild(child);
         }
     });
 
     chrome.storage.local.get('colorImages', (data) => {
-        const allColors = data.colorImages;
+        let allColors = data.colorImages;
         console.log("ALL COLORS: ", allColors);
 
         allColors.forEach(color => {
@@ -1462,7 +1464,20 @@ function setAllHistoryColors() {
             });
 
             wrapper.appendChild(colorBox);
-            historyColorPopup.insertBefore(wrapper, historyColorCloseButton);
+            historyColorPopup.insertBefore(wrapper, historyButtons);
+        });
+
+        historyClearPopupButton.addEventListener('click', () => {
+            allColors = [];
+
+            [...historyColorPopup.children].forEach(child => {
+                if (child !== historyButtons) {
+                    historyColorPopup.removeChild(child);
+                }
+            });
+
+            chrome.storage.local.set({ colorImages: allColors });
+            console.log("Colors have been cleared.");
         });
     });
 }
@@ -1498,7 +1513,7 @@ function toggleNew() {
         saturation: inputSaturation,
         lightness: inputLightness,
     }
-    
+
     function getValue(source) {
         return {
             h : source.hue.value,
@@ -1547,12 +1562,6 @@ function toggleNew() {
         console.log('COLOR: ', appState.previewColor);
 
         const getElement = appState.arraySelectedElementPalette;
-        if (appState.historyColorArray.length < 25 && !appState.historyColorArray.includes(appState.previewColor)) {
-            appState.historyColorArray.push(appState.previewColor);
-        } else {
-            appState.historyColorArray.pop();
-            appState.historyColorArray.unshift(appState.previewColor);
-        }
 
         chrome.storage.local.get('paletteColors', (result) => {
             let palette = result.paletteColors || {};
@@ -1581,10 +1590,16 @@ function toggleNew() {
         chrome.storage.local.get('colorImages', (result) => {
             let colors = result.colorImages || [];
             
-            if (!colors.includes(appState.previewColor)) {
+            if (colors.length < 17 && !colors.includes(appState.previewColor)) {
                 colors.push(appState.previewColor);
-                chrome.storage.local.set({ colorImages: colors });
+            } else if (colors.length >= 17) {
+                if (!colors.includes(appState.previewColor)) {
+                    colors.pop(); 
+                    colors.unshift(appState.previewColor); 
+                }
             }
+
+            chrome.storage.local.set({ colorImages: colors });
         });
 
         paletteOverlay.style.display = 'none';
