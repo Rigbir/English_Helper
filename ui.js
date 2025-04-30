@@ -1520,7 +1520,7 @@ function toggleNew() {
             l : source.lightness.value
         }
     }
-    
+
     function updateColorFrom(source) {
         const { h, s, l } = getValue(source);
 
@@ -1532,6 +1532,20 @@ function toggleNew() {
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
         [lightnessBar, inputLightness].forEach(el => el.value = l);
+    }
+
+    function startColor() {
+        chrome.storage.local.get('colorImages', (data) => {
+            if (data.colorImages[0]) {
+                preview.value = data.colorImages[0];
+                const { h, s, l } = hexToHsl(data.colorImages[0]);
+                [hueBar, inputHue].forEach(el => el.value = h);
+                [saturationBar, inputSaturation].forEach(el => el.value = s);
+                [lightnessBar, inputLightness].forEach(el => el.value = l);
+            } else {
+                updateColorFrom(sliders)
+            }
+        });
     }
 
     restrictInput(inputHue, 0, 360);
@@ -1590,7 +1604,7 @@ function toggleNew() {
             let colors = result.colorImages || [];
             
             if (colors.length < 18 && !colors.includes(appState.previewColor)) {
-                colors.push(appState.previewColor);
+                colors.unshift(appState.previewColor);
             } else if (colors.length >= 18) {
                 if (!colors.includes(appState.previewColor)) {
                     colors.pop(); 
@@ -1612,6 +1626,7 @@ function toggleNew() {
     applyButton.addEventListener('click', handler);
 
     updateColorFrom(sliders);
+    startColor();
 }
 
 function hslToHex(h, s, l) {
