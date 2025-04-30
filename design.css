@@ -272,14 +272,13 @@ input::-webkit-inner-spin-button {
     display: none;
     grid-template-columns: repeat(3, 1fr); 
     grid-gap: 7px; 
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     /* cursor: pointer; */
 
     align-content: start;         
     justify-content: center;   
-    height: 80vh; 
-    padding-bottom: 50px;
+    /* height: 80vh; 
+    padding-bottom: 50px; */
 }
 
 .colorWrapper {
@@ -301,18 +300,11 @@ input::-webkit-inner-spin-button {
     transition: transform 0.3s ease;
 }
 
-/* #close-historyColor-popup {
-    grid-column: span 3;
-    padding: 10px;
-    margin-top: 10px;
-    margin-left: 60px;
-} */
-
 .historyPopupButtons {
     grid-column: span 3; 
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
+    margin-top: 3px;
 }
 
 #reset-color {

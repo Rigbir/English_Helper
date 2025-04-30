@@ -1414,7 +1414,6 @@ function setAllHistoryColors() {
     const { historyColorPopup, 
             historyButtons,
             historyClearPopupButton,
-            historyColorCloseButton,
             historyColorOverlay,
             paletteOverlay,
             palettePopup,
@@ -1590,9 +1589,9 @@ function toggleNew() {
         chrome.storage.local.get('colorImages', (result) => {
             let colors = result.colorImages || [];
             
-            if (colors.length < 17 && !colors.includes(appState.previewColor)) {
+            if (colors.length < 18 && !colors.includes(appState.previewColor)) {
                 colors.push(appState.previewColor);
-            } else if (colors.length >= 17) {
+            } else if (colors.length >= 18) {
                 if (!colors.includes(appState.previewColor)) {
                     colors.pop(); 
                     colors.unshift(appState.previewColor); 
