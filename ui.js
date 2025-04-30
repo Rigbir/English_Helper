@@ -1301,6 +1301,7 @@ export function settingsPopup() {
         historyColorOverlay.style.display = 'block';
         historyColorPopup.style.display = 'block';
 
+        setAllHistoryColors();
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
     });
@@ -1409,6 +1410,34 @@ function resetColor() {
     initializeThemeSettings();
 }
 
+function setAllHistoryColors() {
+    const { historyColorPopup, historyColorCloseButton } = elements;
+    historyColorPopup.style.display = 'grid';
+
+    [...historyColorPopup.children].forEach(child => {
+        if (child !== historyColorCloseButton) {
+            historyColorPopup.removeChild(child);
+        }
+    });
+
+    chrome.storage.local.get('colorImages', (data) => {
+        const allColors = data.colorImages;
+        console.log("ALL COLORS: ", allColors);
+
+        allColors.forEach(color => {
+            const wrapper = document.createElement('div');
+            wrapper.classList.add('colorWrapper');
+
+            const colorBox = document.createElement('div');
+            colorBox.classList.add('color-box');
+            colorBox.style.backgroundColor = color;
+
+            wrapper.appendChild(colorBox);
+            historyColorPopup.insertBefore(wrapper, historyColorCloseButton);
+        });
+    });
+}
+
 function toggleNew() {
     const { preview,
             applyButton,
@@ -1492,6 +1521,12 @@ function toggleNew() {
         console.log('COLOR: ', color);
 
         const getElement = appState.arraySelectedElementPalette;
+        if (appState.historyColorArray.length < 25 && !appState.historyColorArray.includes(color)) {
+            appState.historyColorArray.push(color);
+        } else {
+            appState.historyColorArray.pop();
+            appState.historyColorArray.unshift(color);
+        }
 
         chrome.storage.local.get('paletteColors', (result) => {
             let palette = result.paletteColors || {};
@@ -1515,6 +1550,15 @@ function toggleNew() {
             });
 
             chrome.storage.local.set({ paletteColors: palette });
+        });
+
+        chrome.storage.local.get('colorImages', (result) => {
+            let colors = result.colorImages || [];
+            
+            if (!colors.includes(color)) {
+                colors.push(color);
+                chrome.storage.local.set({ colorImages: colors });
+            }
         });
 
         paletteOverlay.style.display = 'none';
