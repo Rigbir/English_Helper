@@ -1452,12 +1452,17 @@ function setAllHistoryColors() {
                 appState.previewColor = color;
                 preview.value = color;
 
-                [hueBar, saturationBar, lightnessBar].forEach(slider => {
-                    slider.style.setProperty('--slider-color', appState.previewColor);
-                });
                 [hueBar, inputHue].forEach(el => el.value = h);
                 [saturationBar, inputSaturation].forEach(el => el.value = s);
                 [lightnessBar, inputLightness].forEach(el => el.value = l);
+                [hueBar, saturationBar, lightnessBar].forEach(slider => {
+                    const value = +slider.value;
+                    const min = +slider.min;
+                    const max = +slider.max;
+                    const percentage = ((value - min) / (max - min)) * 100;
+                
+                    slider.style.background = `linear-gradient(to right, ${appState.previewColor} 0%, ${appState.previewColor} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
+                });
 
                 historyColorPopup.style.display = 'none';
                 historyColorOverlay.style.display = 'none'; 
@@ -1533,7 +1538,12 @@ function toggleNew() {
         preview.value = appState.previewColor;
 
         [hueBar, saturationBar, lightnessBar].forEach(slider => {
-            slider.style.setProperty('--slider-color', appState.previewColor);
+            const value = +slider.value;
+            const min = +slider.min;
+            const max = +slider.max;
+            const percentage = ((value - min) / (max - min)) * 100;
+        
+            slider.style.background = `linear-gradient(to right, ${appState.previewColor} 0%, ${appState.previewColor} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
         });
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
@@ -1547,7 +1557,12 @@ function toggleNew() {
                 const { h, s, l } = hexToHsl(data.colorImages[0]);
 
                 [hueBar, saturationBar, lightnessBar].forEach(slider => {
-                    slider.style.setProperty('--slider-color', data.colorImages[0]);
+                    const value = +slider.value;
+                    const min = +slider.min;
+                    const max = +slider.max;
+                    const percentage = ((value - min) / (max - min)) * 100;
+                
+                    slider.style.background = `linear-gradient(to right, ${data.colorImages[0]} 0%, ${data.colorImages[0]} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
                 });
                 [hueBar, inputHue].forEach(el => el.value = h);
                 [saturationBar, inputSaturation].forEach(el => el.value = s);
