@@ -1296,11 +1296,6 @@ export function settingsPopup() {
     });
     
     historyColorButton.addEventListener('click', () => {
-        paletteOverlay.style.display = 'none';
-        palettePopup.style.display = 'none';
-        historyColorOverlay.style.display = 'block';
-        historyColorPopup.style.display = 'block';
-
         setAllHistoryColors();
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
@@ -1425,7 +1420,6 @@ function setAllHistoryColors() {
             inputSaturation,
             inputLightness
           } = elements;
-    historyColorPopup.style.display = 'grid';
 
     [...historyColorPopup.children].forEach(child => {
         if (child !== historyButtons) {
@@ -1445,6 +1439,9 @@ function setAllHistoryColors() {
             colorBox.classList.add('color-box');
             colorBox.style.backgroundColor = color;
 
+            wrapper.appendChild(colorBox);
+            historyColorPopup.insertBefore(wrapper, historyButtons);
+
             colorBox.addEventListener('click', () => {
                 console.log("CLICK ON THIS COLOR: ", color);
 
@@ -1463,15 +1460,16 @@ function setAllHistoryColors() {
                 
                     slider.style.background = `linear-gradient(to right, ${appState.previewColor} 0%, ${appState.previewColor} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
                 });
-
-                historyColorPopup.style.display = 'none';
-                historyColorOverlay.style.display = 'none'; 
-                paletteOverlay.style.display = 'block';
-                palettePopup.style.display = 'block';
             });
 
-            wrapper.appendChild(colorBox);
-            historyColorPopup.insertBefore(wrapper, historyButtons);
+            historyColorPopup.style.display = 'none';
+            historyColorOverlay.style.display = 'none'; 
+            paletteOverlay.style.display = 'block';
+            palettePopup.style.display = 'block';
+        });
+
+        requestAnimationFrame(() => {
+            historyColorPopup.style.display = 'grid';
         });
 
         historyClearPopupButton.addEventListener('click', () => {
