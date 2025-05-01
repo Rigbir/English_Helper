@@ -117,7 +117,7 @@ export function setupStorageListeners() {
                     initializeMainDatabase(database);
 
                     initializeInputFieldAndHintButton(database);
-                    //generateNewRandomWord(database);
+                    generateNewRandomWord(database);
                 };
                 requestWords.onerror = () => {
                     console.error("Error opened new databse: ", error)

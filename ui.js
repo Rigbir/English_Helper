@@ -1481,6 +1481,7 @@ function setAllHistoryColors() {
                     historyColorPopup.removeChild(child);
                 }
             });
+            historyColorOverlay.style.display = 'block'; 
 
             chrome.storage.local.set({ colorImages: allColors });
             console.log("Colors have been cleared.");
