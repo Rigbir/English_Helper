@@ -1,8 +1,17 @@
 import { initializeMainDatabase } from './database/mainDatabase.js';
+import { elements } from './domElements.js';
 import { initializeThemeAndTimeSettings } from './theme.js';
 import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime } from './ui.js';
 
 export function updateSelection(changes, key, selector, className) {
+    const { themeOverlay,
+            themePopup,
+            timePopup,
+            timeOverlay,
+            changeModePopup,
+            changeModeOverlay,
+          } = elements;
+
     if (changes[key]) {
         const currentValue = changes[key].newValue;
         console.log('KEY: ', changes[key]);
@@ -16,6 +25,17 @@ export function updateSelection(changes, key, selector, className) {
                 selection.classList.add(className);
             }
         });
+    }
+
+    if (key === 'selectedTheme') {
+        themePopup.style.display = 'none';
+        themeOverlay.style.display = 'none';
+    } else if (key === 'selectedTime') {
+        timePopup.style.display = 'none';
+        timeOverlay.style.display = 'none';
+    } else if (key === 'selectedMode') {
+        changeModePopup.style.display = 'none';
+        changeModeOverlay.style.display = 'none';
     }
 }
 
@@ -97,7 +117,7 @@ export function setupStorageListeners() {
                     initializeMainDatabase(database);
 
                     initializeInputFieldAndHintButton(database);
-                    generateNewRandomWord(database);
+                    //generateNewRandomWord(database);
                 };
                 requestWords.onerror = () => {
                     console.error("Error opened new databse: ", error)

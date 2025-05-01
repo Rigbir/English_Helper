@@ -50,6 +50,7 @@ export function selectedThemePopup() {
 
     allThemeSelections.forEach(themeSelected => {
         themeSelected.addEventListener('click', () => {
+            console.log("Clicked on theme:", themeSelected.textContent);
             allThemeSelections.forEach(item => item.classList.remove('selected-theme'));
 
             themeSelected.classList.add('selected-theme');
