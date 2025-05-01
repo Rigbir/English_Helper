@@ -1460,12 +1460,12 @@ function setAllHistoryColors() {
                 
                     slider.style.background = `linear-gradient(to right, ${appState.previewColor} 0%, ${appState.previewColor} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
                 });
-            });
 
-            historyColorPopup.style.display = 'none';
-            historyColorOverlay.style.display = 'none'; 
-            paletteOverlay.style.display = 'block';
-            palettePopup.style.display = 'block';
+                historyColorPopup.style.display = 'none';
+                historyColorOverlay.style.display = 'none'; 
+                paletteOverlay.style.display = 'block';
+                palettePopup.style.display = 'block';
+            });
         });
 
         requestAnimationFrame(() => {
