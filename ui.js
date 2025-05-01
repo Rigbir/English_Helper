@@ -1257,7 +1257,7 @@ export function settingsPopup() {
         palettePopup.style.display = 'block';
         mainWindow.classList.remove('highlight-body');
         
-        createCustomColorPicker();
+        //createCustomColorPicker();
         toggleNew();
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
     });
@@ -1451,7 +1451,10 @@ function setAllHistoryColors() {
                 const { h, s, l } = hexToHsl(color);
                 appState.previewColor = color;
                 preview.value = color;
-                
+
+                [hueBar, saturationBar, lightnessBar].forEach(slider => {
+                    slider.style.setProperty('--slider-color', appState.previewColor);
+                });
                 [hueBar, inputHue].forEach(el => el.value = h);
                 [saturationBar, inputSaturation].forEach(el => el.value = s);
                 [lightnessBar, inputLightness].forEach(el => el.value = l);
@@ -1529,6 +1532,9 @@ function toggleNew() {
         console.log(`COLOR HSL ${h}, ${s}, ${l}`);
         preview.value = appState.previewColor;
 
+        [hueBar, saturationBar, lightnessBar].forEach(slider => {
+            slider.style.setProperty('--slider-color', appState.previewColor);
+        });
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
         [lightnessBar, inputLightness].forEach(el => el.value = l);
@@ -1539,6 +1545,10 @@ function toggleNew() {
             if (data.colorImages[0]) {
                 preview.value = data.colorImages[0];
                 const { h, s, l } = hexToHsl(data.colorImages[0]);
+
+                [hueBar, saturationBar, lightnessBar].forEach(slider => {
+                    slider.style.setProperty('--slider-color', data.colorImages[0]);
+                });
                 [hueBar, inputHue].forEach(el => el.value = h);
                 [saturationBar, inputSaturation].forEach(el => el.value = s);
                 [lightnessBar, inputLightness].forEach(el => el.value = l);

@@ -187,7 +187,8 @@ html.no-transition, body.no-transition {
 .slider input[type="range"] {
     flex: 1;
     margin-left: 10px;
-    accent-color: #dcc788;
+    /* accent-color: #dcc788; */
+    accent-color: var(--slider-color, #dcc788);
     cursor: pointer;
 }
 
