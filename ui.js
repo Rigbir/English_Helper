@@ -1456,14 +1456,7 @@ function setAllHistoryColors() {
                 [hueBar, inputHue].forEach(el => el.value = h);
                 [saturationBar, inputSaturation].forEach(el => el.value = s);
                 [lightnessBar, inputLightness].forEach(el => el.value = l);
-                [hueBar, saturationBar, lightnessBar].forEach(slider => {
-                    const value = +slider.value;
-                    const min = +slider.min;
-                    const max = +slider.max;
-                    const percentage = ((value - min) / (max - min)) * 100;
-                
-                    slider.style.background = `linear-gradient(to right, ${appState.previewColor} 0%, ${appState.previewColor} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
-                });
+                calculateSliderPosition(appState.previewColor);
 
                 historyColorPopup.style.display = 'none';
                 historyColorOverlay.style.display = 'none'; 
