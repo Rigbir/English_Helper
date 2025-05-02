@@ -1487,21 +1487,27 @@ function setAllHistoryColors() {
 
             appState.previewColor = hslToHex(180, 50, 50);
             preview.value = appState.previewColor;
+
+            calculateSliderPosition(appState.previewColor);
             [hueBar, inputHue].forEach(el => el.value = 180);
             [saturationBar, inputSaturation].forEach(el => el.value = 50);
             [lightnessBar, inputLightness].forEach(el => el.value = 50);
-            [hueBar, saturationBar, lightnessBar].forEach(slider => {
-                const value = +slider.value;
-                const min = +slider.min;
-                const max = +slider.max;
-                const percentage = ((value - min) / (max - min)) * 100;
-            
-                slider.style.background = `linear-gradient(to right, ${preview.value} 0%, ${preview.value} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
-            });
 
             chrome.storage.local.set({ colorImages: allColors });
             console.log("Colors have been cleared.");
         });
+    });
+}
+
+function calculateSliderPosition(color) {
+    const { hueBar, saturationBar, lightnessBar } = elements;
+    [hueBar, saturationBar, lightnessBar].forEach(slider => {
+        const value = +slider.value;
+        const min = +slider.min;
+        const max = +slider.max;
+        const percentage = ((value - min) / (max - min)) * 100;
+    
+        slider.style.background = `linear-gradient(to right, ${color} 0%, ${color} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
     });
 }
 
@@ -1553,14 +1559,7 @@ function toggleNew() {
         console.log(`COLOR HSL ${h}, ${s}, ${l}`);
         preview.value = appState.previewColor;
 
-        [hueBar, saturationBar, lightnessBar].forEach(slider => {
-            const value = +slider.value;
-            const min = +slider.min;
-            const max = +slider.max;
-            const percentage = ((value - min) / (max - min)) * 100;
-        
-            slider.style.background = `linear-gradient(to right, ${appState.previewColor} 0%, ${appState.previewColor} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
-        });
+        calculateSliderPosition(appState.previewColor);
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
         [lightnessBar, inputLightness].forEach(el => el.value = l);
@@ -1572,14 +1571,7 @@ function toggleNew() {
                 preview.value = data.colorImages[0];
                 const { h, s, l } = hexToHsl(data.colorImages[0]);
 
-                [hueBar, saturationBar, lightnessBar].forEach(slider => {
-                    const value = +slider.value;
-                    const min = +slider.min;
-                    const max = +slider.max;
-                    const percentage = ((value - min) / (max - min)) * 100;
-                
-                    slider.style.background = `linear-gradient(to right, ${data.colorImages[0]} 0%, ${data.colorImages[0]} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
-                });
+                calculateSliderPosition(data.colorImages[0]);
                 [hueBar, inputHue].forEach(el => el.value = h);
                 [saturationBar, inputSaturation].forEach(el => el.value = s);
                 [lightnessBar, inputLightness].forEach(el => el.value = l);
@@ -1604,8 +1596,9 @@ function toggleNew() {
     preview.addEventListener('input', (event) => {
         const hexValue = event.target.value;
         const { h, s, l } = hexToHsl(hexValue);
-        color = hslToHex(h, s, l);
+        appState.previewColor = hslToHex(h, s, l);
         
+        calculateSliderPosition(appState.previewColor);
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
         [lightnessBar, inputLightness].forEach(el => el.value = l);
