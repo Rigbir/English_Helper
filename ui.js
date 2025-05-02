@@ -1422,6 +1422,9 @@ function setAllHistoryColors() {
             inputLightness
           } = elements;
 
+    paletteOverlay.style.display = 'none';
+    historyColorOverlay.style.display = 'block';
+
     [...historyColorPopup.children].forEach(child => {
         if (child !== historyButtons) {
             historyColorPopup.removeChild(child);
@@ -1481,7 +1484,19 @@ function setAllHistoryColors() {
                     historyColorPopup.removeChild(child);
                 }
             });
-            historyColorOverlay.style.display = 'block'; 
+
+            preview.value = hslToHex(180, 50, 50);
+            [hueBar, inputHue].forEach(el => el.value = 180);
+            [saturationBar, inputSaturation].forEach(el => el.value = 50);
+            [lightnessBar, inputLightness].forEach(el => el.value = 50);
+            [hueBar, saturationBar, lightnessBar].forEach(slider => {
+                const value = +slider.value;
+                const min = +slider.min;
+                const max = +slider.max;
+                const percentage = ((value - min) / (max - min)) * 100;
+            
+                slider.style.background = `linear-gradient(to right, ${preview.value} 0%, ${preview.value} ${percentage}%, #ffffff ${percentage}%, #ffffff 100%)`;
+            });
 
             chrome.storage.local.set({ colorImages: allColors });
             console.log("Colors have been cleared.");
