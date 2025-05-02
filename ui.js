@@ -1485,7 +1485,8 @@ function setAllHistoryColors() {
                 }
             });
 
-            preview.value = hslToHex(180, 50, 50);
+            appState.previewColor = hslToHex(180, 50, 50);
+            preview.value = appState.previewColor;
             [hueBar, inputHue].forEach(el => el.value = 180);
             [saturationBar, inputSaturation].forEach(el => el.value = 50);
             [lightnessBar, inputLightness].forEach(el => el.value = 50);
