@@ -6,6 +6,11 @@ export const elements = {
     themeToggleState : document.getElementById('theme-toggle'),
     themeToggleBackground : document.querySelector('.toggle_label'),
 
+    languagesButton : document.querySelector('.languages-btn'),
+    languagesOverlay : document.getElementById('overlay'),
+    languagesPopup : document.getElementById('languages-popup'),
+    languagesCloseOverlayButton : document.getElementById('languages-close-popup'),
+
     infoButton : document.querySelector('.information-btn'),
     infoPopup : document.getElementById('info-popup'),
     infoOverlay : document.getElementById('overlay'),

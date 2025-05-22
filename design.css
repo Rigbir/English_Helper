@@ -5,6 +5,7 @@ html, body {
     margin: 0;
     padding: 0;
     transition: background-color 0.3s ease;
+    display: flex;
 }
 
 html.no-transition, body.no-transition {
@@ -13,14 +14,14 @@ html.no-transition, body.no-transition {
 
 #main-window {
     width: 320px;
-    height: 600px;
+    height: 100%;
 }
 
 * {
     margin: 0;
     padding: 0;
 }
-
+  
 .toggle-container {
     display: flex;
     justify-content: space-between; 
@@ -30,10 +31,10 @@ html.no-transition, body.no-transition {
 }
 
 .toggle_label {
-    width: 140px;
+    width: 100px;
     height: 40px;
     margin-right: 8px;
-    margin-left: 7px;
+    margin-left: 5px;
     margin-top: 10px;
     position: relative;
     display: block;
@@ -70,13 +71,13 @@ html.no-transition, body.no-transition {
     background: #242424;
 }
 .toggle_input:checked + .toggle_label::after {
-    left: 118px;
+    left: 80px;
     transform: translateX(-100%);
     background: linear-gradient(180deg,#777,#3a3a3a);
 }
 
 .toggle_label:active::after {
-    width: 50px;
+    width: 45px;
 }
 
 .toggle_label svg {
@@ -92,7 +93,7 @@ html.no-transition, body.no-transition {
     transition: 0.3s;
 }
 .toggle_label svg.moon {
-    left:87px;
+    left:49px;
     fill: #7e7e7e;
     transition: 0.3s;
 }
@@ -101,6 +102,51 @@ html.no-transition, body.no-transition {
 }
 .toggle_input:checked + .toggle_label svg.moon path{
     fill:#fff;
+}
+
+#languages-popup {
+    display: none;
+    height: 185px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 7px;
+    overflow: hidden;
+    align-content: start;
+    justify-content: center;
+}
+
+.languagesWrapper {
+    transition: transform 0.3s ease;
+    display: inline-block;
+    pointer-events: auto;
+}
+
+.languagesWrapper:hover {
+    transform: scale(1.15);
+}
+
+.flag-circle {
+    width: 94%;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2px solid #aa9e9e;
+    cursor: pointer;
+    animation: pop-in 0.6s ease forwards;
+    transition: transform 0.3s ease;
+}
+
+.flag-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+#languages-close-popup {
+    margin-top: 10px;
+    margin-left: 60px;
+    grid-column: span 3;
+    padding: 10px;
 }
 
 .container {
@@ -356,11 +402,12 @@ input::-webkit-inner-spin-button {
     margin-top: 8px;
 }
 
-#information {
+#information, #languages, 
+#themeColors {
     margin-top: 10px;
     margin-right: 7px;
-    width: 40px;
-    height: 35px;
+    width: 48px;
+    height: 39px;
     background-color: #dcc788;
     border: none; 
     border-radius: 60px; 
@@ -445,9 +492,9 @@ input::-webkit-inner-spin-button {
 }
 
 .on-off_label {
-    width: 140px;
+    width: 100px;
     height: 40px;
-    margin-right: 10px;
+    margin-right: 5px;
     margin-top: 10px;
     position: relative;
     display: block;
@@ -482,13 +529,13 @@ input::-webkit-inner-spin-button {
 }
 
 .on-off_input:checked + .on-off_label::after {
-    left: 118.78px;
+    left: 81.78px;
     transform: translateX(-100%);
     background: linear-gradient(180deg,#23541c,#215e22);
 }
 
 .on-off_label:active::after {
-    width: 50px;
+    width: 45px;
 }
 
 .on-off_label svg {
@@ -504,7 +551,7 @@ input::-webkit-inner-spin-button {
     transition: 0.3s;
 }
 .on-off_label svg.on {
-    left: 79px;
+    left: 42px;
     fill: #7e7e7e;
     transition: 0.3s;
 }
@@ -563,6 +610,7 @@ input::-webkit-inner-spin-button {
 
 .theme-input {
     height: 38px;
+    width: 200px;
     text-align: center; 
     font-size: 18px;
     border: 1px solid black; 
@@ -633,7 +681,6 @@ input::-webkit-inner-spin-button {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
-
 .select-time-container {
     display: flex;
     align-items: center;
@@ -644,6 +691,7 @@ input::-webkit-inner-spin-button {
 
 .time-input {
     height: 38px;
+    width: 200px;
     text-align: center;
     font-size: 18px;
     border: 1px solid black;
@@ -695,6 +743,7 @@ input::-webkit-inner-spin-button {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    gap: 1px;
 }
 
 #palette-popup {
@@ -921,6 +970,10 @@ input::-webkit-inner-spin-button {
 .list-check-btn-text {
     position: relative;
     color: #fff;
+}
+
+#list-window {
+    width: 100%;
 }
 
 .clickable-text {

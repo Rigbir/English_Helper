@@ -28,7 +28,7 @@ export function initializeThemeSettings() {
         translateWord.style.color = isDark ? '#1DB954' : '#1DB954'
         listHeadWord.style.color = isDark ? 'white' : 'black';
         listHeadTranslate.style.color = isDark ? 'white' : 'black';
-        
+
         chrome.storage.local.get('paletteColors', (data) => {
             const colorMap = data.paletteColors || [];
 

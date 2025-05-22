@@ -35,6 +35,29 @@ export function displayAppInfoPopup() {
     });
 }
 
+export function displayLanguagesPopup() {
+    const { languagesButton,
+            languagesOverlay,
+            languagesPopup,
+            languagesCloseOverlayButton
+          } = elements;
+
+    languagesButton.addEventListener('click', () => {
+        languagesOverlay.style.display = 'block';
+        languagesPopup.style.display = 'grid';
+    });
+
+    languagesOverlay.addEventListener('click', () => {
+        languagesOverlay.style.display = 'none';
+        languagesPopup.style.display = 'none';
+    });
+
+    languagesCloseOverlayButton.addEventListener('click', () => {
+        languagesOverlay.style.display = 'none';
+        languagesPopup.style.display = 'none';
+    });
+}
+
 export function selectedThemePopup() {
     const { themeField,
             themePopup,
