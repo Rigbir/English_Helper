@@ -52,7 +52,7 @@ html.no-transition, body.no-transition {
     position: absolute;
     top: 3px;
     left: 3px;
-    background: linear-gradient(180deg,#ffcc89,#e09017);
+    background: var(--toggle-bg, linear-gradient(180deg,#ffcc89,#e09017));
     border-radius: 180px;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
     transition: 0.3s;
@@ -88,7 +88,7 @@ html.no-transition, body.no-transition {
     z-index: 100;
 }
 .toggle_label svg.sun {
-    left: 8px;
+    left: 9px;
     fill: #fff;
     transition: 0.3s;
 }
@@ -106,7 +106,7 @@ html.no-transition, body.no-transition {
 
 #languages-popup {
     display: none;
-    height: 185px;
+    height: 200px;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 7px;
     overflow: hidden;
@@ -144,7 +144,7 @@ html.no-transition, body.no-transition {
 
 #languages-close-popup,
 #baseTheme-close-popup {
-    margin-top: 10px;
+    margin-top: 20px;
     margin-left: 60px;
     grid-column: span 3;
     padding: 10px;
@@ -152,6 +152,7 @@ html.no-transition, body.no-transition {
 
 #baseTheme-popup {
     display: none;
+    height: 200px;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 7px;
     overflow: hidden;
@@ -512,11 +513,10 @@ input::-webkit-inner-spin-button {
     overflow-y: auto;
 }
 
-.popup button:not([aria-labelledby="clr-open-label"], .icon-btn) {
+.popup button:not(.icon-btn) {
     width: 100px;
     height: 35px;
     background-color: #dcc788;
-    border: none; 
     border-radius: 65px; 
     text-align: center;
     color: #fff;
@@ -525,12 +525,19 @@ input::-webkit-inner-spin-button {
     letter-spacing: 0.1rem;
     text-transform: uppercase;
     cursor: pointer; 
+
+    border: 1px solid rgba(0, 0, 0, 0.1);
     transition: transform 0.3s, background-color 0.3s;
 }
 
-.popup button:hover:not([aria-labelledby="clr-open-label"]) {
+.close-popup-button:hover {
     transform: scale(1.1);
     background-color: #cab063;
+}
+
+.close-popup-button:active {
+    transform: scale(1.03);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .on-off_label {

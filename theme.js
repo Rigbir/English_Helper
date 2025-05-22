@@ -25,12 +25,12 @@ export function initializeThemeSettings() {
 
     const applyTheme = (isDark) => {        
         activeWord.style.color = isDark ? 'white' : 'black';
-        translateWord.style.color = isDark ? '#1DB954' : '#1DB954'
+        translateWord.style.color = isDark ? '#1DB954' : '#1DB954';
         listHeadWord.style.color = isDark ? 'white' : 'black';
         listHeadTranslate.style.color = isDark ? 'white' : 'black';
 
         chrome.storage.local.get('paletteColors', (data) => {
-            const colorMap = data.paletteColors || [];
+            const colorMap = data.paletteColors;
 
             if (colorMap._reset) {
                 const isDark = themeToggleState.checked;
@@ -42,7 +42,6 @@ export function initializeThemeSettings() {
         
                 iconButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
                 arrowButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
-        
                 footerButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
                 allPopupButton.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
                 returnFromList.style.backgroundColor = '#dcc788';
@@ -71,6 +70,7 @@ export function initializeThemeSettings() {
                     document.body.style.backgroundColor = isDark ? '#313030' : '#f5f4f4';
                     themeToggleBackground.style.backgroundColor = isDark ? '#242424' : '#f5f4f4';
                     onOffToggleBackground.style.backgroundColor = isDark ? '#242424' : '#f5f4f4';
+                    themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #ffcc89, #e09017)`);
                 }
                 
                 if (colorMap['image']) {
@@ -116,6 +116,87 @@ export function initializeThemeSettings() {
                 }
                 
                 console.log("IN CRHOME: ", colorMap); 
+            }
+        });
+
+        const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
+        chrome.storage.local.get(key, (data) => {
+            const color = data[key];
+            if (!color) return;
+
+            console.log("COLOR: ", color);
+            if (color === '#263a47' && key === 'baseThemeDark') {
+                applyBaseTheme('#263a47', '#728495', '#98a9be');
+            } else if (color === '#263a47' && key === 'baseThemeLight') {
+                const darkerColor = shadeColor('#263a47', -20);
+                themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #728495, ${darkerColor})`);
+                applyBaseTheme('#263a47', '#728495', '#98a9be');
+            }
+
+            if (color === '#44334a' && key === 'baseThemeDark') {
+                applyBaseTheme('#44334a', '#8d77a8', '#c4addd');
+            } else if (color === '#44334a' && key === 'baseThemeLight') {
+                const darkerColor = shadeColor('#44334a', -20);
+                themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #8d77a8, ${darkerColor})`);
+                applyBaseTheme('#44334a', '#8d77a8', '#c4addd');
+            }
+
+            if (color === '#375647' && key === 'baseThemeDark') {
+                applyBaseTheme('#375647', '#729e7e', '#91aaa8');
+            } else if (color === '#375647' && key === 'baseThemeLight') {
+                const darkerColor = shadeColor('#375647', -20);
+                themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #729e7e, ${darkerColor})`);
+                applyBaseTheme('#375647', '#729e7e', '#91aaa8');
+            }
+
+            if (color === '#4c3d19' && key === 'baseThemeDark') {
+                applyBaseTheme('#4c3d19', '#889063', '#cfbb99');
+            } else if (color === '#4c3d19' && key === 'baseThemeLight') {
+                const darkerColor = shadeColor('#4c3d19', -20);
+                themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #889063, ${darkerColor})`);
+                applyBaseTheme('#4c3d19', '#889063', '#cfbb99');
+            }
+
+            if (color === '#5b8094' && key === 'baseThemeDark') {
+                applyBaseTheme('#5b8094', '#aad0e2', '#87b1c8');
+            } else if (color === '#5b8094' && key === 'baseThemeLight') {
+                const darkerColor = shadeColor('#5b8094', -20);
+                themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #aad0e2, ${darkerColor})`);
+                applyBaseTheme('#5b8094', '#aad0e2', '#87b1c8');
+            }
+
+            if (color === '#1a1836' && key === 'baseThemeDark') {
+                applyBaseTheme('#1a1836', '#e99856', '#e0b4b2');
+            } else if (color === '#1a1836' && key === 'baseThemeLight') {
+                const darkerColor = shadeColor('#1a1836', -20);
+                themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #e99856, ${darkerColor})`);
+                applyBaseTheme('#1a1836', '#e99856', '#e0b4b2');
+            }
+
+            function applyBaseTheme(base, accent, liner) {
+                const darkerColor = shadeColor(base, -20);
+                const deeperDarker = shadeColor(accent, -20);
+
+                document.body.style.backgroundColor = base;
+                themeToggleBackground.style.backgroundColor = darkerColor;
+                onOffToggleBackground.style.backgroundColor = darkerColor;
+
+                iconButtons.forEach(btn => {btn.style.backgroundColor = accent});
+                arrowButtons.forEach(btn => {btn.style.backgroundColor = accent});
+                footerButtons.forEach(btn => {btn.style.backgroundColor = accent});
+                allPopupButton.forEach(btn => {btn.style.backgroundColor = accent});
+                returnFromList.style.backgroundColor = accent;
+                [listButton, uploadButton, returnFromList].forEach(btn => {
+                    btn.style.setProperty('--before-color', deeperDarker);
+                });
+
+                mainHorizontalLines.forEach(line => {line.style.backgroundColor = liner});
+                listHorizontalLines.forEach(line => {line.style.backgroundColor = liner});
+
+                activeWord.style.color = 'white';
+                translateWord.style.color = '#1DB954';
+                listHeadWord.style.color = 'white';
+                listHeadTranslate.style.color = 'white';
             }
         });
     }

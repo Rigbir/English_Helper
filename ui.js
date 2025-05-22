@@ -81,6 +81,68 @@ export function displayBaseThemePopup() {
     });
 }
 
+export function selectedBaseThemeColor() {
+    const { baseThemeColorBoxes,
+            baseThemeOverlay,
+            baseThemePopup,
+            themeToggleState
+          } = elements;
+
+    baseThemeColorBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            resetSelection();
+
+            const color = getComputedStyle(box).backgroundColor;
+            const hex = rgbToHex(color);
+
+            const dotGradient = `radial-gradient(circle at center, ${hex}, ${darkenColor(hex, 40)})`;
+            const borderColor = darkenColor(hex, 60);
+
+            box.classList.add('selected');
+            box.style.setProperty('--dot-color', dotGradient);
+            box.style.setProperty('--border-color', borderColor);
+            
+            baseThemeOverlay.style.display = 'none';
+            baseThemePopup.style.display = 'none';
+
+            console.log(hex);
+
+            const isDark = themeToggleState.checked;
+            const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
+            chrome.storage.local.set({ [key]: hex });
+            chrome.storage.local.set({ baseTheme: hex });
+
+            initializeThemeSettings();
+        });
+    });
+
+    chrome.storage.local.get('baseTheme', ({ baseTheme }) => {
+        if (!baseTheme) return;
+
+        baseThemeColorBoxes.forEach(box => {
+            const currentColor = getComputedStyle(box).backgroundColor;
+            const hex = rgbToHex(currentColor);
+
+            if (hex.toLowerCase() === baseTheme.toLowerCase()) {
+                const dotGradient = `radial-gradient(circle at center, ${hex}, ${darkenColor(hex, 40)})`;
+                const borderColor = darkenColor(hex, 60);
+
+                box.classList.add('selected');
+                box.style.setProperty('--dot-color', dotGradient);
+                box.style.setProperty('--border-color', borderColor);
+            }
+        });
+    });
+
+    function resetSelection() {
+        baseThemeColorBoxes.forEach(b => {
+            b.classList.remove('selected');
+            b.style.removeProperty('--dot-color');
+            b.style.removeProperty('--border-color');
+        });
+    }
+}
+
 function darkenColor(hex, amount) {
     let col = hex.replace("#", "");
     if (col.length === 3) col = col.split('').map(c => c + c).join('');
@@ -97,32 +159,6 @@ function darkenColor(hex, amount) {
     return `rgb(${r}, ${g}, ${b})`;
 }
 
-export function selectedBaseThemeColor() {
-    const baseThemeColorBoxes = document.querySelectorAll('.baseColor');
-
-    baseThemeColorBoxes.forEach(box => {
-        box.addEventListener('click', () => {
-            baseThemeColorBoxes.forEach(b => {
-                b.classList.remove('selected');
-                b.style.removeProperty('--dot-color');
-                b.style.removeProperty('--border-color');
-            });
-
-            const color = getComputedStyle(box).backgroundColor;
-            const hex = rgbToHex(color);
-
-            const dotGradient = `radial-gradient(circle at center, ${hex}, ${darkenColor(hex, 40)})`;
-            const borderColor = darkenColor(hex, 60);
-
-            box.classList.add('selected');
-            box.style.setProperty('--dot-color', dotGradient);
-            box.style.setProperty('--border-color', borderColor);
-
-            console.log("Выбран цвет:", hex);
-        });
-    });
-}
-
 function rgbToHex(rgb) {
     const result = rgb.match(/\d+/g);
     if (!result) return "#000000";
@@ -137,7 +173,6 @@ function rgbToHex(rgb) {
             .join("")
     );
 }
-
 
 export function selectedThemePopup() {
     const { themeField,

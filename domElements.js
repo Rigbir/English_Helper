@@ -20,7 +20,7 @@ export const elements = {
     baseThemeOverlay : document.getElementById('overlay'),
     baseThemePopup : document.getElementById('baseTheme-popup'),
     baseThemeCloseOverlayButton : document.getElementById('baseTheme-close-popup'),
-    baseThemeColorBox : document.querySelectorAll('.baseColor'),
+    baseThemeColorBoxes : document.querySelectorAll('.baseColor'),
 
     onOffToggleState : document.getElementById('on-off-toggle'),
     onOffToggleBackground : document.querySelector('.on-off_label'),
