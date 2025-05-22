@@ -58,6 +58,87 @@ export function displayLanguagesPopup() {
     });
 }
 
+export function displayBaseThemePopup() {
+    const { baseThemeButton,
+            baseThemeOverlay,
+            baseThemePopup,
+            baseThemeCloseOverlayButton
+          } = elements;
+
+    baseThemeButton.addEventListener('click', () => {
+        baseThemeOverlay.style.display = 'block';
+        baseThemePopup.style.display = 'grid';
+    });
+
+    baseThemeOverlay.addEventListener('click', () => {
+        baseThemeOverlay.style.display = 'none';
+        baseThemePopup.style.display = 'none';
+    });
+
+    baseThemeCloseOverlayButton.addEventListener('click', () => {
+        baseThemeOverlay.style.display = 'none';
+        baseThemePopup.style.display = 'none';
+    });
+}
+
+function darkenColor(hex, amount) {
+    let col = hex.replace("#", "");
+    if (col.length === 3) col = col.split('').map(c => c + c).join('');
+    const num = parseInt(col, 16);
+
+    let r = (num >> 16) - amount;
+    let g = ((num >> 8) & 0x00FF) - amount;
+    let b = (num & 0x0000FF) - amount;
+
+    r = Math.max(0, r);
+    g = Math.max(0, g);
+    b = Math.max(0, b);
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+export function selectedBaseThemeColor() {
+    const baseThemeColorBoxes = document.querySelectorAll('.baseColor');
+
+    baseThemeColorBoxes.forEach(box => {
+        box.addEventListener('click', () => {
+            baseThemeColorBoxes.forEach(b => {
+                b.classList.remove('selected');
+                b.style.removeProperty('--dot-color');
+                b.style.removeProperty('--border-color');
+            });
+
+            const color = getComputedStyle(box).backgroundColor;
+            const hex = rgbToHex(color);
+
+            const dotGradient = `radial-gradient(circle at center, ${hex}, ${darkenColor(hex, 40)})`;
+            const borderColor = darkenColor(hex, 60);
+
+            box.classList.add('selected');
+            box.style.setProperty('--dot-color', dotGradient);
+            box.style.setProperty('--border-color', borderColor);
+
+            console.log("Выбран цвет:", hex);
+        });
+    });
+}
+
+function rgbToHex(rgb) {
+    const result = rgb.match(/\d+/g);
+    if (!result) return "#000000";
+    return (
+        "#" +
+        result
+            .slice(0, 3)
+            .map(x => {
+                const hex = parseInt(x).toString(16);
+                return hex.length === 1 ? "0" + hex : hex;
+            })
+            .join("")
+    );
+}
+
+
 export function selectedThemePopup() {
     const { themeField,
             themePopup,

@@ -16,6 +16,12 @@ export const elements = {
     infoOverlay : document.getElementById('overlay'),
     infoCloseOverlayButton : document.getElementById('close-popup'),
 
+    baseThemeButton : document.querySelector('.baseTheme-btn'),
+    baseThemeOverlay : document.getElementById('overlay'),
+    baseThemePopup : document.getElementById('baseTheme-popup'),
+    baseThemeCloseOverlayButton : document.getElementById('baseTheme-close-popup'),
+    baseThemeColorBox : document.querySelectorAll('.baseColor'),
+
     onOffToggleState : document.getElementById('on-off-toggle'),
     onOffToggleBackground : document.querySelector('.on-off_label'),
 

@@ -3,6 +3,8 @@ import { initializeSecondaryDatabase, addWordToSecondaryDatabase } from './datab
 import { initializeThemeSettings, initializeThemeAndTimeSettings } from './theme.js';
 import { displayAppInfoPopup, 
          displayLanguagesPopup,
+         displayBaseThemePopup,
+         selectedBaseThemeColor,
          initializeNotificationSettings, 
          initializeInputFieldAndHintButton, 
          generateNewRandomWord, 
@@ -33,6 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeThemeSettings();
     displayAppInfoPopup();
     displayLanguagesPopup();
+    displayBaseThemePopup();
+    selectedBaseThemeColor();
     initializeNotificationSettings();
 
     const initialRequest = indexedDB.open('words');
