@@ -173,7 +173,23 @@
                      <div class="colorWrapper">
                         <div class="baseColor" style="background-color:rgb(26, 24, 54);"></div>
                     </div>
-                    <button id="baseTheme-close-popup" class="close-popup-button">Close</button>
+                    <div class="buttonsBaseThemePoppup">
+                        <button id="baseTheme-reset-popup" class="close-popup-button">Reset</button>
+                        <button id="baseTheme-close-popup" class="close-popup-button">Close</button>
+                    </div>
+                </div>
+                <div id="agreeResetOverlay" class="overlay"></div>
+                <div id="agree-reset-themes-popup" class="popup">
+                    <div class="popup-content">
+                        <h3 class="popup-title">Reset theme?</h3>
+                        <p class="popup-text">
+                            This will restore theme settings to their default values. Are you sure you want to continue?
+                        </p>
+                    </div>
+                    <div id="resetThemeButtons" class="agreePopupButtons"> 
+                        <button id="yes-reset-theme-popup" class="close-popup-button">yes</button>
+                        <button id="no-reset-theme-popup" class="close-popup-button">no</button>
+                    </div>
                 </div>
 
                 <input type="checkbox" id="on-off-toggle" class="on-off_input">
@@ -917,7 +933,7 @@
                 <div id="agreeOverlay" class="overlay"></div>
                 <div id="agree-reset-color-popup" class="popup">
                     <div class="popup-content">
-                        <h3 class="popup-title">Reset colors?</h3>
+                        <h3 class="popup-title">Reset colors in Custom theme?</h3>
                         <p class="popup-text">
                             This will restore all color settings to their default values. Are you sure you want to continue?
                         </p>

@@ -21,6 +21,11 @@ export const elements = {
     baseThemePopup : document.getElementById('baseTheme-popup'),
     baseThemeCloseOverlayButton : document.getElementById('baseTheme-close-popup'),
     baseThemeColorBoxes : document.querySelectorAll('.baseColor'),
+    baseThemeResetButton : document.getElementById('baseTheme-reset-popup'),
+    agreeResetThemesOverlay : document.getElementById('agreeResetOverlay'),
+    agreeResetThemesPopup : document.getElementById('agree-reset-themes-popup'),
+    yesResetThemeButton : document.getElementById('yes-reset-theme-popup'),
+    noResetThemeButton : document.getElementById('no-reset-theme-popup'),
 
     onOffToggleState : document.getElementById('on-off-toggle'),
     onOffToggleBackground : document.querySelector('.on-off_label'),

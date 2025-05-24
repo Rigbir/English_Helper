@@ -10,7 +10,7 @@ import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMod
 import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
 import { handleMissingLettersMode, replaceWordMissingLettersMode } from './modes/MissingLetters.js';
 import { updateSelection, loadInitialSelection } from './storage.js';
-import { initializeThemeAndTimeSettings, initializeThemeSettings } from './theme.js';
+import { initializeCustomThemeSettings, initializeThemeSettings } from './theme.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -62,12 +62,45 @@ export function displayBaseThemePopup() {
     const { baseThemeButton,
             baseThemeOverlay,
             baseThemePopup,
-            baseThemeCloseOverlayButton
+            baseThemeCloseOverlayButton,
+            baseThemeResetButton,
+            baseThemeColorBoxes,
+            agreeResetThemesOverlay,
+            agreeResetThemesPopup,
+            yesResetThemeButton,
+            noResetThemeButton,
           } = elements;
 
     baseThemeButton.addEventListener('click', () => {
         baseThemeOverlay.style.display = 'block';
         baseThemePopup.style.display = 'grid';
+
+        const colorBody = getComputedStyle(document.body).backgroundColor;
+        const hexBody = rgbToHex(colorBody);
+
+        baseThemeColorBoxes.forEach(b => {
+            b.classList.remove('selected');
+            b.style.removeProperty('--dot-color');
+            b.style.removeProperty('--border-color');
+        });
+        
+        baseThemeColorBoxes.forEach(box => {
+            const colorBox = getComputedStyle(box).backgroundColor;
+            const hexBox = rgbToHex(colorBox);
+            console.log('COLORBG: ', colorBody);
+            console.log('COLORBOX: ', colorBox);
+
+            if (hexBody === hexBox) {
+                const dotGradient = `radial-gradient(circle at center, ${hexBox}, ${darkenColor(hexBox, 40)})`;
+                const borderColor = darkenColor(hexBox, 60);
+
+                box.classList.add('selected');
+                box.style.setProperty('--dot-color', dotGradient);
+                box.style.setProperty('--border-color', borderColor);
+
+                return;
+            }
+        });
     });
 
     baseThemeOverlay.addEventListener('click', () => {
@@ -79,6 +112,51 @@ export function displayBaseThemePopup() {
         baseThemeOverlay.style.display = 'none';
         baseThemePopup.style.display = 'none';
     });
+
+    baseThemeResetButton.addEventListener('click', () => {
+        baseThemeOverlay.style.display = 'none';
+        baseThemePopup.style.display = 'none';
+        agreeResetThemesOverlay.style.display = 'block';
+        agreeResetThemesPopup.style.display = 'block';
+    });
+
+    yesResetThemeButton.addEventListener('click', () => {
+        agreeResetThemesOverlay.style.display = 'none';
+        agreeResetThemesPopup.style.display = 'none';
+        baseThemePopup.style.display = 'none';
+        baseThemeOverlay.style.display = 'none';
+        resetBaseTheme();
+    });
+
+    noResetThemeButton.addEventListener('click', () => {
+        agreeResetThemesOverlay.style.display = 'none';
+        agreeResetThemesPopup.style.display = 'none';
+        baseThemePopup.style.display = 'grid';
+        baseThemeOverlay.style.display = 'block';
+    });
+
+    agreeResetThemesOverlay.addEventListener('click', () => {
+        agreeResetThemesOverlay.style.display = 'none';
+        agreeResetThemesPopup.style.display = 'none';
+        baseThemePopup.style.display = 'grid';
+        baseThemeOverlay.style.display = 'block';
+    });
+}
+
+function resetBaseTheme() {
+    const { themeToggleState, baseThemeColorBoxes } = elements;
+    const isDark = themeToggleState.checked;
+    const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
+    chrome.storage.local.set({ [key]: 'default' });
+    chrome.storage.local.set({ baseTheme: 'default' });
+
+    baseThemeColorBoxes.forEach(b => {
+        b.classList.remove('selected');
+        b.style.removeProperty('--dot-color');
+        b.style.removeProperty('--border-color');
+    });
+
+    initializeThemeSettings();
 }
 
 export function selectedBaseThemeColor() {
@@ -117,7 +195,7 @@ export function selectedBaseThemeColor() {
     });
 
     chrome.storage.local.get('baseTheme', ({ baseTheme }) => {
-        if (!baseTheme) return;
+        if (!baseTheme || baseTheme === 'default') return;
 
         baseThemeColorBoxes.forEach(box => {
             const currentColor = getComputedStyle(box).backgroundColor;
@@ -1787,7 +1865,8 @@ function toggleNew() {
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
 
-        initializeThemeSettings();
+        //initializeThemeSettings();
+        initializeCustomThemeSettings();
     }
     applyButton.addEventListener('click', handler);
 
