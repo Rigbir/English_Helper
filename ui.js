@@ -1550,44 +1550,6 @@ export function settingsPopup() {
     });
 }
 
-function createCustomColorPicker() {
-    // Coloris({
-    //     parent: '.example-full',
-    //     el: '.coloris',
-    //     theme: 'polaroid',
-    //     themeMode: 'light',
-    //     alpha: false,
-    //     defaultColor: '#ffffff',
-    // });
-
-    // // Simple example, see optional options for more configuration.
-    // const pickr = Pickr.create({
-    //     el: '.color-picker',
-    //     theme: 'nano', // or 'monolith', or 'nano'
-    //     autoReposition: true,
-    //     padding: 8,
-    //     components: {
-
-    //         // Main components
-    //         preview: true,
-    //         opacity: false,
-    //         hue: true,
-
-    //         // Input / output Options
-    //         interaction: {
-    //             hex: false,
-    //             rgba: false,
-    //             hsla: false,
-    //             hsva: false,
-    //             cmyk: false,
-    //             input: false,
-    //             clear: true,
-    //             save: true
-    //         }
-    //     }
-    // });
-}
-
 function growHighlightGroupDisable(element) {
     element.forEach(el => {
         const currentHandle = handleMap.get(el);

@@ -232,28 +232,6 @@ html.no-transition, body.no-transition {
     text-align: center;
 }
 
-/* 
-.example-full {
-    height: 100%;
-}
-#customColorPicker {
-    width: 95%;
-    height: 150px;
-    border-radius: 16px;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-    box-sizing: border-box;
-}
-#clr-color-preview {
-    display: none !important;
-}
-#clr-picker {
-    left: 41px !important;
-    top: auto !important;
-} */
-
-
 #color-preview {
     width: 100%;
     height: 150px;
@@ -410,7 +388,6 @@ input::-webkit-inner-spin-button {
     grid-template-columns: repeat(3, 1fr); 
     grid-gap: 7px; 
     overflow: hidden;
-    /* cursor: pointer; */
 
     align-content: start;         
     justify-content: center;   
