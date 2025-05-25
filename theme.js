@@ -160,6 +160,9 @@ export function initializeThemeSettings() {
                     '#4c3d19': { accent: '#889063', liner: '#cfbb99' },
                     '#5b8094': { accent: '#aad0e2', liner: '#87b1c8' },
                     '#1a1836': { accent: '#e99856', liner: '#e0b4b2' },
+                    '#2e2e38': { accent: '#904040', liner: '#cdd8eb' },
+                    '#2c2824': { accent: '#76736c', liner: '#c3b9a6' },
+                    '#a392a4': { accent: '#A2C2CB', liner: '#B6D6DF' },
                 };
 
                 const isDarkKey = key === 'baseThemeDark';
