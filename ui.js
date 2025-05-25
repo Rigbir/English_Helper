@@ -10,7 +10,7 @@ import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMod
 import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
 import { handleMissingLettersMode, replaceWordMissingLettersMode } from './modes/MissingLetters.js';
 import { updateSelection, loadInitialSelection } from './storage.js';
-import { initializeCustomThemeSettings, initializeThemeSettings } from './theme.js';
+import { initializeThemeSettings } from './theme.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -72,6 +72,14 @@ export function displayBaseThemePopup() {
           } = elements;
 
     baseThemeButton.addEventListener('click', () => {
+        const customBaseThemeBackground = document.getElementById('customBaseColor');
+        const getSavedBackgroundCustomColor = localStorage.getItem('customColorBackground');
+        
+        console.log('SAVED COLOR BASE: ', getSavedBackgroundCustomColor);
+        if (getSavedBackgroundCustomColor) {
+            customBaseThemeBackground.style.backgroundColor = getSavedBackgroundCustomColor;
+        }
+
         baseThemeOverlay.style.display = 'block';
         baseThemePopup.style.display = 'grid';
 
@@ -103,14 +111,11 @@ export function displayBaseThemePopup() {
         });
     });
 
-    baseThemeOverlay.addEventListener('click', () => {
-        baseThemeOverlay.style.display = 'none';
-        baseThemePopup.style.display = 'none';
-    });
-
-    baseThemeCloseOverlayButton.addEventListener('click', () => {
-        baseThemeOverlay.style.display = 'none';
-        baseThemePopup.style.display = 'none';
+    [baseThemeOverlay, baseThemeCloseOverlayButton].forEach(element => {
+        element.addEventListener('click', () => {
+            baseThemeOverlay.style.display = 'none';
+            baseThemePopup.style.display = 'none';
+        });
     });
 
     baseThemeResetButton.addEventListener('click', () => {
@@ -128,18 +133,13 @@ export function displayBaseThemePopup() {
         resetBaseTheme();
     });
 
-    noResetThemeButton.addEventListener('click', () => {
-        agreeResetThemesOverlay.style.display = 'none';
-        agreeResetThemesPopup.style.display = 'none';
-        baseThemePopup.style.display = 'grid';
-        baseThemeOverlay.style.display = 'block';
-    });
-
-    agreeResetThemesOverlay.addEventListener('click', () => {
-        agreeResetThemesOverlay.style.display = 'none';
-        agreeResetThemesPopup.style.display = 'none';
-        baseThemePopup.style.display = 'grid';
-        baseThemeOverlay.style.display = 'block';
+    [noResetThemeButton, agreeResetThemesOverlay].forEach(element => {
+        element.addEventListener('click', () => {
+            agreeResetThemesOverlay.style.display = 'none';
+            agreeResetThemesPopup.style.display = 'none';
+            baseThemePopup.style.display = 'grid';
+            baseThemeOverlay.style.display = 'block';
+        });
     });
 }
 
@@ -1396,39 +1396,45 @@ export function settingsPopup() {
             historyColorCloseButton,
           } = elements;
 
-
-
     paletteButton.addEventListener('click', () => {
         chrome.storage.local.get('baseTheme', ({ baseTheme }) => {
-            console.log('baseTheme =', baseTheme, 'type =', typeof baseTheme);
+            chrome.storage.local.get('paletteColors', (data) => {
+                const colorMap = data.paletteColors || {};
 
-            if (baseTheme !== '#8e7e8e') {
-                confirmPopup.style.display = 'block';
-                confirmOverlay.style.display = 'block';
+                let customTheme = colorMap['overlay'] ? toLowerCaseAll(colorMap['overlay']) : '#8e7e8e';
+                if (baseTheme === '#8e7e8e') customTheme = baseTheme;
+                console.log("CUSTOM THEM COLOR: ", customTheme);
+    
+                console.log('baseTheme =', baseTheme, 'type =', typeof baseTheme);
 
-                confirmCloseButton.addEventListener('click', () => {
-                    confirmPopup.style.display = 'none';
-                    confirmOverlay.style.display = 'none';
-                }, { once: true });
+                if (baseTheme !== customTheme) {
+                    confirmPopup.style.display = 'block';
+                    confirmOverlay.style.display = 'block';
 
-                confirmOverlay.addEventListener('click', () => {
-                    confirmPopup.style.display = 'none';
-                    confirmOverlay.style.display = 'none';
-                }, { once: true });
+                    confirmCloseButton.addEventListener('click', () => {
+                        confirmPopup.style.display = 'none';
+                        confirmOverlay.style.display = 'none';
+                    }, { once: true });
 
-                return; 
-            }
+                    confirmOverlay.addEventListener('click', () => {
+                        confirmPopup.style.display = 'none';
+                        confirmOverlay.style.display = 'none';
+                    }, { once: true });
 
-            firstPaletteOverlay.style.display = 'block';
+                    return; 
+                }
 
-            document.querySelectorAll('.information-btn, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
-                el.classList.add('highlight-target');
-                el.disabled = true;
+                firstPaletteOverlay.style.display = 'block';
+
+                document.querySelectorAll('.information-btn, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+                    el.classList.add('highlight-target');
+                    el.disabled = true;
+                });
+                
+                [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
+                [allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
+                getClickOnButton(firstPaletteOverlay);
             });
-            
-            [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
-            [allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
-            getClickOnButton(firstPaletteOverlay);
         });
     });
 
@@ -1501,7 +1507,6 @@ export function settingsPopup() {
         palettePopup.style.display = 'block';
         mainWindow.classList.remove('highlight-body');
         
-        //createCustomColorPicker();
         toggleNew();
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
     });
@@ -1607,7 +1612,11 @@ function removeClickHandler(element) {
 }
 
 function resetColor() {
-    chrome.storage.local.set({ paletteColors: 'default' });
+    const { themeToggleState } = elements;
+    const isDark = themeToggleState.checked;
+    const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
+    chrome.storage.local.set({ [key]: 'resetCustom' });
+    localStorage.setItem('customColorBackground', '#8e7e8e');
     initializeThemeSettings();
 }
 
@@ -1726,7 +1735,8 @@ function toggleNew() {
             lightnessBar,
             inputHue,
             inputSaturation,
-            inputLightness
+            inputLightness,
+            themeToggleState
           } = elements;
     
     const sliders = {
@@ -1829,6 +1839,10 @@ function toggleNew() {
                 }
             });
 
+            const isDark = themeToggleState.checked;
+            const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
+            chrome.storage.local.set({ [key]: 'custom' });
+            chrome.storage.local.set({ baseTheme: toLowerCaseAll(palette['overlay']) });
             chrome.storage.local.set({ paletteColors: palette });
         });
 
@@ -1853,8 +1867,7 @@ function toggleNew() {
         [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
 
-        //initializeThemeSettings();
-        initializeCustomThemeSettings();
+        initializeThemeSettings();
     }
     applyButton.addEventListener('click', handler);
 
