@@ -135,10 +135,10 @@ export function initializeThemeSettings() {
                 themeToggleBackground.style.setProperty('--toggle-bgm', `linear-gradient(180deg, #777, #3a3a3a)`);
                 themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #ffcc89, #e09017)`);
         
-                iconButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
-                arrowButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
-                footerButtons.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
-                allPopupButton.forEach(btn => {btn.style.backgroundColor = '#dcc788'});
+                [...iconButtons, ...arrowButtons, ...footerButtons, ...allPopupButton].forEach(btn => {
+                    btn.style.backgroundColor = '#dcc788';
+                });
+
                 returnFromList.style.backgroundColor = '#dcc788';
                 [listButton, uploadButton, returnFromList].forEach(btn => {
                     btn.style.setProperty('--before-color', '#cab063');
@@ -153,66 +153,29 @@ export function initializeThemeSettings() {
                 listHeadTranslate.style.color = isDark ? 'white' : 'black';
                 return;
             } else {
+                const themes = {
+                    '#263a47': { accent: '#728495', liner: '#98a9be' },
+                    '#44334a': { accent: '#8d77a8', liner: '#c4addd' },
+                    '#375647': { accent: '#729e7e', liner: '#91aaa8' },
+                    '#4c3d19': { accent: '#889063', liner: '#cfbb99' },
+                    '#5b8094': { accent: '#aad0e2', liner: '#87b1c8' },
+                    '#1a1836': { accent: '#e99856', liner: '#e0b4b2' },
+                };
+
+                const isDarkKey = key === 'baseThemeDark';
+                const theme = themes[color];
+
+                if (theme) {
+                    const darkerColor = shadeColor(isDarkKey ? '#263a47' : color, -20);
+                    const gradient = `linear-gradient(180deg, ${theme.accent}, ${darkerColor})`;
+
+                    const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
+                    themeToggleBackground.style.setProperty(toggleBgProp, gradient);
+
+                    applyBaseTheme(color, theme.accent, theme.liner);
+                }
+    
                 console.log("COLOR: ", color);
-                if (color === '#263a47' && key === 'baseThemeDark') {
-                    const darkerColor = shadeColor('#263a47', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bgm', `linear-gradient(180deg, #728495, ${darkerColor})`);
-                    applyBaseTheme('#263a47', '#728495', '#98a9be');
-                } else if (color === '#263a47' && key === 'baseThemeLight') {
-                    const darkerColor = shadeColor('#263a47', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #728495, ${darkerColor})`);
-                    applyBaseTheme('#263a47', '#728495', '#98a9be');
-                }
-
-                if (color === '#44334a' && key === 'baseThemeDark') {
-                    const darkerColor = shadeColor('#263a47', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bgm', `linear-gradient(180deg, #8d77a8, ${darkerColor})`);
-                    applyBaseTheme('#44334a', '#8d77a8', '#c4addd');
-                } else if (color === '#44334a' && key === 'baseThemeLight') {
-                    const darkerColor = shadeColor('#44334a', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #8d77a8, ${darkerColor})`);
-                    applyBaseTheme('#44334a', '#8d77a8', '#c4addd');
-                }
-
-                if (color === '#375647' && key === 'baseThemeDark') {
-                    const darkerColor = shadeColor('#263a47', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bgm', `linear-gradient(180deg, #729e7e, ${darkerColor})`);
-                    applyBaseTheme('#375647', '#729e7e', '#91aaa8');
-                } else if (color === '#375647' && key === 'baseThemeLight') {
-                    const darkerColor = shadeColor('#375647', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #729e7e, ${darkerColor})`);
-                    applyBaseTheme('#375647', '#729e7e', '#91aaa8');
-                }
-
-                if (color === '#4c3d19' && key === 'baseThemeDark') {
-                    const darkerColor = shadeColor('#263a47', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bgm', `linear-gradient(180deg, #889063, ${darkerColor})`);
-                    applyBaseTheme('#4c3d19', '#889063', '#cfbb99');
-                } else if (color === '#4c3d19' && key === 'baseThemeLight') {
-                    const darkerColor = shadeColor('#4c3d19', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #889063, ${darkerColor})`);
-                    applyBaseTheme('#4c3d19', '#889063', '#cfbb99');
-                }
-
-                if (color === '#5b8094' && key === 'baseThemeDark') {
-                    const darkerColor = shadeColor('#263a47', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bgm', `linear-gradient(180deg, #aad0e2, ${darkerColor})`);
-                    applyBaseTheme('#5b8094', '#aad0e2', '#87b1c8');
-                } else if (color === '#5b8094' && key === 'baseThemeLight') {
-                    const darkerColor = shadeColor('#5b8094', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #aad0e2, ${darkerColor})`);
-                    applyBaseTheme('#5b8094', '#aad0e2', '#87b1c8');
-                }
-
-                if (color === '#1a1836' && key === 'baseThemeDark') {
-                    const darkerColor = shadeColor('#263a47', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bgm', `linear-gradient(180deg, #e99856, ${darkerColor})`);
-                    applyBaseTheme('#1a1836', '#e99856', '#e0b4b2');
-                } else if (color === '#1a1836' && key === 'baseThemeLight') {
-                    const darkerColor = shadeColor('#1a1836', -20);
-                    themeToggleBackground.style.setProperty('--toggle-bg', `linear-gradient(180deg, #e99856, ${darkerColor})`);
-                    applyBaseTheme('#1a1836', '#e99856', '#e0b4b2');
-                }
 
                 function applyBaseTheme(base, accent, liner) {
                     const darkerColor = shadeColor(base, -20);
@@ -222,10 +185,10 @@ export function initializeThemeSettings() {
                     themeToggleBackground.style.backgroundColor = darkerColor;
                     onOffToggleBackground.style.backgroundColor = darkerColor;
 
-                    iconButtons.forEach(btn => {btn.style.backgroundColor = accent});
-                    arrowButtons.forEach(btn => {btn.style.backgroundColor = accent});
-                    footerButtons.forEach(btn => {btn.style.backgroundColor = accent});
-                    allPopupButton.forEach(btn => {btn.style.backgroundColor = accent});
+                    [...iconButtons, ...arrowButtons, ...footerButtons, ...allPopupButton].forEach(btn => {
+                        btn.style.backgroundColor = accent;
+                    });
+
                     returnFromList.style.backgroundColor = accent;
                     [listButton, uploadButton, returnFromList].forEach(btn => {
                         btn.style.setProperty('--before-color', deeperDarker);
