@@ -1375,6 +1375,9 @@ export function settingsPopup() {
             firstPaletteOverlay,
             palettePopup,
             paletteOverlayCloseButton,
+            confirmPopup,
+            confirmOverlay,
+            confirmCloseButton,
             iconButtons,
             arrowButtons,
             mainHorizontalLines,
@@ -1393,17 +1396,40 @@ export function settingsPopup() {
             historyColorCloseButton,
           } = elements;
 
-    paletteButton.addEventListener('click', () => {
-        firstPaletteOverlay.style.display = 'block';
 
-        document.querySelectorAll('.information-btn, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
-            el.classList.add('highlight-target');
-            el.disabled = true;
+
+    paletteButton.addEventListener('click', () => {
+        chrome.storage.local.get('baseTheme', ({ baseTheme }) => {
+            console.log('baseTheme =', baseTheme, 'type =', typeof baseTheme);
+
+            if (baseTheme !== '#8e7e8e') {
+                confirmPopup.style.display = 'block';
+                confirmOverlay.style.display = 'block';
+
+                confirmCloseButton.addEventListener('click', () => {
+                    confirmPopup.style.display = 'none';
+                    confirmOverlay.style.display = 'none';
+                }, { once: true });
+
+                confirmOverlay.addEventListener('click', () => {
+                    confirmPopup.style.display = 'none';
+                    confirmOverlay.style.display = 'none';
+                }, { once: true });
+
+                return; 
+            }
+
+            firstPaletteOverlay.style.display = 'block';
+
+            document.querySelectorAll('.information-btn, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+                el.classList.add('highlight-target');
+                el.disabled = true;
+            });
+            
+            [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
+            [allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
+            getClickOnButton(firstPaletteOverlay);
         });
-        
-        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
-        [allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
-        getClickOnButton(firstPaletteOverlay);
     });
 
     function growHighlightGroup(element) {

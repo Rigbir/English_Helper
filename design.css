@@ -73,7 +73,6 @@ html.no-transition, body.no-transition {
 .toggle_input:checked + .toggle_label::after {
     left: 80px;
     transform: translateX(-100%);
-    /* background: linear-gradient(180deg,#777,#3a3a3a); */
     background: var(--toggle-bgm, linear-gradient(180deg,#777,#3a3a3a));
 }
 
@@ -823,6 +822,15 @@ input::-webkit-inner-spin-button {
     flex-direction: row;
     gap: 19px;
     margin-top: 8px;
+}
+
+#confirm-popup {
+    height: 208px;
+    overflow: hidden;
+}
+
+#close-confirm-popup {
+    margin-top: 20px;
 }
 
 .highlight-target {

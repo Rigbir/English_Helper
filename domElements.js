@@ -107,6 +107,10 @@ export const elements = {
     palettePopup : document.getElementById('palette-popup'),
     paletteOverlayCloseButton : document.getElementById('close-palette-popup'),
 
+    confirmPopup : document.getElementById('confirm-popup'),
+    confirmOverlay : document.getElementById('confirmOverlay'),
+    confirmCloseButton : document.getElementById('close-confirm-popup'),
+
     preview : document.getElementById('color-previews'),
     hueBar: document.getElementById('hue'),
     saturationBar: document.getElementById('saturation'),
