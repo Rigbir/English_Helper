@@ -1616,6 +1616,7 @@ function resetColor() {
     const isDark = themeToggleState.checked;
     const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
     chrome.storage.local.set({ [key]: 'resetCustom' });
+    chrome.storage.local.set({ baseTheme: '#8e7e8e' });
     localStorage.setItem('customColorBackground', '#8e7e8e');
     initializeThemeSettings();
 }
@@ -1842,7 +1843,7 @@ function toggleNew() {
             const isDark = themeToggleState.checked;
             const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
             chrome.storage.local.set({ [key]: 'custom' });
-            chrome.storage.local.set({ baseTheme: toLowerCaseAll(palette['overlay']) });
+            chrome.storage.local.set({ baseTheme: palette['overlay'] ? toLowerCaseAll(palette['overlay']) : '#8e7e8e' });
             chrome.storage.local.set({ paletteColors: palette });
         });
 
