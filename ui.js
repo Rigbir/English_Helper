@@ -24,14 +24,11 @@ export function displayAppInfoPopup() {
         infoOverlay.style.display = 'block';
     });
 
-    infoCloseOverlayButton.addEventListener('click', () => {
-        infoPopup.style.display = 'none';
-        infoOverlay.style.display = 'none';
-    });
-
-    infoOverlay.addEventListener('click', () => {
-        infoPopup.style.display = 'none';
-        infoOverlay.style.display = 'none';
+    [infoCloseOverlayButton, infoOverlay].forEach(element => {
+        element.addEventListener('click', () => {
+            infoPopup.style.display = 'none';
+            infoOverlay.style.display = 'none';
+        }); 
     });
 }
 
@@ -47,14 +44,11 @@ export function displayLanguagesPopup() {
         languagesPopup.style.display = 'grid';
     });
 
-    languagesOverlay.addEventListener('click', () => {
-        languagesOverlay.style.display = 'none';
-        languagesPopup.style.display = 'none';
-    });
-
-    languagesCloseOverlayButton.addEventListener('click', () => {
-        languagesOverlay.style.display = 'none';
-        languagesPopup.style.display = 'none';
+    [languagesOverlay, languagesCloseOverlayButton].forEach(element => {
+        element.addEventListener('click', () => {
+            languagesPopup.style.display = 'none';
+            languagesOverlay.style.display = 'none';
+        }); 
     });
 }
 
@@ -86,11 +80,7 @@ export function displayBaseThemePopup() {
         const colorBody = getComputedStyle(document.body).backgroundColor;
         const hexBody = rgbToHex(colorBody);
 
-        baseThemeColorBoxes.forEach(b => {
-            b.classList.remove('selected');
-            b.style.removeProperty('--dot-color');
-            b.style.removeProperty('--border-color');
-        });
+        resetSelection();
         
         baseThemeColorBoxes.forEach(box => {
             const colorBox = getComputedStyle(box).backgroundColor;
@@ -99,13 +89,7 @@ export function displayBaseThemePopup() {
             console.log('COLORBOX: ', colorBox);
 
             if (hexBody === hexBox) {
-                const dotGradient = `radial-gradient(circle at center, ${hexBox}, ${darkenColor(hexBox, 40)})`;
-                const borderColor = darkenColor(hexBox, 60);
-
-                box.classList.add('selected');
-                box.style.setProperty('--dot-color', dotGradient);
-                box.style.setProperty('--border-color', borderColor);
-
+                addSelection(box, hexBox);
                 return;
             }
         });
@@ -144,18 +128,13 @@ export function displayBaseThemePopup() {
 }
 
 function resetBaseTheme() {
-    const { themeToggleState, baseThemeColorBoxes } = elements;
+    const { themeToggleState } = elements;
     const isDark = themeToggleState.checked;
     const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
     chrome.storage.local.set({ [key]: 'default' });
     chrome.storage.local.set({ baseTheme: 'default' });
 
-    baseThemeColorBoxes.forEach(b => {
-        b.classList.remove('selected');
-        b.style.removeProperty('--dot-color');
-        b.style.removeProperty('--border-color');
-    });
-
+    resetSelection();
     initializeThemeSettings();
 }
 
@@ -168,17 +147,12 @@ export function selectedBaseThemeColor() {
 
     baseThemeColorBoxes.forEach(box => {
         box.addEventListener('click', () => {
+            
             resetSelection();
 
             const color = getComputedStyle(box).backgroundColor;
             const hex = rgbToHex(color);
-
-            const dotGradient = `radial-gradient(circle at center, ${hex}, ${darkenColor(hex, 40)})`;
-            const borderColor = darkenColor(hex, 60);
-
-            box.classList.add('selected');
-            box.style.setProperty('--dot-color', dotGradient);
-            box.style.setProperty('--border-color', borderColor);
+            addSelection(box, hex);
             
             baseThemeOverlay.style.display = 'none';
             baseThemePopup.style.display = 'none';
@@ -202,23 +176,29 @@ export function selectedBaseThemeColor() {
             const hex = rgbToHex(currentColor);
 
             if (hex.toLowerCase() === baseTheme.toLowerCase()) {
-                const dotGradient = `radial-gradient(circle at center, ${hex}, ${darkenColor(hex, 40)})`;
-                const borderColor = darkenColor(hex, 60);
-
-                box.classList.add('selected');
-                box.style.setProperty('--dot-color', dotGradient);
-                box.style.setProperty('--border-color', borderColor);
+                addSelection(box, hex);
             }
         });
     });
+}
 
-    function resetSelection() {
-        baseThemeColorBoxes.forEach(b => {
-            b.classList.remove('selected');
-            b.style.removeProperty('--dot-color');
-            b.style.removeProperty('--border-color');
-        });
-    }
+function resetSelection() {
+    const { baseThemeColorBoxes } = elements;
+
+    baseThemeColorBoxes.forEach(b => {
+        b.classList.remove('selected');
+        b.style.removeProperty('--dot-color');
+        b.style.removeProperty('--border-color');
+    });
+}
+
+function addSelection(box, hex) {
+    const dotGradient = `radial-gradient(circle at center, ${hex}, ${darkenColor(hex, 40)})`;
+    const borderColor = darkenColor(hex, 60);
+
+    box.classList.add('selected');
+    box.style.setProperty('--dot-color', dotGradient);
+    box.style.setProperty('--border-color', borderColor);
 }
 
 function darkenColor(hex, amount) {
@@ -275,14 +255,11 @@ export function selectedThemePopup() {
         });
     });
 
-    themeCloseOverlayButton.addEventListener('click', () => {
-        themePopup.style.display = 'none';
-        themeOverlay.style.display = 'none';
-    });
-
-    themeOverlay.addEventListener('click', () => {
-        themePopup.style.display = 'none';
-        themeOverlay.style.display = 'none';
+    [themeCloseOverlayButton, themeOverlay].forEach(element => {
+        element.addEventListener('click', () => {
+            themePopup.style.display = 'none';
+            themeOverlay.style.display = 'none';
+        });
     });
 }
 
@@ -310,14 +287,11 @@ export function selectedTimePopup() {
         });
     });
 
-    timeCloseOverlayButton.addEventListener('click', () => {
-        timePopup.style.display = 'none';
-        timeOverlay.style.display = 'none';
-    });
-
-    timeOverlay.addEventListener('click', () => {
-        timePopup.style.display = 'none';
-        timeOverlay.style.display = 'none';
+    [timeCloseOverlayButton, timeOverlay].forEach(element => {
+        element.addEventListener('click', () => {
+            timePopup.style.display = 'none';
+            timeOverlay.style.display = 'none';
+        });
     });
 }
 
@@ -354,14 +328,11 @@ export function selectedModePopup() {
         });
     });
 
-    changeModeCloseButtonOverlay.addEventListener('click', () => {
-        changeModePopup.style.display = 'none';
-        changeModeOverlay.style.display = 'none';
-    });
-
-    changeModeOverlay.addEventListener('click', () => {
-        changeModePopup.style.display = 'none';
-        changeModeOverlay.style.display = 'none';
+    [changeModeCloseButtonOverlay, changeModeOverlay].forEach(element => {
+        element.addEventListener('click', () => {
+            changeModePopup.style.display = 'none';
+            changeModeOverlay.style.display = 'none';
+        });
     });
 }
 
@@ -387,32 +358,22 @@ export function selectedAchievementPopup(databaseLearned) {
         achievementOverlay.style.display = 'block';
     });
 
-    achievementCloseButtonOverlay.addEventListener('click', () => {
-        const progressFills = document.querySelectorAll('.progress-fill');
-        progressFills.forEach(bar => {
-            bar.dataset.progress = 0; 
-            bar.style.width = `${0}%`;
+    [achievementCloseButtonOverlay, achievementOverlay].forEach(element => {
+        element.addEventListener('click', () => {
+            const progressFills = document.querySelectorAll('.progress-fill');
+            progressFills.forEach(bar => {
+                bar.dataset.progress = 0; 
+                bar.style.width = `${0}%`;
+            });
+
+            achievementPopup.style.display = 'none';
+            achievementOverlay.style.display = 'none';
         });
-
-        achievementPopup.style.display = 'none';
-        achievementOverlay.style.display = 'none';
-    });
-
-    achievementOverlay.addEventListener('click', () => {
-        const progressFills = document.querySelectorAll('.progress-fill');
-        progressFills.forEach(bar => {
-            bar.dataset.progress = 0; 
-            bar.style.width = `${0}%`;
-        });
-
-        achievementPopup.style.display = 'none';
-        achievementOverlay.style.display = 'none';
     });
 }
 
 export function initializeNotificationSettings() {
-    const { onOffToggleState,
-          } = elements;
+    const { onOffToggleState } = elements;
 
     chrome.storage.local.get(['extensionState', 'theme'], function (data) {
         const isOnMode = data.extensionState !== undefined ? data.extensionState : true;
@@ -808,10 +769,10 @@ export function playWordPronunciation() {
 
 export function saveNotificationTime() {
     const timeField = document.getElementById('text-field-time').value.trim();
-    const match = timeField.match(/^(\d+)/); // Extract number from the string
+    const match = timeField.match(/^(\d+)/);
 
     if (match) {
-        const interval = parseInt(match[1], 10); // Convert to number
+        const interval = parseInt(match[1], 10); 
 
         chrome.storage.local.set({ messageInterval: interval }, function() {
             console.log('✅ Interval saved:', interval, 'minutes');
@@ -1530,18 +1491,13 @@ export function settingsPopup() {
         resetColor();
     });
 
-    noButton.addEventListener('click', () => {
-        agreeResetColorOverlay.style.display = 'none';
-        agreeResetColorPopup.style.display = 'none';
-        palettePopup.style.display = 'block';
-        paletteOverlay.style.display = 'block';
-    });
-
-    agreeResetColorOverlay.addEventListener('click', () => {
-        agreeResetColorOverlay.style.display = 'none';
-        agreeResetColorPopup.style.display = 'none';
-        palettePopup.style.display = 'block';
-        paletteOverlay.style.display = 'block';
+    [noButton, agreeResetColorOverlay].forEach(element => {
+        element.addEventListener('click', () => {
+            agreeResetColorOverlay.style.display = 'none';
+            agreeResetColorPopup.style.display = 'none';
+            palettePopup.style.display = 'block';
+            paletteOverlay.style.display = 'block';
+        });
     });
     
     historyColorButton.addEventListener('click', () => {
@@ -1550,34 +1506,23 @@ export function settingsPopup() {
         [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
     });
 
-    historyColorCloseButton.addEventListener('click', () => {
-        historyColorPopup.style.display = 'none';
-        historyColorOverlay.style.display = 'none'; 
-        paletteOverlay.style.display = 'block';
-        palettePopup.style.display = 'block';
+    [historyColorCloseButton, historyColorOverlay].forEach(element => {
+        element.addEventListener('click', () => {
+            historyColorPopup.style.display = 'none';
+            historyColorOverlay.style.display = 'none'; 
+            paletteOverlay.style.display = 'block';
+            palettePopup.style.display = 'block';
+        });
     });
 
-    historyColorOverlay.addEventListener('click', () => {
-        historyColorPopup.style.display = 'none';
-        historyColorOverlay.style.display = 'none'; 
-        paletteOverlay.style.display = 'block';
-        palettePopup.style.display = 'block';
-    });
+    [paletteOverlay, paletteOverlayCloseButton].forEach(element => {
+        element.addEventListener('click', () => {
+            paletteOverlay.style.display = 'none';
+            palettePopup.style.display = 'none';
 
-    paletteOverlay.addEventListener('click', () => {
-        paletteOverlay.style.display = 'none';
-        palettePopup.style.display = 'none';
-
-        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
-    });
-
-    paletteOverlayCloseButton.addEventListener('click', () => {
-        paletteOverlay.style.display = 'none';
-        palettePopup.style.display = 'none';
-
-        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+            [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+            [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+        });
     });
 }
 
@@ -1953,4 +1898,3 @@ function restrictInput(input, min, max) {
         input.value = value;
     });
 }
-
