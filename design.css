@@ -425,7 +425,7 @@ input::-webkit-inner-spin-button {
 
 #agree-reset-color-popup,
 #agree-reset-themes-popup {
-    height: 200px;
+    height: 208px;
     overflow: hidden;
 }
 
@@ -816,7 +816,7 @@ input::-webkit-inner-spin-button {
     justify-content: center;
     align-items: flex-end;
     flex-direction: row;
-    gap: 19px;
+    gap: 22px;
     margin-top: 8px;
 }
 
