@@ -1343,6 +1343,8 @@ export function settingsPopup() {
             arrowButtons,
             mainHorizontalLines,
             footerButtons,
+            iconAndArrowAndFooterButtons,
+            allIconAndArrowImage,
             allIconImage,
             allArrowImage,
             footerText,
@@ -1392,8 +1394,10 @@ export function settingsPopup() {
                     el.disabled = true;
                 });
                 
-                [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
-                [allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
+                //[iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
+                //[allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
+                [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroup);
+                [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
                 getClickOnButton(firstPaletteOverlay);
             });
         });
@@ -1431,7 +1435,8 @@ export function settingsPopup() {
                     mainWindow.classList.remove('highlight-body');
         
                     toggleNew();
-                    [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+                    //[iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+                    [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
                 };
         
                 el.addEventListener('click', handler);
@@ -1454,7 +1459,8 @@ export function settingsPopup() {
             mainWindow.classList.remove('highlight-body');
     
             toggleNew();
-            [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+            //[iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+            [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
         };
     
         el.addEventListener('click', handler);
@@ -1469,7 +1475,8 @@ export function settingsPopup() {
         mainWindow.classList.remove('highlight-body');
         
         toggleNew();
-        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        //[iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
     });
 
     resetColorButton.addEventListener('click', () => {
@@ -1478,8 +1485,10 @@ export function settingsPopup() {
         agreeResetColorOverlay.style.display = 'block';
         agreeResetColorPopup.style.display = 'block';
 
-        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+        // [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        // [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+        [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(removeClickHandler);
     });
 
     yesButton.addEventListener('click', () => {
@@ -1502,8 +1511,10 @@ export function settingsPopup() {
     
     historyColorButton.addEventListener('click', () => {
         setAllHistoryColors();
-        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+        // [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        // [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+        [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(removeClickHandler);
     });
 
     [historyColorCloseButton, historyColorOverlay].forEach(element => {
@@ -1520,8 +1531,10 @@ export function settingsPopup() {
             paletteOverlay.style.display = 'none';
             palettePopup.style.display = 'none';
 
-            [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-            [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+            // [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+            // [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+            [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+            [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(removeClickHandler);
         });
     });
 }
@@ -1673,6 +1686,8 @@ function toggleNew() {
             arrowButtons,
             mainHorizontalLines,
             footerButtons,
+            iconAndArrowAndFooterButtons,
+            allIconAndArrowImage,
             allIconImage,
             allArrowImage,
             footerText,
@@ -1777,7 +1792,7 @@ function toggleNew() {
                 console.log("NAME: ", name);
 
                 if (name.includes('upload-btn-text') || name.includes('list-check-btn-text')) {
-                    palette['footer-btn'] = appState.previewColor; 
+                    palette['image'] = appState.previewColor; 
                 } else if (name.includes('horizontal-line') || name.includes('list-line')) {
                     palette['line'] = appState.previewColor;
                 } else {
@@ -1810,8 +1825,10 @@ function toggleNew() {
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
 
-        [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+        // [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        // [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
+        [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(removeClickHandler);
 
         initializeThemeSettings();
     }

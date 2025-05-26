@@ -142,6 +142,9 @@ export const elements = {
     listWordsContainer : document.querySelector('.all-words'),
 
     //Group Element
+    iconAndArrowAndFooterButtons : document.querySelectorAll('.icon-btn, .arrow-btn, .footer-btn'),
+    allIconAndArrowImage : document.querySelectorAll('.image'),
+    
     allIconImage : document.querySelectorAll('.image'),
     allArrowImage : document.querySelectorAll('.image-arrow'),
     footerText : document.querySelectorAll('.clickable-text'),

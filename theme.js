@@ -69,6 +69,8 @@ export function initializeThemeSettings() {
                     const colorMap = data.paletteColors;
                     const customBaseThemeBackground = document.getElementById('customBaseColor');
 
+                    console.log("COLOR MAP: ", colorMap);
+
                     if (colorMap['overlay']) {
                         document.body.style.backgroundColor = colorMap['overlay'];
                         customBaseThemeBackground.style.backgroundColor = toLowerCaseAll(colorMap['overlay']);
@@ -98,31 +100,21 @@ export function initializeThemeSettings() {
                     }
 
                     if (colorMap['image']) {
-                        iconButtons.forEach(btn => {btn.style.backgroundColor = colorMap['image']});
+                        [...iconButtons, ...arrowButtons].forEach(btn => {btn.style.backgroundColor = colorMap['image']});
                         [resetColorButton, historyColorButton].forEach(btn => {btn.style.backgroundColor = colorMap['image']});
-                    } else {
-                        iconButtons.forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
-                        [resetColorButton, historyColorButton].forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
-                    }
+                        [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = colorMap['image']});
+                        returnFromList.style.backgroundColor = colorMap['image'];
 
-                    if (colorMap['image-arrow']) {
-                        arrowButtons.forEach(btn => {btn.style.backgroundColor = colorMap['image-arrow']});
-                    } else {
-                        arrowButtons.forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
-                    }
-
-                    if (colorMap['footer-btn']) {
-                        [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = colorMap['footer-btn']})
-                        returnFromList.style.backgroundColor = colorMap['footer-btn'];
-
-                        const baseColor = colorMap['footer-btn'];
+                        const baseColor = colorMap['image'];
                         const darkerColor = shadeColor(baseColor, -20);
 
                         [listButton, uploadButton, returnFromList].forEach(btn => {
                             btn.style.setProperty('--before-color', darkerColor);
                         });
                     } else {
-                        [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = '#b1b4b6'})
+                        [...iconButtons, ...arrowButtons].forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
+                        [resetColorButton, historyColorButton].forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
+                        [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
                         returnFromList.style.backgroundColor = '#b1b4b6';
 
                         const baseColor = '#b1b4b6';
@@ -130,8 +122,36 @@ export function initializeThemeSettings() {
 
                         [listButton, uploadButton, returnFromList].forEach(btn => {
                             btn.style.setProperty('--before-color', darkerColor);
-                        });    
+                        });  
                     }
+
+                    // if (colorMap['image-arrow']) {
+                    //     arrowButtons.forEach(btn => {btn.style.backgroundColor = colorMap['image-arrow']});
+                    // } else {
+                    //     arrowButtons.forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
+                    // }
+
+                    // if (colorMap['footer-btn']) {
+                    //     [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = colorMap['footer-btn']});
+                    //     returnFromList.style.backgroundColor = colorMap['footer-btn'];
+
+                    //     const baseColor = colorMap['footer-btn'];
+                    //     const darkerColor = shadeColor(baseColor, -20);
+
+                    //     [listButton, uploadButton, returnFromList].forEach(btn => {
+                    //         btn.style.setProperty('--before-color', darkerColor);
+                    //     });
+                    // } else {
+                    //     [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
+                    //     returnFromList.style.backgroundColor = '#b1b4b6';
+
+                    //     const baseColor = '#b1b4b6';
+                    //     const darkerColor = shadeColor(baseColor, -20);
+
+                    //     [listButton, uploadButton, returnFromList].forEach(btn => {
+                    //         btn.style.setProperty('--before-color', darkerColor);
+                    //     });    
+                    // }
 
                     if (colorMap['line']) {
                         [...mainHorizontalLines, ...listHorizontalLines].forEach(line => {line.style.backgroundColor = colorMap['line']})
