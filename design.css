@@ -473,6 +473,10 @@ input::-webkit-inner-spin-button {
     background-color: #cab063;
 }
 
+.info-text {
+    line-height: 19px;
+}
+
 .overlay {
     display: none;
     position: fixed;
