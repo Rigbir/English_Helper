@@ -97,6 +97,12 @@ export function initializeThemeSettings() {
 
                         themeToggleBackground.style.backgroundColor = darkerColor;
                         onOffToggleBackground.style.backgroundColor = darkerColor;
+
+                        const isDarkKey = key === 'baseThemeDark';
+                        const gradient = `linear-gradient(180deg, '#b1b4b6', ${darkerColor})`;
+
+                        const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
+                        themeToggleBackground.style.setProperty(toggleBgProp, gradient);
                     }
 
                     if (colorMap['image']) {
@@ -200,11 +206,11 @@ export function initializeThemeSettings() {
                     console.log("THEME: ", theme);
 
                     if (theme) {
-                        const darkerColor = shadeColor(isDarkKey ? '#263a47' : color, -20);
-                        const gradient = `linear-gradient(180deg, ${theme.accent}, ${darkerColor})`;
+                        // const darkerColor = shadeColor(isDarkKey ? '#263a47' : color, -20);
+                        // const gradient = `linear-gradient(180deg, ${theme.accent}, ${darkerColor})`;
 
-                        const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
-                        themeToggleBackground.style.setProperty(toggleBgProp, gradient);
+                        // const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
+                        // themeToggleBackground.style.setProperty(toggleBgProp, gradient);
 
                         applyBaseTheme(color, theme.accent, theme.liner);
                     }
@@ -220,6 +226,13 @@ export function initializeThemeSettings() {
                 document.body.style.backgroundColor = base;
                 themeToggleBackground.style.backgroundColor = darkerColor;
                 onOffToggleBackground.style.backgroundColor = darkerColor;
+
+                const isDarkKey = key === 'baseThemeDark';
+                // const darkerColor = shadeColor(isDarkKey ? '#263a47' : color, -20);
+                const gradient = `linear-gradient(180deg, ${accent}, ${darkerColor})`;
+
+                const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
+                themeToggleBackground.style.setProperty(toggleBgProp, gradient);
 
                 [...iconButtons, ...arrowButtons, ...footerButtons, ...allPopupButton].forEach(btn => {
                     btn.style.backgroundColor = accent;

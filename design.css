@@ -51,7 +51,7 @@ html.no-transition, body.no-transition {
     height: 35px;
     position: absolute;
     top: 3px;
-    left: 3px;
+    left: 4px;
     background: var(--toggle-bg, linear-gradient(180deg,#ffcc89,#e09017));
     border-radius: 180px;
     box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
@@ -71,7 +71,7 @@ html.no-transition, body.no-transition {
     background: #242424;
 }
 .toggle_input:checked + .toggle_label::after {
-    left: 80px;
+    left: 78px;
     transform: translateX(-100%);
     background: var(--toggle-bgm, linear-gradient(180deg,#777,#3a3a3a));
 }
@@ -88,12 +88,12 @@ html.no-transition, body.no-transition {
     z-index: 100;
 }
 .toggle_label svg.sun {
-    left: 9px;
+    left: 10px;
     fill: #fff;
     transition: 0.3s;
 }
 .toggle_label svg.moon {
-    left:49px;
+    left: 47.5px;
     fill: #7e7e7e;
     transition: 0.3s;
 }
