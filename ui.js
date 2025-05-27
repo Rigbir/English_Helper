@@ -1718,10 +1718,10 @@ function toggleNew() {
         console.log(`COLOR HSL ${h}, ${s}, ${l}`);
         preview.value = appState.previewColor;
 
-        calculateSliderPosition(appState.previewColor);
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
         [lightnessBar, inputLightness].forEach(el => el.value = l);
+        calculateSliderPosition(appState.previewColor);
     }
 
     function startColor() {
@@ -1730,10 +1730,10 @@ function toggleNew() {
                 preview.value = data.colorImages[0];
                 const { h, s, l } = hexToHsl(data.colorImages[0]);
 
-                calculateSliderPosition(data.colorImages[0]);
                 [hueBar, inputHue].forEach(el => el.value = h);
                 [saturationBar, inputSaturation].forEach(el => el.value = s);
                 [lightnessBar, inputLightness].forEach(el => el.value = l);
+                calculateSliderPosition(data.colorImages[0]);
             } else {
                 updateColorFrom(sliders)
             }
