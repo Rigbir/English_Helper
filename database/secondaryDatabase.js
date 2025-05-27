@@ -204,45 +204,36 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                     newButton.id = 'return-word-btn';
                     newButton.classList.add('icon-btn');
 
-                    console.log("COLOR MAP: ", color);   
                     chrome.storage.local.get('paletteColors', (data) => {
                         const colorMap = data.paletteColors || {};
                         let customTheme = colorMap['overlay'] ? toLowerCaseAll(colorMap['overlay']) : '#8e7e8e';
                         if (color === '#8e7e8e') customTheme = color;
 
-                        if (color === 'default') {
-                            newButton.style.backgroundColor = '#dcc788';
-                            newContainer.style.setProperty('--before-color', '#afaf41');
-                        } else if (color === 'resetCustom') {
-                            newButton.style.backgroundColor = '#b1b4b6'; 
-                            newContainer.style.setProperty('--before-color', '#b6d6df');
-                        } else if (color === 'custom' || color === customTheme) {   
-                            newButton.style.backgroundColor = colorMap['image'] ? colorMap['image'] : '#b1b4b6';
-                            newContainer.style.setProperty('--before-color', colorMap['line'] ? colorMap['line'] : '#b6d6df');
-                        } else if (color === '#263a47') {
-                            newButton.style.backgroundColor = '#728495';
-                            newContainer.style.setProperty('--before-color', '#98a9be');
-                        } else if (color === '#44334a') {
-                            newButton.style.backgroundColor = '#8d77a8';
-                            newContainer.style.setProperty('--before-color', '#c4addd');
-                        } else if (color === '#375647') {
-                            newButton.style.backgroundColor = '#729e7e';
-                            newContainer.style.setProperty('--before-color', '#91aaa8');
-                        } else if (color === '#4c3d19') {
-                            newButton.style.backgroundColor = '#889063';
-                            newContainer.style.setProperty('--before-color', '#cfbb99');
-                        } else if (color === '#5b8094') {
-                            newButton.style.backgroundColor = '#aad0e2';
-                            newContainer.style.setProperty('--before-color', '#87b1c8');
-                        } else if (color === '#1a1836') {
-                            newButton.style.backgroundColor = '#e99856';
-                            newContainer.style.setProperty('--before-color', '#e0b4b2');
-                        } else if (color === '#2e2e38') {
-                            newButton.style.backgroundColor = '#904040';
-                            newContainer.style.setProperty('--before-color', '#cdd8eb');
-                        } else if (color === '#2c2824') {
-                            newButton.style.backgroundColor = '#76736c';
-                            newContainer.style.setProperty('--before-color', '#c3b9a6');
+                        const themes = {
+                            'default': { accent: '#dcc788', liner: '#afaf41' },
+                            'resetCustom': { accent: '#b1b4b6', liner: '#b6d6df' },
+                            'custom': { 
+                                accent: colorMap['image'] ? colorMap['image'] : '#b1b4b6', 
+                                liner: colorMap['line'] ? colorMap['line'] : '#b6d6df'
+                            },
+                            '#263a47': { accent: '#728495', liner: '#98a9be' },
+                            '#44334a': { accent: '#8d77a8', liner: '#c4addd' },
+                            '#375647': { accent: '#729e7e', liner: '#91aaa8' },
+                            '#4c3d19': { accent: '#889063', liner: '#cfbb99' },
+                            '#5b8094': { accent: '#aad0e2', liner: '#87b1c8' },
+                            '#1a1836': { accent: '#e99856', liner: '#e0b4b2' },
+                            '#2e2e38': { accent: '#904040', liner: '#cdd8eb' },
+                            '#2c2824': { accent: '#76736c', liner: '#c3b9a6' },
+                        };
+                        const theme = themes[color];
+
+                        if (theme) {
+                            applyTheme(theme.accent, theme.liner);
+                        }
+
+                        function applyTheme(accent, liner) {
+                            newButton.style.backgroundColor = accent;
+                            newContainer.style.setProperty('--before-color', liner);
                         }
                     });
                     
