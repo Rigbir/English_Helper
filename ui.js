@@ -1490,6 +1490,8 @@ export function settingsPopup() {
         agreeResetColorPopup.style.display = 'none';
         palettePopup.style.display = 'none';
         paletteOverlay.style.display = 'none';
+        inputField.style.display = 'block';
+        wordContainer.classList.remove('show-translate');
         resetColor();
     });
 
@@ -1727,7 +1729,8 @@ function toggleNew() {
     function startColor() {
         chrome.storage.local.get('colorImages', (data) => {
             if (data.colorImages[0]) {
-                preview.value = data.colorImages[0];
+                appState.previewColor = data.colorImages[0];
+                preview.value = appState.previewColor;
                 const { h, s, l } = hexToHsl(data.colorImages[0]);
 
                 [hueBar, inputHue].forEach(el => el.value = h);
@@ -1757,10 +1760,10 @@ function toggleNew() {
         const { h, s, l } = hexToHsl(hexValue);
         appState.previewColor = hslToHex(h, s, l);
         
-        calculateSliderPosition(appState.previewColor);
         [hueBar, inputHue].forEach(el => el.value = h);
         [saturationBar, inputSaturation].forEach(el => el.value = s);
         [lightnessBar, inputLightness].forEach(el => el.value = l);
+        calculateSliderPosition(appState.previewColor);
     });
     
     const handler = () => {

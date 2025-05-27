@@ -184,17 +184,10 @@ export function initializeThemeSettings() {
                         },
                     };
 
-                    const isDarkKey = key === 'baseThemeDark';
                     const theme = themes[color];
                     console.log("THEME: ", theme);
 
                     if (theme) {
-                        // const darkerColor = shadeColor(isDarkKey ? '#263a47' : color, -20);
-                        // const gradient = `linear-gradient(180deg, ${theme.accent}, ${darkerColor})`;
-
-                        // const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
-                        // themeToggleBackground.style.setProperty(toggleBgProp, gradient);
-
                         applyBaseTheme(color, theme.accent, theme.liner);
                     }
         

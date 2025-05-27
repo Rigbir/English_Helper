@@ -162,8 +162,9 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
         });
     
         const isDark = themeToggleState.checked;
-        chrome.storage.local.get('paletteColors', (data) => {
-            const colorMap = data.paletteColors;
+        const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
+        chrome.storage.local.get(key, (data) => {
+            const color = data[key];
 
             getAllRequest.onsuccess = () => {
                 const words = getAllRequest.result;
@@ -203,17 +204,48 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                     newButton.id = 'return-word-btn';
                     newButton.classList.add('icon-btn');
 
-                    if (colorMap['default']) {
-                        newButton.style.backgroundClip = '#dcc788';
-                    } else {
-                        if (colorMap['image']) {
-                            newButton.style.backgroundColor = isDark ? colorMap['image'] : '#dcc788';
-                            newContainer.style.setProperty('--before-color', isDark ? colorMap['image'] : '#afaf41');
-                        } else {
-                            newButton.style.backgroundClip = '#dcc788';
+                    console.log("COLOR MAP: ", color);   
+                    chrome.storage.local.get('paletteColors', (data) => {
+                        const colorMap = data.paletteColors || {};
+                        let customTheme = colorMap['overlay'] ? toLowerCaseAll(colorMap['overlay']) : '#8e7e8e';
+                        if (color === '#8e7e8e') customTheme = color;
+
+                        if (color === 'default') {
+                            newButton.style.backgroundColor = '#dcc788';
+                            newContainer.style.setProperty('--before-color', '#afaf41');
+                        } else if (color === 'resetCustom') {
+                            newButton.style.backgroundColor = '#b1b4b6'; 
+                            newContainer.style.setProperty('--before-color', '#b6d6df');
+                        } else if (color === 'custom' || color === customTheme) {   
+                            newButton.style.backgroundColor = colorMap['image'] ? colorMap['image'] : '#b1b4b6';
+                            newContainer.style.setProperty('--before-color', colorMap['line'] ? colorMap['line'] : '#b6d6df');
+                        } else if (color === '#263a47') {
+                            newButton.style.backgroundColor = '#728495';
+                            newContainer.style.setProperty('--before-color', '#98a9be');
+                        } else if (color === '#44334a') {
+                            newButton.style.backgroundColor = '#8d77a8';
+                            newContainer.style.setProperty('--before-color', '#c4addd');
+                        } else if (color === '#375647') {
+                            newButton.style.backgroundColor = '#729e7e';
+                            newContainer.style.setProperty('--before-color', '#91aaa8');
+                        } else if (color === '#4c3d19') {
+                            newButton.style.backgroundColor = '#889063';
+                            newContainer.style.setProperty('--before-color', '#cfbb99');
+                        } else if (color === '#5b8094') {
+                            newButton.style.backgroundColor = '#aad0e2';
+                            newContainer.style.setProperty('--before-color', '#87b1c8');
+                        } else if (color === '#1a1836') {
+                            newButton.style.backgroundColor = '#e99856';
+                            newContainer.style.setProperty('--before-color', '#e0b4b2');
+                        } else if (color === '#2e2e38') {
+                            newButton.style.backgroundColor = '#904040';
+                            newContainer.style.setProperty('--before-color', '#cdd8eb');
+                        } else if (color === '#2c2824') {
+                            newButton.style.backgroundColor = '#76736c';
+                            newContainer.style.setProperty('--before-color', '#c3b9a6');
                         }
-                    }
-        
+                    });
+                    
                     const img = document.createElement('img');
                     img.src = 'image/return.png';
                     img.alt = '';

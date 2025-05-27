@@ -1445,7 +1445,7 @@ border: 2px solid grey;
 }
 
 .new-learned-word {
-    min-height: 80px;
+    min-height: 83px;
     height: auto;
     display: flex;
     width: 100%;
