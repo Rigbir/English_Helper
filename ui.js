@@ -480,7 +480,6 @@ export function initializeInputFieldAndHintButton(database) {
             console.log('FOUND WORD:', foundWord);
 
             if (appState.countHelpButtonPressed === 0) {
-                translateWord.style.color = '#1DB954';
                 
                 switch(appState.mode) {
                     case 'Default': handleDefaultMode(foundWord); break;
@@ -1339,14 +1338,13 @@ export function settingsPopup() {
             confirmPopup,
             confirmOverlay,
             confirmCloseButton,
-            iconButtons,
-            arrowButtons,
             mainHorizontalLines,
-            footerButtons,
             iconAndArrowAndFooterButtons,
             allIconAndArrowImage,
-            allIconImage,
-            allArrowImage,
+            inputField,
+            activeWord,
+            translateWord,
+            wordContainer,
             footerText,
             resetColorButton,
             agreeResetColorOverlay,
@@ -1388,16 +1386,16 @@ export function settingsPopup() {
                 }
 
                 firstPaletteOverlay.style.display = 'block';
+                inputField.style.display = 'none';
+                wordContainer.classList.add('show-translate');
 
-                document.querySelectorAll('.information-btn, .horizontal-line, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
+                document.querySelectorAll('.information-btn, .horizontal-line, .word, .translate, .icon-btn, .arrow-btn, .upload-btn, .list-check-btn').forEach(el => {
                     el.classList.add('highlight-target');
                     el.disabled = true;
                 });
                 
-                //[iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroup);
-                //[allIconImage, allArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
-                [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroup);
-                [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(getClickOnButton);
+                [iconAndArrowAndFooterButtons, mainHorizontalLines, [activeWord], [translateWord]].forEach(growHighlightGroup);
+                [allIconAndArrowImage, footerText, mainHorizontalLines, [activeWord], [translateWord]].forEach(getClickOnButton);
                 getClickOnButton(firstPaletteOverlay);
             });
         });
@@ -1435,8 +1433,7 @@ export function settingsPopup() {
                     mainWindow.classList.remove('highlight-body');
         
                     toggleNew();
-                    //[iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-                    [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+                    [iconAndArrowAndFooterButtons, mainHorizontalLines, [activeWord], [translateWord]].forEach(growHighlightGroupDisable);
                 };
         
                 el.addEventListener('click', handler);
@@ -1459,8 +1456,7 @@ export function settingsPopup() {
             mainWindow.classList.remove('highlight-body');
     
             toggleNew();
-            //[iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-            [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+            [iconAndArrowAndFooterButtons, mainHorizontalLines, [activeWord], [translateWord]].forEach(growHighlightGroupDisable);
         };
     
         el.addEventListener('click', handler);
@@ -1475,8 +1471,7 @@ export function settingsPopup() {
         mainWindow.classList.remove('highlight-body');
         
         toggleNew();
-        //[iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
+        [iconAndArrowAndFooterButtons, mainHorizontalLines, [activeWord], [translateWord]].forEach(growHighlightGroupDisable);
     });
 
     resetColorButton.addEventListener('click', () => {
@@ -1485,10 +1480,8 @@ export function settingsPopup() {
         agreeResetColorOverlay.style.display = 'block';
         agreeResetColorPopup.style.display = 'block';
 
-        // [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        // [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
-        [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(removeClickHandler);
+        [iconAndArrowAndFooterButtons, mainHorizontalLines, [activeWord], [translateWord]].forEach(growHighlightGroupDisable);
+        [allIconAndArrowImage, footerText, mainHorizontalLines, [activeWord], [translateWord]].forEach(removeClickHandler);
     });
 
     yesButton.addEventListener('click', () => {
@@ -1511,10 +1504,8 @@ export function settingsPopup() {
     
     historyColorButton.addEventListener('click', () => {
         setAllHistoryColors();
-        // [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        // [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
-        [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(removeClickHandler);
+        [iconAndArrowAndFooterButtons, mainHorizontalLines, [activeWord], [translateWord]].forEach(growHighlightGroupDisable);
+        [allIconAndArrowImage, footerText, mainHorizontalLines, [activeWord], [translateWord]].forEach(removeClickHandler);
     });
 
     [historyColorCloseButton, historyColorOverlay].forEach(element => {
@@ -1530,11 +1521,11 @@ export function settingsPopup() {
         element.addEventListener('click', () => {
             paletteOverlay.style.display = 'none';
             palettePopup.style.display = 'none';
+            inputField.style.display = 'block';
+            wordContainer.classList.remove('show-translate');
 
-            // [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-            // [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
-            [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-            [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(removeClickHandler);
+            [iconAndArrowAndFooterButtons, mainHorizontalLines, [activeWord], [translateWord]].forEach(growHighlightGroupDisable);
+            [allIconAndArrowImage, footerText, mainHorizontalLines, [activeWord], [translateWord]].forEach(removeClickHandler);
         });
     });
 }
@@ -1682,15 +1673,14 @@ function toggleNew() {
             applyButton,
             paletteOverlay,
             palettePopup,
-            iconButtons,
-            arrowButtons,
             mainHorizontalLines,
-            footerButtons,
             iconAndArrowAndFooterButtons,
             allIconAndArrowImage,
-            allIconImage,
-            allArrowImage,
             footerText,
+            inputField,
+            wordContainer,
+            activeWord,
+            translateWord,
             hueBar,
             saturationBar,
             lightnessBar,
@@ -1824,11 +1814,11 @@ function toggleNew() {
 
         paletteOverlay.style.display = 'none';
         palettePopup.style.display = 'none';
+        inputField.style.display = 'block';
+        wordContainer.classList.remove('show-translate');
 
-        // [iconButtons, arrowButtons, footerButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        // [allIconImage, allArrowImage, footerText].forEach(removeClickHandler);
-        [iconAndArrowAndFooterButtons, mainHorizontalLines].forEach(growHighlightGroupDisable);
-        [allIconAndArrowImage, footerText, mainHorizontalLines].forEach(removeClickHandler);
+        [iconAndArrowAndFooterButtons, mainHorizontalLines, [activeWord], [translateWord]].forEach(growHighlightGroupDisable);
+        [allIconAndArrowImage, footerText, mainHorizontalLines, [activeWord], [translateWord]].forEach(removeClickHandler);
 
         initializeThemeSettings();
     }

@@ -25,8 +25,6 @@ export function initializeThemeSettings() {
           } = elements;
 
     const applyTheme = (isDark) => {        
-        activeWord.style.color = isDark ? 'white' : 'black';
-        translateWord.style.color = isDark ? '#1DB954' : '#1DB954';
         listHeadWord.style.color = isDark ? 'white' : 'black';
         listHeadTranslate.style.color = isDark ? 'white' : 'black';
 
@@ -105,6 +103,19 @@ export function initializeThemeSettings() {
                         themeToggleBackground.style.setProperty(toggleBgProp, gradient);
                     }
 
+                    if (colorMap['word']) {
+                        activeWord.style.color = colorMap['word'];
+                        console.log("ACTIVE WORD COLOR: ", activeWord);
+                    } else {
+                        activeWord.style.color = isDark ? 'white' : 'black';
+                    }
+                    if (colorMap['translate']) {
+                        translateWord.style.color = colorMap['translate'];
+                        console.log("TRANSLATE WORD COLOR: ", translateWord);
+                    } else {
+                        translateWord.style.color = isDark ? '#1DB954' : '#1DB954';
+                    }
+
                     if (colorMap['image']) {
                         [...iconButtons, ...arrowButtons].forEach(btn => {btn.style.backgroundColor = colorMap['image']});
                         [resetColorButton, historyColorButton].forEach(btn => {btn.style.backgroundColor = colorMap['image']});
@@ -130,34 +141,6 @@ export function initializeThemeSettings() {
                             btn.style.setProperty('--before-color', darkerColor);
                         });  
                     }
-
-                    // if (colorMap['image-arrow']) {
-                    //     arrowButtons.forEach(btn => {btn.style.backgroundColor = colorMap['image-arrow']});
-                    // } else {
-                    //     arrowButtons.forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
-                    // }
-
-                    // if (colorMap['footer-btn']) {
-                    //     [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = colorMap['footer-btn']});
-                    //     returnFromList.style.backgroundColor = colorMap['footer-btn'];
-
-                    //     const baseColor = colorMap['footer-btn'];
-                    //     const darkerColor = shadeColor(baseColor, -20);
-
-                    //     [listButton, uploadButton, returnFromList].forEach(btn => {
-                    //         btn.style.setProperty('--before-color', darkerColor);
-                    //     });
-                    // } else {
-                    //     [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = '#b1b4b6'});
-                    //     returnFromList.style.backgroundColor = '#b1b4b6';
-
-                    //     const baseColor = '#b1b4b6';
-                    //     const darkerColor = shadeColor(baseColor, -20);
-
-                    //     [listButton, uploadButton, returnFromList].forEach(btn => {
-                    //         btn.style.setProperty('--before-color', darkerColor);
-                    //     });    
-                    // }
 
                     if (colorMap['line']) {
                         [...mainHorizontalLines, ...listHorizontalLines].forEach(line => {line.style.backgroundColor = colorMap['line']})
@@ -228,9 +211,7 @@ export function initializeThemeSettings() {
                 onOffToggleBackground.style.backgroundColor = darkerColor;
 
                 const isDarkKey = key === 'baseThemeDark';
-                // const darkerColor = shadeColor(isDarkKey ? '#263a47' : color, -20);
                 const gradient = `linear-gradient(180deg, ${accent}, ${darkerColor})`;
-
                 const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
                 themeToggleBackground.style.setProperty(toggleBgProp, gradient);
 
