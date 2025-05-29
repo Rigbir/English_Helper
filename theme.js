@@ -76,29 +76,28 @@ export function initializeThemeSettings() {
 
                         const baseColor = colorMap['overlay'];
                         const darkerColor = shadeColor(baseColor, -20);
-
-                        const isDarkKey = key === 'baseThemeDark';
-                        const gradient = `linear-gradient(180deg, ${colorMap['image'] ? colorMap['image'] : '#b1b4b6'}, ${darkerColor})`;
-
-                        const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
-                        themeToggleBackground.style.setProperty(toggleBgProp, gradient);
+                        const accentColor = colorMap['image'] ? colorMap['image'] : '#b1b4b6';
 
                         console.log("TOGGLE NEW: ");
                         themeToggleBackground.style.backgroundColor = darkerColor;
                         onOffToggleBackground.style.backgroundColor = darkerColor;
+
+                        const isDarkKey = key === 'baseThemeDark';
+                        const gradient = `linear-gradient(180deg, ${accentColor}, ${darkerColor})`;
+                        const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
+                        themeToggleBackground.style.setProperty(toggleBgProp, gradient);
                     } 
                     else {
                         document.body.style.backgroundColor = '#8e7e8e';
-
                         const baseColor = '#8e7e8e';
+                        const accentColor = '#b1b4b6';
                         const darkerColor = shadeColor(baseColor, -20);
 
                         themeToggleBackground.style.backgroundColor = darkerColor;
                         onOffToggleBackground.style.backgroundColor = darkerColor;
 
                         const isDarkKey = key === 'baseThemeDark';
-                        const gradient = `linear-gradient(180deg, '#b1b4b6', ${darkerColor})`;
-
+                        const gradient = `linear-gradient(180deg, ${accentColor}, ${darkerColor})`;
                         const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
                         themeToggleBackground.style.setProperty(toggleBgProp, gradient);
                     }
@@ -107,7 +106,7 @@ export function initializeThemeSettings() {
                         activeWord.style.color = colorMap['word'];
                         console.log("ACTIVE WORD COLOR: ", activeWord);
                     } else {
-                        activeWord.style.color = isDark ? 'white' : 'black';
+                        activeWord.style.color = 'white';
                     }
                     if (colorMap['translate']) {
                         translateWord.style.color = colorMap['translate'];
@@ -121,6 +120,14 @@ export function initializeThemeSettings() {
                         [resetColorButton, historyColorButton].forEach(btn => {btn.style.backgroundColor = colorMap['image']});
                         [...footerButtons, ...allPopupButton].forEach(btn => {btn.style.backgroundColor = colorMap['image']});
                         returnFromList.style.backgroundColor = colorMap['image'];
+
+                        const baseBgColor = colorMap['overlay'] ? colorMap['overlay'] : '#8e7e8e';
+                        const darkerBdColor = shadeColor(baseBgColor, -20);
+
+                        const isDarkKey = key === 'baseThemeDark';
+                        const gradient = `linear-gradient(180deg, ${colorMap['image']}, ${darkerBdColor})`;
+                        const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
+                        themeToggleBackground.style.setProperty(toggleBgProp, gradient);
 
                         const baseColor = colorMap['image'];
                         const darkerColor = shadeColor(baseColor, -20);
@@ -152,14 +159,6 @@ export function initializeThemeSettings() {
                 chrome.storage.local.set({ paletteColors: {} }, () => {
                     console.log('paletteColors reset.');
                 });
-
-                const isDarkKey = key === 'baseThemeDark';
-                const darkerColor = shadeColor(isDarkKey ? '#263a47' : color, -20);
-                const gradient = `linear-gradient(180deg, '#b1b4b6', ${darkerColor})`;
-
-                const toggleBgProp = isDarkKey ? '--toggle-bgm' : '--toggle-bg';
-                themeToggleBackground.style.setProperty(toggleBgProp, gradient);
-
                 applyBaseTheme('#8e7e8e', '#b1b4b6', '#b6d6df');
             } else {
                 chrome.storage.local.get('paletteColors', (data) => {
@@ -253,7 +252,7 @@ export function initializeThemeSettings() {
     });
 }
 
-function shadeColor(color, percent) {
+export function shadeColor(color, percent) {
     let R = parseInt(color.substring(1,3),16);
     let G = parseInt(color.substring(3,5),16);
     let B = parseInt(color.substring(5,7),16);

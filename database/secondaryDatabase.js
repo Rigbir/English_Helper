@@ -1,9 +1,10 @@
 import { elements } from "../domElements.js";
 import { appState } from "../appState.js";
-import { replaceCharacter, toLowerCaseAll } from "../utils.js";
+import { toLowerCaseAll } from "../utils.js";
 import { replaceCurrentWord, getFoundWordFromDatabase } from "../ui.js";
 import { removeWordFromMainDatabase, restoreWordToMainDatabase } from "./mainDatabase.js";
-import { initializeThemeSettings } from "../theme.js";
+import { shadeColor } from "../theme.js";
+
 
 export function initializeSecondaryDatabase() {
     const requestList = indexedDB.open('learned_words', 1);
@@ -182,15 +183,6 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                 words.forEach((item, index) => {
                     const newContainer = document.createElement('div');
                     newContainer.classList.add('new-learned-word');
-                    
-                    if (appState.theme === 'dark') {
-                        newContainer.style.backgroundColor = index % 2 === 0 ? '#9a9a9a' : '#8fa3b0';
-                        console.log("STYLE SET FOR DARK");
-                    }
-                    else if (appState.theme === 'light') {
-                        newContainer.style.backgroundColor = index % 2 === 0 ? '#f0e8e4' : '#d6c7c3';
-                        console.log("STYLE SET FOR LIGHT");
-                    }
         
                     const newWord = document.createElement('p');
                     newWord.classList.add('learned-word');
@@ -232,8 +224,10 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                         }
 
                         function applyTheme(accent, liner) {
+                            const darkerColor = shadeColor(liner, 20);
                             newButton.style.backgroundColor = accent;
                             newContainer.style.setProperty('--before-color', liner);
+                            newContainer.style.backgroundColor = index % 2 === 0 ? accent : darkerColor;
                         }
                     });
                     
