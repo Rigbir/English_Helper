@@ -1,7 +1,7 @@
-import { toLowerCaseAll } from "../utils.js";
-import { elements } from "../domElements.js";
+import { toLowerCaseAll } from "../utils/utils.js";
+import { elements } from "../utils/domElements.js";
 import { hideLetters } from "../database/mainDatabase.js";
-import { appState } from "../appState.js";
+import { appState } from "../core/appState.js";
 
 export function handleMissingLettersMode(foundWord) {
     const { translateWord } = elements;

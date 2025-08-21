@@ -1,16 +1,16 @@
-import { elements } from './domElements.js';
-import { appState } from './appState.js';
-import { toLowerCaseAll, replaceCharacter } from './utils.js';
-import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from './database/mainDatabase.js';
-import { addWordToSecondaryDatabase, loadLearnedWordsFromDatabase } from './database/secondaryDatabase.js';
-import { handleDefaultMode, replaceWordDefaultMode } from './modes/DefaultMode.js';
-import { handleReverseMode, replaceWordReverseMode } from './modes/ReverseMode.js';
-import { handleMixedMode, replaceWordMixedMode } from './modes/MixedMode.js';
-import { handlePhoneticMode, replaceWordPhoneticMode } from './modes/PhoneticMode.js';
-import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from './modes/TimeChallengeMode.js';
-import { handleMissingLettersMode, replaceWordMissingLettersMode } from './modes/MissingLetters.js';
-import { updateSelection, loadInitialSelection } from './storage.js';
-import { initializeThemeSettings } from './theme.js';
+import { elements } from '../utils/domElements.js';
+import { appState } from '../core/appState.js';
+import { toLowerCaseAll, replaceCharacter } from '../utils/utils.js';
+import { moveWordToLearnedForThisSection, fetchRandomWordFromDatabase } from '../database/mainDatabase.js';
+import { addWordToSecondaryDatabase, loadLearnedWordsFromDatabase } from '../database/secondaryDatabase.js';
+import { handleDefaultMode, replaceWordDefaultMode } from '../modes/DefaultMode.js';
+import { handleReverseMode, replaceWordReverseMode } from '../modes/ReverseMode.js';
+import { handleMixedMode, replaceWordMixedMode } from '../modes/MixedMode.js';
+import { handlePhoneticMode, replaceWordPhoneticMode } from '../modes/PhoneticMode.js';
+import { handleTimeChallengeMode, replaceWordTimeChallengeMode } from '../modes/TimeChallengeMode.js';
+import { handleMissingLettersMode, replaceWordMissingLettersMode } from '../modes/MissingLetters.js';
+import { updateSelection, loadInitialSelection } from '../core/storage.js';
+import { initializeThemeSettings } from '../core/theme.js';
 
 export function displayAppInfoPopup() {
     const { infoButton,
@@ -42,6 +42,38 @@ export function displayLanguagesPopup() {
     languagesButton.addEventListener('click', () => {
         languagesOverlay.style.display = 'block';
         languagesPopup.style.display = 'grid';
+        chrome.storage.local.get({ selectedLanguage: 'ru' }, ({ selectedLanguage }) => {
+            const map = { ru: 'russian', de: 'german', it: 'italian', fr: 'french', es: 'spanish', da: 'danish' };
+            const alt = map[selectedLanguage];
+            languagesPopup.querySelectorAll('.flag-circle').forEach(el => el.classList.remove('selected-language'));
+            if (alt) {
+                const img = [...languagesPopup.querySelectorAll('img')].find(i => (i.alt||'').toLowerCase() === alt);
+                if (img && img.parentElement) img.parentElement.classList.add('selected-language');
+            }
+        });
+    });
+
+    languagesPopup.addEventListener('click', (e) => {
+        const img = e.target.closest('img');
+        if (!img) return;
+        const alt = (img.alt || '').toLowerCase();
+        const map = {
+            'russian': 'ru',
+            'german': 'de',
+            'italian': 'it',
+            'french': 'fr',
+            'spanish': 'es',
+            'danish': 'da',
+            'dutch': 'nl'
+        };
+        const code = map[alt];
+        if (code) {
+            chrome.storage.local.set({ selectedLanguage: code });
+            languagesPopup.querySelectorAll('.flag-circle').forEach(el => el.classList.remove('selected-language'));
+            if (img.parentElement) img.parentElement.classList.add('selected-language');
+        }
+        languagesPopup.style.display = 'none';
+        languagesOverlay.style.display = 'none';
     });
 
     [languagesOverlay, languagesCloseOverlayButton].forEach(element => {
@@ -444,7 +476,7 @@ export function initializeInputFieldAndHintButton(database) {
           inputField
         } = elements;
 
-    const sound = new Audio('sound/CorrectWord.mp3');
+    const sound = new Audio('../sound/CorrectWord.mp3');
 
     if (appState.helpButtonClickHandler) {
         helpButton.removeEventListener('click', appState.helpButtonClickHandler);
@@ -516,7 +548,7 @@ export function initializeInputFieldAndHintButton(database) {
     appState.inputFieldClickHandler = (event) => {
         console.log('Event listener added');
         selectedTheme = textFieldTheme.value;
-        const phoneticVoiceButton = document.getElementById('Phonetic-voice-btn');
+        const phoneticVoiceButton = document.getElementById('phonetic-voice-btn');
 
         if (event.key === 'Enter'){
             inputField.value = toLowerCaseAll(inputField.value);
@@ -750,21 +782,29 @@ export function playWordPronunciation() {
             }
             const utterance = new SpeechSynthesisUtterance();
             utterance.text = wordElement.textContent;
-            switch(appState.mode) {
-                case 'Default': utterance.lang = 'en'; break;
-                case 'Reverse': utterance.lang = 'ru'; break;
-                case 'Mixed': utterance.lang = appState.handlerForMixedMode ? 'en' : 'ru'; break;
-                case 'Phonetic': utterance.lang = 'en'; break;
-                case 'Time Challenge': utterance.lang = 'en'; break;
-                case 'Missing Letters': utterance.lang = 'en'; break;
-            }
-            utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
-            appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
-            speechSynthesis.speak(utterance);
-            console.log(wordElement);
+            chrome.storage.local.get({ selectedLanguage: 'ru' }, ({ selectedLanguage }) => {
+                const langMap = { ru: 'ru-RU', de: 'de-DE', it: 'it-IT', fr: 'fr-FR', es: 'es-ES', da: 'da-DK' };
+                const targetLang = langMap[selectedLanguage] || 'en-US';
+                
+                let speakLang = 'en-US';
+                switch (appState.mode) {
+                    case 'Default': speakLang = 'en-US'; break;
+                    case 'Reverse': speakLang = targetLang; break;
+                    case 'Mixed': speakLang = appState.handlerForMixedMode ? targetLang : 'en-US'; break;
+                    case 'Phonetic': speakLang = 'en-US'; break;
+                    case 'Time Challenge': speakLang = 'en-US'; break;
+                    case 'Missing Letters': speakLang = 'en-US'; break;
+                }
+                utterance.lang = speakLang;
+                utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
+                appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
+                speechSynthesis.speak(utterance);
+                console.log(wordElement);
+            });
         }
     })
 }
+
 
 export function saveNotificationTime() {
     const timeField = document.getElementById('text-field-time').value.trim();

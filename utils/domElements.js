@@ -33,6 +33,7 @@ export const elements = {
     //Main Buttons/Word place 
     wordContainer : document.querySelector('.word-container'),
     activeWord : document.querySelector('.word'),
+    phoneticVoiceButton : document.getElementById('phonetic-voice-btn'),
     translateWord : document.querySelector('.translate'),
     inputField : document.getElementById('translateField'),
     mainHorizontalLines : document.querySelectorAll('.horizontal-line'),

@@ -1,6 +1,6 @@
-import { elements } from "../domElements.js";
-import { appState } from "../appState.js";
-import { toLowerCaseAll } from "../utils.js";
+import { elements } from "../utils/domElements.js";
+import { appState } from "../core/appState.js";
+import { toLowerCaseAll } from "../utils/utils.js";
 
 export function initializeMainDatabase(database) {
     const { inputField,
@@ -16,9 +16,11 @@ export function initializeMainDatabase(database) {
             console.log("IndexedDB is empty, loading JSON");
             activeWord.innerHTML = "Enjoy<br>and<br>Learn!";
             inputField.style.display = 'none';
-            inputField.style.visibility = 'hidden'; 
-
-            loadJsonFileIntoDB(database);
+            inputField.style.visibility = 'hidden';
+        
+            loadJsonFileIntoDB(database).then(() => {
+                chrome.storage.session.set({ hasLoadedOnce: true });
+            });
         } else {
             inputField.style.visibility = 'visible';
             console.log("IndexedDB already contains data");
@@ -103,37 +105,105 @@ export function isDatabaseEmpty(database) {
 }
 
 export function loadJsonFileIntoDB(database) {
-    fetch("words.json")
-    .then(response => response.json())
-    .then(data => {
+    return new Promise((resolve) => {
+    chrome.storage.local.get({ selectedLanguage: 'ru' }, ({ selectedLanguage }) => {
+        let file = '../WordsLang/words.json';
+        switch (selectedLanguage) {
+            case 'de': file = '../WordsLang/words_de.json'; break;
+            case 'it': file = '../WordsLang/words_it.json'; break;
+            case 'fr': file = '../WordsLang/words_fr.json'; break;
+            case 'es': file = '../WordsLang/words_es.json'; break;
+            case 'da': file = '../WordsLang/words_da.json'; break;
+            case 'ru': default: file = '../WordsLang/words.json'; break;
+        }
+
+        fetch(file)
+        .then(response => response.json())
+        .then(data => {
         if (!database || !database.objectStoreNames) {
             console.error("Database not properly initialized.");
+            resolve();
             return;
         }
-        Object.keys(data).forEach(theme => {
-            if (database.objectStoreNames.contains(theme)) {
-                const transaction = database.transaction(theme, "readwrite");
-                const store = transaction.objectStore(theme);
+    
+        try {
+            const newCounts = {};
+            Object.keys(data).forEach(theme => {
+                newCounts[theme] = Array.isArray(data[theme]) ? data[theme].length : 0;
+            });
+            chrome.storage.local.set({ countOnStart: newCounts });
+            localStorage.setItem('countOnStart', JSON.stringify(newCounts));
+        } catch (e) {
+            console.warn('Failed to update countOnStart for language', e);
+        }
 
-                data[theme].forEach(item => {
-                    if (!Array.isArray(item.translation)) {
-                        item.translation = [item.translation];
-                    }
-                    store.put(item);
-                });
+        const themes = Object.keys(data).filter(theme => database.objectStoreNames.contains(theme));
+        if (themes.length === 0) {
+            resolve();
+            return;
+        }
 
-                transaction.oncomplete = () => {
-                    console.log(`Data for theme '${theme}' successfully added!`);
-                };
+        let completed = 0;
+        themes.forEach(theme => {
+            const transaction = database.transaction(theme, "readwrite");
+            const store = transaction.objectStore(theme);
 
-                transaction.onerror = (event) => {
-                    console.error(`Transaction error in theme '${theme}':`, event.target.error);
-                };
-            }
+            data[theme].forEach(item => {
+                if (!Array.isArray(item.translation)) {
+                    item.translation = [item.translation];
+                }
+                store.put(item);
+            });
+
+            transaction.oncomplete = () => {
+                console.log(`Data for theme '${theme}' successfully added!`);
+                completed++;
+                if (completed === themes.length) {
+                    resolve();
+                }
+            };
+
+            transaction.onerror = (event) => {
+                console.error(`Transaction error in theme '${theme}':`, event.target.error);
+            };
         });
-    })
-    .catch(error => {
-        console.error('Failed to load JSON', error);
+        })
+        .catch(error => {
+            console.error('Failed to load JSON', error);
+            resolve();
+        });
+    });
+    });
+}
+
+export function reloadDatabaseForLanguage(database) {
+    return new Promise((resolve) => {
+       
+        const storeNames = Array.from(database.objectStoreNames);
+        if (storeNames.length === 0) {
+            loadJsonFileIntoDB(database);
+            resolve();
+            return;
+        }
+
+        const transaction = database.transaction(storeNames, 'readwrite');
+        let cleared = 0;
+        storeNames.forEach((name) => {
+            const store = transaction.objectStore(name);
+            const req = store.clear();
+            req.onsuccess = () => {
+                cleared++;
+            };
+        });
+
+        transaction.oncomplete = () => {
+            console.log('All stores cleared for language reload');
+            loadJsonFileIntoDB(database).then(() => resolve());
+        };
+        transaction.onerror = () => {
+            console.error('Failed to clear stores during language reload');
+            resolve();
+        };
     });
 }
 
@@ -159,6 +229,7 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
     const { activeWord,
             translateWord,
             inputField,
+            phoneticVoiceButton,
             randomButton
           } = elements;
 
@@ -197,11 +268,8 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 const filtered = data.filter(item => item.word !== activeWord.textContent);
                 const word = filtered[Math.floor(Math.random() * filtered.length)];
 
-                const existingButton = document.getElementById('Phonetic-voice-btn');
-                if (existingButton) {
-                    existingButton.remove();
-                    activeWord.style.visibility = 'visible';   
-                } 
+                phoneticVoiceButton.style.display = 'none'; 
+                activeWord.style.display = 'block';
 
                 if (appState.mode === 'Default') {
                     console.log("Word object:", word);
@@ -244,44 +312,36 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 } else if (appState.mode === 'Phonetic') {
                     console.log("Word object:", word);
                     activeWord.textContent = toLowerCaseAll(word.word) || "No data";
-                    activeWord.style.visibility = 'hidden';
+                    activeWord.style.display = 'none';
+                    phoneticVoiceButton.style.visibility = 'visible';
+                    phoneticVoiceButton.style.display = 'block'; 
 
-                    const parantClassWord = document.querySelector('.word-in-container');
-
-                    const phoneticVoiceButton = document.createElement('button');
-                    phoneticVoiceButton.id = 'Phonetic-voice-btn';
-                    phoneticVoiceButton.classList.add('icon-btn');
-
-                    const img = document.createElement('img');
-                    img.src = 'image/sound.png';
-                    img.alt = '';
-                    img.draggable = false;
-                    img.style.display = 'block';
-        
-                    phoneticVoiceButton.appendChild(img);
-                    parantClassWord.appendChild(phoneticVoiceButton);
-
+                    phoneticVoiceButton.classList.remove('pulse-animation');
+                    void phoneticVoiceButton.offsetWidth; 
                     phoneticVoiceButton.classList.add('pulse-animation');
                     setTimeout(() => {
                         phoneticVoiceButton.classList.remove('pulse-animation');
                     }, 1000);
-                  
-                    phoneticVoiceButton.addEventListener('click', () => {
-                        if (window.speechSynthesis) {
+
+                    if (!phoneticVoiceButton.dataset.listenerAttached) {
+                        phoneticVoiceButton.addEventListener('click', () => {
                             const wordElement = document.querySelector('.word');
-                            if (!wordElement || !wordElement.textContent.trim()){
+                            if (!wordElement || !wordElement.textContent.trim()) {
                                 console.log('No word to pronounce');
                                 return;
                             }
+                
                             const utterance = new SpeechSynthesisUtterance();
                             utterance.text = wordElement.textContent;
                             utterance.lang = 'en';
                             utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
                             appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
+                
                             speechSynthesis.speak(utterance);
                             console.log(wordElement);
-                        }
-                    })
+                        });
+                        phoneticVoiceButton.dataset.listenerAttached = 'true';
+                    }
 
                     Array.isArray(word.translation)
                         ? translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation"

@@ -3,12 +3,15 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="design.css">
+        <link rel="stylesheet" href="../style/design.css">
         <style>
             .hidden { display: none; }
         </style>
     </head>
     <body>
+        <div id="splash" class="splash">
+            <img src="../image/favicon.png" alt="Loading" draggable="false" class="splash-logo">
+        </div>
         <div id="main-window">
 
             <div class="toggle-container" style="align-items: flex-end;">
@@ -50,7 +53,7 @@
                 </label>
 
                 <button id="languages" class="languages-btn icon-btn">
-                    <img src="image/languages.png" alt="" class="image" draggable="false" style="display: block; width: 97%; height: auto;">
+                    <img src="../image/languages.png" alt="" class="image" draggable="false" style="display: block; width: 97%; height: auto;">
                 </button>
                 <div id="overlay" class="overlay"></div>
                 <div id="languages-popup" class="popup">
@@ -81,14 +84,14 @@
                     </div>
                     <div class="languagesWrapper">
                         <div class="flag-circle">
-                            <img src="https://flagcdn.com/w160/nl.png" alt="Dutch">
+                            <img src="https://flagcdn.com/w160/dk.png" alt="Danish">
                         </div>
                     </div>
                     <button id="languages-close-popup" class="close-popup-button">Close</button>
                 </div>
 
                 <button id="information" class="information-btn icon-btn">
-                    <img src="image/information.png" alt="" class="image" draggable="false" style="display: block; width: 87%; height: auto; margin-left: 3px;">
+                    <img src="../image/information.png" alt="" class="image" draggable="false" style="display: block; width: 87%; height: auto; margin-left: 3px;">
                 </button>
                 <div id="overlay" class="overlay"></div>
                 <div id="info-popup" class="popup">
@@ -96,27 +99,27 @@
                         Это расширение поможет учить Английские слова <strong>Эффективнее!</strong>
                     </p><br/>
                     <p>Возможности:</p><br/>
-                    <p class="info-text"><strong>Изменение темы:</strong> Нажмите на кнопку (<img src="image/sun.svg" draggable="false" style="height: 1.1em; vertical-align: middle;">/<img src="image/moon.svg" style="height: 1em; vertical-align: middle;">) в левом верхнем углу, чтобы переключиться между светлой и тёмной темой.</p><br/>
-                    <p class="info-text"><strong>Смена языка:</strong> Нажмите на кнопку <img src="image/languages.png" draggable="false" style="height: 1.7em; vertical-align: middle;">, чтобы переключиться между языками.</p><br/>
-                    <p class="info-text"><strong>Оформление расширения:</strong> Нажмите на кнопку <img src="image/colors.png" draggable="false" style="height: 1.15em; vertical-align: middle;">, чтобы сменить окраску темы.</p><br/>
-                    <p class="info-text"><strong>Включение/отключение уведомлений:</strong> Нажмите на кнопку (<img src="image/message-off.svg" draggable="false" style="height: 1.2em; vertical-align: middle;">/<img src="image/message-on.svg" style="height: 1.2em; vertical-align: middle;">) в правом верхнем углу, чтобы включить или отключить уведомления.</p><br/>
+                    <p class="info-text"><strong>Изменение темы:</strong> Нажмите на кнопку (<img src="../image/sun.svg" draggable="false" style="height: 1.1em; vertical-align: middle;">/<img src="../image/moon.svg" style="height: 1em; vertical-align: middle;">) в левом верхнем углу, чтобы переключиться между светлой и тёмной темой.</p><br/>
+                    <p class="info-text"><strong>Смена языка:</strong> Нажмите на кнопку <img src="../image/languages.png" draggable="false" style="height: 1.7em; vertical-align: middle;">, чтобы переключиться между языками.</p><br/>
+                    <p class="info-text"><strong>Оформление расширения:</strong> Нажмите на кнопку <img src="../image/colors.png" draggable="false" style="height: 1.15em; vertical-align: middle;">, чтобы сменить окраску темы.</p><br/>
+                    <p class="info-text"><strong>Включение/отключение уведомлений:</strong> Нажмите на кнопку (<img src="../image/message-off.svg" draggable="false" style="height: 1.2em; vertical-align: middle;">/<img src="../image/message-on.svg" style="height: 1.2em; vertical-align: middle;">) в правом верхнем углу, чтобы включить или отключить уведомления.</p><br/>
                     <p class="info-text"><strong>Изучение слов:</strong> В центре экрана появится слово, которое нужно перевести. Введите правильный перевод в поле.</p><br/>
-                    <p class="info-text"><strong>Подсказка:</strong> Нажмите на <img src="image/question.png" draggable="false" style="height: 0.9em; vertical-align: middle;">, если не знаете, как перевести слово.</p><br/>
-                    <p class="info-text"><strong>Выбор другого слова:</strong> Если слово вам не подходит, нажмите на <img src="image/replace.png" draggable="false" style="height: 1.15em; vertical-align: middle;">.</p><br/>
-                    <p class="info-text"><strong>Смена режима изучения:</strong> Используйте кнопку настроек <img src="image/mode.png" draggable="false" style="height: 1.15em; vertical-align: middle;">, чтобы переключаться между режимами.</p><br/>
-                    <p class="info-text"><strong>Озвучивание слова:</strong> Нажмите на <img src="image/sound.png" draggable="false" style="height: 1.15em; vertical-align: middle;">, чтобы воспроизвести слово с помощью машинного голоса.</p><br/>
-                    <p class="info-text"><strong>Прогресс изучения:</strong> Отслеживайте процент изученных слов по темам нажав на <img src="image/achievement.png" draggable="false" style="height: 1.15em; vertical-align: middle;">.</p><br/>
-                    <p class="info-text"><strong>Добавление слова в список:</strong> Нажмите на <img src="image/plus.png" draggable="false" style="height: 1.15em; vertical-align: middle;">, чтобы добавить слово в изученные.</p><br/>
+                    <p class="info-text"><strong>Подсказка:</strong> Нажмите на <img src="../image/question.png" draggable="false" style="height: 0.9em; vertical-align: middle;">, если не знаете, как перевести слово.</p><br/>
+                    <p class="info-text"><strong>Выбор другого слова:</strong> Если слово вам не подходит, нажмите на <img src="../image/replace.png" draggable="false" style="height: 1.15em; vertical-align: middle;">.</p><br/>
+                    <p class="info-text"><strong>Смена режима изучения:</strong> Используйте кнопку настроек <img src="../image/mode.png" draggable="false" style="height: 1.15em; vertical-align: middle;">, чтобы переключаться между режимами.</p><br/>
+                    <p class="info-text"><strong>Озвучивание слова:</strong> Нажмите на <img src="../image/sound.png" draggable="false" style="height: 1.15em; vertical-align: middle;">, чтобы воспроизвести слово с помощью машинного голоса.</p><br/>
+                    <p class="info-text"><strong>Прогресс изучения:</strong> Отслеживайте процент изученных слов по темам нажав на <img src="../image/achievement.png" draggable="false" style="height: 1.15em; vertical-align: middle;">.</p><br/>
+                    <p class="info-text"><strong>Добавление слова в список:</strong> Нажмите на <img src="../image/plus.png" draggable="false" style="height: 1.15em; vertical-align: middle;">, чтобы добавить слово в изученные.</p><br/>
                     <p class="info-text"><strong>Выбор темы для изучения:</strong> Изучайте слова из определённых категорий (путешествия, спорт, еда и другие).</p><br/>
                     <p class="info-text"><strong>Настройка времени уведомлений:</strong> Укажите удобное время для получения уведомлений.</p><br/>
                     <p class="info-text"><strong>Загрузка своих слов:</strong> Импортируйте свои темы, с помощью кнопки <strong>UPLOAD</strong>.</p><br/>
-                    <p class="info-text"><strong>Кастомная настройка оформления:</strong> Нажмите на <img src="image/palette.png" draggable="false" style="height: 1.3em; vertical-align: middle;">, чтобы сделать свое личное оформление цветов.</p><br/>
+                    <p class="info-text"><strong>Кастомная настройка оформления:</strong> Нажмите на <img src="../image/palette.png" draggable="false" style="height: 1.3em; vertical-align: middle;">, чтобы сделать свое личное оформление цветов.</p><br/>
                     <p class="info-text"><strong>Список изученных слов:</strong> Просматривайте выученные слова, нажав кнопку <strong>LIST</strong>.</p><br/>
                     <button id="close-popup" class="close-popup-button">Close</button>
                 </div>
 
                 <button id="baseTheme" class="baseTheme-btn icon-btn">
-                    <img src="image/colors.png" alt="" class="image" draggable="false" style="display: block; width: 74%; height: auto; margin-left: 5px;">
+                    <img src="../image/colors.png" alt="" class="image" draggable="false" style="display: block; width: 74%; height: auto; margin-left: 5px;">
                 </button>
                 <div id="overlay" class="overlay"></div>
                 <div id="baseTheme-popup" class="popup">
@@ -476,6 +479,9 @@
                 <div class="word-container">
                     <div class="word-in-container">
                         <p class="word"></p>
+                        <button class="icon-btn" id="phonetic-voice-btn">
+                            <img src="../image/sound.png" alt="sound" draggable="false">
+                        </button>
                     </div>
                     <div class="translate-container">
                         <input placeholder="Input Translate..." id="translateField" type="text" name="text" autocomplete="off" class="inputTranslate">
@@ -486,11 +492,11 @@
             <div class="icon-container">
 
                 <button id="help-btn" class="icon-btn">
-                    <img src="image/question.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    <img src="../image/question.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                 </button>
 
                 <button id="replace-btn" class="icon-btn">
-                    <img src="image/replace.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    <img src="../image/replace.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                 </button>
 
                 <div id="overlay" class="overlay"></div>
@@ -504,11 +510,11 @@
                     <button id="close-mode-popup" class="close-popup-button">Close</button>
                 </div>
                 <button id="change-mode" class="icon-btn">
-                    <img src="image/mode.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    <img src="../image/mode.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                 </button>
 
                 <button id="sound-btn" class="icon-btn">
-                    <img src="image/sound.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    <img src="../image/sound.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                 </button>
 
                 <div id="overlay" class="overlay"></div>
@@ -740,11 +746,11 @@
                     <button id="close-allImagesForThemes-popup" class="close-popup-button">Back</button>
                 </div>
                 <button id="achievement-btn" class="icon-btn">
-                    <img src="image/achievement.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    <img src="../image/achievement.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                 </button>
 
                 <button id="plus-btn" class="icon-btn">
-                    <img src="image/plus.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    <img src="../image/plus.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                 </button>
             </div>
 
@@ -752,7 +758,7 @@
 
             <div class="select-theme-container">
                 <button id="prev-btn-theme" class="arrow-btn">
-                    <img src="image/arrow-left.png" alt="" class="image" draggable="false" style="display: block; width: 100%; height: 100%;">
+                    <img src="../image/arrow-left.png" alt="" class="image" draggable="false" style="display: block; width: 100%; height: 100%;">
                 </button>
 
                 <input type="text" id="text-field-theme" class="theme-input" readonly>
@@ -774,12 +780,12 @@
                 </div>
 
                 <button id="next-btn-theme" class="arrow-btn">
-                    <img src="image/arrow-right.png" alt="" class="image" draggable="false" style="display: block; width: 100%; height: 100%;">
+                    <img src="../image/arrow-right.png" alt="" class="image" draggable="false" style="display: block; width: 100%; height: 100%;">
                 </button>
             </div>
             <div class="select-time-container">
                 <button id="prev-btn-time" class="arrow-btn">
-                    <img src="image/arrow-left.png" alt="" class="image" draggable="false" style="display: block; width: 100%; height: 100%;">
+                    <img src="../image/arrow-left.png" alt="" class="image" draggable="false" style="display: block; width: 100%; height: 100%;">
                 </button>
 
                 <input type="text" id="text-field-time" class="time-input" readonly>
@@ -794,7 +800,7 @@
                 </div>
 
                 <button id="next-btn-time" class="arrow-btn">
-                    <img src="image/arrow-right.png" alt="" class="image" draggable="false" style="display: block; width: 100%; height: 100%;">
+                    <img src="../image/arrow-right.png" alt="" class="image" draggable="false" style="display: block; width: 100%; height: 100%;">
                 </button>
             </div>
 
@@ -893,7 +899,7 @@
 
                         <div class="row">
                             <button id="reset-color" class="icon-btn">
-                                <img src="image/reset.png" alt="" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                                <img src="../image/reset.png" alt="" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                             </button>
                             <div class="input-group">
                                 <label for="input-lightness">L</label>
@@ -901,7 +907,7 @@
                             </div>
 
                             <button id="history-color" class="icon-btn">
-                                <img src="image/history.png" alt="" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                                <img src="../image/history.png" alt="" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                             </button>
                         </div>
                     </div>
@@ -934,7 +940,7 @@
                 </div>
 
                 <button id="palette-btn" class="icon-btn">
-                    <img src="image/palette.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
+                    <img src="../image/palette.png" alt="" class="image" draggable="false" style="display: block; width: 75%; height: auto; margin-left: 5px;">
                 </button>
 
                 <div class="list-container">
@@ -962,7 +968,7 @@
                     <p class="learned-word">hello</p>
                     <p class="learned-translate">привет</p>
                     <button id="return-word-btn" class="icon-btn">
-                        <img src="image/return.png" alt="" style="display: block; width: 100%; height: auto;">
+                        <img src="../image/return.png" alt="" style="display: block; width: 100%; height: auto;">
                     </button>
                 </div>
             --> 
@@ -976,6 +982,7 @@
             </div>
         </div>
 
-        <script type="module" src="functional.js"></script>
+
+        <script type="module" src="../core/functional.js"></script>
     </body>    
 </html>

@@ -1,6 +1,6 @@
 {
     "name": "English Helper",
-    "version": "5",
+    "version": "6",
     "description": "Extension",
     "manifest_version": 3,
     "permissions": [
@@ -11,14 +11,14 @@
     "content_scripts":[
         {
             "matches": ["<all_urls>"],
-            "js": ["functional.js"]
+            "js": ["core/functional.js"]
         }
     ],
     "background": {
-        "service_worker": "background.js"
+        "service_worker": "core/background.js"
     },
     "action": {
         "default_icon": "image/favicon.png",
-        "default_popup": "popup.html"
+        "default_popup": "views/popup.html"
     }
 }

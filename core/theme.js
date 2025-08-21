@@ -1,7 +1,7 @@
-import { elements } from "./domElements.js";
-import { appState } from "./appState.js";
-import { toLowerCaseAll } from "./utils.js";
-import { initializeNotificationSettings } from "./ui.js";
+import { elements } from "../utils/domElements.js";
+import { appState } from "../core/appState.js";
+import { toLowerCaseAll } from "../utils/utils.js";
+import { initializeNotificationSettings } from "../ui/ui.js";
 
 export function initializeThemeSettings() {
     const { themeToggleState, 
@@ -30,8 +30,8 @@ export function initializeThemeSettings() {
 
         const key = isDark ? 'baseThemeDark' : 'baseThemeLight';
         chrome.storage.local.get(key, (data) => {
-            const color = data[key];
-            if (!color) return;
+            const color = data[key] || 'default';
+         
 
             console.log("COLOR: ", color);
             if (color === 'default') {

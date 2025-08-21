@@ -1,9 +1,8 @@
-import { toLowerCaseAll } from "../utils.js";
-import { elements } from "../domElements.js";
+import { toLowerCaseAll } from "../utils/utils.js";
+import { elements } from "../utils/domElements.js";
 
 export function handlePhoneticMode(foundWord) {
-    const { translateWord } = elements;
-    const phoneticVoiceButton = document.getElementById('Phonetic-voice-btn');
+    const { translateWord, phoneticVoiceButton } = elements;
 
     Array.isArray(foundWord.translation) 
         ? translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)])
@@ -18,6 +17,5 @@ export function handlePhoneticMode(foundWord) {
 
 export function replaceWordPhoneticMode(randomWord) {
     const { activeWord } = elements;
-
     activeWord.textContent = toLowerCaseAll(randomWord.word);
 }

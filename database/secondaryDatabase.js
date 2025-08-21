@@ -1,9 +1,9 @@
-import { elements } from "../domElements.js";
-import { appState } from "../appState.js";
-import { toLowerCaseAll } from "../utils.js";
-import { replaceCurrentWord, getFoundWordFromDatabase } from "../ui.js";
+import { elements } from "../utils/domElements.js";
+import { appState } from "../core/appState.js";
+import { toLowerCaseAll } from "../utils/utils.js";
+import { replaceCurrentWord, getFoundWordFromDatabase } from "../ui/ui.js";
 import { removeWordFromMainDatabase, restoreWordToMainDatabase } from "./mainDatabase.js";
-import { shadeColor } from "../theme.js";
+import { shadeColor } from "../core/theme.js";
 
 
 export function initializeSecondaryDatabase() {
@@ -49,7 +49,7 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
             wordText = wordText.trim().toLowerCase();
             console.log("WORD TEXT: ", wordText);
 
-            const phoneticVoiceButton = document.getElementById('Phonetic-voice-btn');
+            const phoneticVoiceButton = document.getElementById('phonetic-voice-btn');
             wordContainer.classList.remove('show-translate');
             appState.countHelpButtonPressed = 0;
             
@@ -232,7 +232,7 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                     });
                     
                     const img = document.createElement('img');
-                    img.src = 'image/return.png';
+                    img.src = '../image/return.png';
                     img.alt = '';
                     img.draggable = false;
                     img.style.display = 'block';

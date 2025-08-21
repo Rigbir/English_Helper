@@ -1,6 +1,6 @@
-import { initializeMainDatabase } from './database/mainDatabase.js';
-import { initializeSecondaryDatabase, addWordToSecondaryDatabase } from './database/secondaryDatabase.js';
-import { initializeThemeSettings, initializeThemeAndTimeSettings } from './theme.js';
+import { initializeMainDatabase } from "../database/mainDatabase.js";
+import { initializeSecondaryDatabase, addWordToSecondaryDatabase } from "../database/secondaryDatabase.js";
+import { initializeThemeSettings, initializeThemeAndTimeSettings } from "../core/theme.js";
 import { displayAppInfoPopup, 
          displayLanguagesPopup,
          displayBaseThemePopup,
@@ -19,11 +19,14 @@ import { displayAppInfoPopup,
          uploadFile,
          loadThemeFromStorage,
          settingsPopup
-} from './ui.js';
-import { setupStorageListeners } from './storage.js';
-import { appState } from './appState.js';
+} from "../ui/ui.js";
+import { setupStorageListeners } from "../core/storage.js";
+import { appState } from "../core/appState.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+    const splash = document.getElementById('splash');
+    const hideSplash = () => { if (splash) splash.style.display = 'none'; };
+
     initializeSecondaryDatabase();
 
     loadThemeFromStorage();
@@ -78,14 +81,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 addWordToSecondaryDatabase(databaseWords, databaseLearned);
                 openSecondaryListWindow(databaseWords, databaseLearned);
                 getSecondaryResultAchievement(databaseLearned);
+                hideSplash();
             };
             requestList.onerror = (error) => {
                 console.error("Error opening database 'learned_words'", error);
+                hideSplash();
             };
         };
 
         requestWords.onerror = (error) => {
             console.error("Error opening database 'words'", error);
+            hideSplash();
         };
     };
 
@@ -93,4 +99,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeThemeAndTimeSettings();
     saveNotificationTime();
     setupStorageListeners();
+    setTimeout(hideSplash, 3000);
 });

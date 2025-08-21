@@ -1,7 +1,8 @@
-import { initializeMainDatabase } from './database/mainDatabase.js';
-import { elements } from './domElements.js';
-import { initializeThemeAndTimeSettings } from './theme.js';
-import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime } from './ui.js';
+import { initializeMainDatabase } from "../database/mainDatabase.js";
+import { elements } from "../utils/domElements.js";
+import { initializeThemeAndTimeSettings } from "../core/theme.js";
+import { initializeInputFieldAndHintButton, generateNewRandomWord, saveNotificationTime } from "../ui/ui.js";
+import { appState } from "../core/appState.js";
 
 export function updateSelection(changes, key, selector, className) {
     const { themeOverlay,
@@ -53,7 +54,7 @@ export function loadInitialSelection(key, defaultValue, selector, className) {
 }
 
 export function setupStorageListeners() {
-    chrome.storage.local.get(['selectedTheme', 'selectedTime', 'selectedMode'], (data) => {
+    chrome.storage.local.get(['selectedTheme', 'selectedTime', 'selectedMode', 'selectedLanguage'], (data) => {
         if (!data.selectedTheme) {
             chrome.storage.local.set({ selectedTheme: 'All Words' });
         }
@@ -62,6 +63,9 @@ export function setupStorageListeners() {
         }
         if (!data.selectedMode) {
             chrome.storage.local.set({ selectedMode: 'Default' });
+        }
+        if (!data.selectedLanguage) {
+            chrome.storage.local.set({ selectedLanguage: 'ru' });
         }
     });
 
@@ -93,6 +97,45 @@ export function setupStorageListeners() {
                     console.error("Error opened new databse: ", error)
                 };
             }
+        }
+
+        if (changes.selectedLanguage) {
+            const initialRequest = indexedDB.open('words');
+            initialRequest.onsuccess = (event) => {
+                const tempDb = event.target.result;
+                const currentVersion = tempDb.version;
+                tempDb.close();
+
+                const requestWords = indexedDB.open('words', currentVersion);
+                requestWords.onsuccess = (event) => {
+                    const database = event.target.result;
+                    appState.countVoiceoverButtonPressed = true;
+
+                    try {
+                        const { wordContainer, inputField } = elements;
+                        if (wordContainer) {
+                            wordContainer.classList.remove('show-translate');
+                        }
+                        if (inputField) {
+                            inputField.value = '';
+                            inputField.classList.remove('error');
+                            inputField.style.display = 'block';
+                            inputField.style.visibility = 'visible';
+                        }
+                        appState.countHelpButtonPressed = 0;
+                    } catch (e) {
+                        console.warn('Hint reset on language change failed silently:', e);
+                    }
+                    import('../database/mainDatabase.js').then(({ reloadDatabaseForLanguage, initializeMainDatabase }) => {
+                        reloadDatabaseForLanguage(database).then(() => {
+                            initializeMainDatabase(database);
+                        });
+                    });
+                };
+                requestWords.onerror = () => {
+                    console.error('Error opened new databse');
+                };
+            };
         }
 
         if (changes.themeIndex) {

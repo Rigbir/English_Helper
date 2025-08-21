@@ -1,5 +1,6 @@
 export const appState = {
     theme: 'dark',
+    selectedLanguage: 'ru',
     count: 0,
     countHelpButtonPressed: 0,
     countVoiceoverButtonPressed: true,
@@ -11,7 +12,7 @@ export const appState = {
     updateWordHandler: null,
     handlerForMixedMode: null,
     currentDatabaseVersion: null,
-    soundTimeChallenge: new Audio('sound/TimeChallenge.mp3'),
+    soundTimeChallenge: new Audio('../sound/TimeChallenge.mp3'),
     originalWord: '',
     jsonThemes: ['All Words', 'Human', 'Food', 'House', 'Sport', 
                  'Profession', 'Money', 'Cinema', 'Nature', 'Traveling', 

@@ -1,6 +1,6 @@
-import { toLowerCaseAll } from "../utils.js";
-import { elements } from "../domElements.js";
-import { appState } from "../appState.js";
+import { toLowerCaseAll } from "../utils/utils.js";
+import { elements } from "../utils/domElements.js";
+import { appState } from "../core/appState.js";
 
 export function handleMixedMode(foundWord) {
     const { translateWord } = elements;
