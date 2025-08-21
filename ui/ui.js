@@ -805,7 +805,6 @@ export function playWordPronunciation() {
     })
 }
 
-
 export function saveNotificationTime() {
     const timeField = document.getElementById('text-field-time').value.trim();
     const match = timeField.match(/^(\d+)/);
@@ -872,10 +871,12 @@ export function getSecondaryResultAchievement(databaseLearned) {
         Object.keys(appState.countOnStart).map(key => [key, 0])
     );
 
-    const transaction = databaseLearned.transaction('learned', 'readonly');
-    const store = transaction.objectStore('learned');
-    const getAllRequest = store.getAll();
-    console.log('WORD IN LIST: ', getAllRequest);
+    chrome.storage.local.get({ selectedLanguage: 'ru' }, ({ selectedLanguage }) => {
+        const storeName = `learned_${selectedLanguage}`;
+        const transaction = databaseLearned.transaction(storeName, 'readonly');
+        const store = transaction.objectStore(storeName);
+        const getAllRequest = store.getAll();
+        console.log('WORD IN LIST: ', getAllRequest);
 
     getAllRequest.onsuccess = () => {
         const data = getAllRequest.result;
@@ -900,11 +901,11 @@ export function getSecondaryResultAchievement(databaseLearned) {
         updateProgressBar(percentLearnedWords);
     
         console.log("PERCENT WORDS: ", percentLearnedWords);
-    }
-
+    };
     getAllRequest.onerror = (event) => {
         console.error("Error opening database 'learned'", event.target.error);    
-    }
+    };
+    });
 }
 
 function updateProgressBar(percentLearnedWords) {

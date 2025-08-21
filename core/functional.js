@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
             initializeInputFieldAndHintButton(databaseWords);
             uploadFile(databaseWords); 
 
-            const requestList = indexedDB.open('learned_words', 1);
+            const requestList = indexedDB.open('learned_words', 2);
             requestList.onsuccess = (event) => {
                 const databaseLearned = event.target.result;
                 console.log("Database 'learned_words' successfully opened", databaseLearned);

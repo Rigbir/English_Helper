@@ -497,7 +497,8 @@ export function restoreWordToMainDatabase(databaseWords, databaseLearned, word){
     const inputField = document.getElementById('translateField');
     const originalTheme = word.theme;
     
-    removeWordFromMainDatabase(databaseLearned, 'learned', word.word)
+    const listStore = `learned_${word.lang || 'ru'}`;
+    removeWordFromMainDatabase(databaseLearned, listStore, word.word)
         .then(() => {
             const transaction = databaseWords.transaction(originalTheme, 'readwrite');
             const store = transaction.objectStore(originalTheme);

@@ -7,14 +7,17 @@ import { shadeColor } from "../core/theme.js";
 
 
 export function initializeSecondaryDatabase() {
-    const requestList = indexedDB.open('learned_words', 1);
+    const requestList = indexedDB.open('learned_words', 2);
 
     requestList.onupgradeneeded = (event) => {
         const databaseLearned = event.target.result;
-        if (!databaseLearned.objectStoreNames.contains('learned')) {
-            databaseLearned.createObjectStore('learned', { keyPath: 'word' });
-            console.log("Сreated object store 'learned'");
-        }
+        const stores = ['learned_ru','learned_de','learned_it','learned_fr','learned_es','learned_da'];
+        stores.forEach(name => {
+            if (!databaseLearned.objectStoreNames.contains(name)) {
+                databaseLearned.createObjectStore(name, { keyPath: 'word' });
+                console.log(`Created object store '${name}'`);
+            }
+        });
     };
 }
 
@@ -92,7 +95,10 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
             if (foundWord) {
                 removeWordFromMainDatabase(databaseWords, selectedTheme, foundWord.word)
                     .then(() => {
-                        transferWordToLearnedList(databaseLearned, foundWord, selectedTheme);
+                        chrome.storage.local.get({ selectedLanguage: 'ru' }, ({ selectedLanguage }) => {
+                            const storeName = `learned_${selectedLanguage}`;
+                            transferWordToLearnedList(databaseLearned, foundWord, selectedTheme, storeName, selectedLanguage);
+                        });
 
                         return new Promise((resolve, reject) => {
                             const transaction = databaseWords.transaction(selectedTheme, 'readonly');
@@ -114,14 +120,14 @@ export function addWordToSecondaryDatabase(databaseWords, databaseLearned) {
     });
 }
 
-export function transferWordToLearnedList(databaseLearned, word, theme) {
+export function transferWordToLearnedList(databaseLearned, word, theme, storeName, lang) {
     if (!word || !word.word) {
         console.error("Invalid word format:", word);
         return;
     }
-    
-    const transaction = databaseLearned.transaction('learned', 'readwrite');
-    const store = transaction.objectStore('learned');
+    if (!storeName) storeName = 'learned_ru';
+    const transaction = databaseLearned.transaction(storeName, 'readwrite');
+    const store = transaction.objectStore(storeName);
     
     word.word = toLowerCaseAll(word.word);
 
@@ -130,6 +136,7 @@ export function transferWordToLearnedList(databaseLearned, word, theme) {
         : word.translation = toLowerCaseAll(word.translation)
     
     word.theme = theme;
+    word.lang = lang || 'ru';
     
     const addRequest = store.put(word);
     
@@ -153,9 +160,11 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
     
         listWordsContainer.innerHTML = '';
     
-        const transaction = databaseLearned.transaction('learned', 'readonly');
-        const store = transaction.objectStore('learned');
-        const getAllRequest = store.getAll();
+        chrome.storage.local.get({ selectedLanguage: 'ru' }, ({ selectedLanguage }) => {
+            const storeName = `learned_${selectedLanguage}`;
+            const transaction = databaseLearned.transaction(storeName, 'readonly');
+            const store = transaction.objectStore(storeName);
+            const getAllRequest = store.getAll();
     
         chrome.storage.local.get('theme', (data) => {
             appState.theme = data.theme || 'dark';
@@ -271,5 +280,6 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                 ? heightVerticalCenterLine.style.height = (heightAllWordsContainer + 40) + 'px'
                 : heightVerticalCenterLine.style.height = '40px'
         }
+        });
     });
 }
