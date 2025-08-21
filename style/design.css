@@ -1038,12 +1038,13 @@ input::-webkit-inner-spin-button {
 .or-text {
     margin: 5px 0;
     font-weight: bold;
+    font-size: 1.1rem;
     color: #333;
 }
 
 #upload-file-button, #close-drag-and-drop-popup {
-    width: 120px;
-    height: 36px;
+    width: 130px;
+    height: 40px;
     background-color: #dcc788;
     border: none;
     border-radius: 65px;
