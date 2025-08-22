@@ -189,28 +189,22 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                 console.log('Words loaded from Learned: ', words);
                 console.log('get-main-cont', listWordsContainer);
             
-                words.forEach((item, index) => {
-                    const newContainer = document.createElement('div');
-                    newContainer.classList.add('new-learned-word');
-        
-                    const newWord = document.createElement('p');
-                    newWord.classList.add('learned-word');
-                    newWord.textContent = item.word;
-                
-                    const newTranslation = document.createElement('p');
-                    newTranslation.classList.add('learned-translate');
-                    newTranslation.textContent = item.translation;
-        
-                    const newButton = document.createElement('button');
-                    newButton.id = 'return-word-btn';
-                    newButton.classList.add('icon-btn');
+                const themeToWords = words.reduce((acc, item) => {
+                    const themeName = item.theme || 'Other';
+                    if (!acc[themeName]) acc[themeName] = [];
+                    acc[themeName].push(item);
+                    return acc;
+                }, {});
 
+                const themes = Object.keys(themeToWords).sort((a, b) => a.localeCompare(b));
+
+                const applyRowTheme = (container, button, index) => {
                     chrome.storage.local.get('paletteColors', (data) => {
                         const colorMap = data.paletteColors || {};
                         let customTheme = colorMap['overlay'] ? toLowerCaseAll(colorMap['overlay']) : '#8e7e8e';
                         if (color === '#8e7e8e') customTheme = color;
 
-                        const themes = {
+                        const themesMap = {
                             'default': { accent: '#dcc788', liner: '#afaf41' },
                             'resetCustom': { accent: '#b1b4b6', liner: '#b6d6df' },
                             'custom': { 
@@ -226,19 +220,32 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                             '#2e2e38': { accent: '#904040', liner: '#cdd8eb' },
                             '#2c2824': { accent: '#76736c', liner: '#c3b9a6' },
                         };
-                        const theme = themes[color];
+                        const t = themesMap[color];
 
-                        if (theme) {
-                            applyTheme(theme.accent, theme.liner);
-                        }
-
-                        function applyTheme(accent, liner) {
-                            const darkerColor = shadeColor(liner, 20);
-                            newButton.style.backgroundColor = accent;
-                            newContainer.style.setProperty('--before-color', liner);
-                            newContainer.style.backgroundColor = index % 2 === 0 ? accent : darkerColor;
+                        if (t) {
+                            const darkerColor = shadeColor(t.liner, 20);
+                            if (button) button.style.backgroundColor = t.accent;
+                            container.style.setProperty('--before-color', t.liner);
+                            container.style.backgroundColor = index % 2 === 0 ? t.accent : darkerColor;
                         }
                     });
+                };
+
+                const createWordRow = (item, index) => {
+                    const row = document.createElement('div');
+                    row.classList.add('new-learned-word');
+
+                    const newWord = document.createElement('p');
+                    newWord.classList.add('learned-word');
+                    newWord.textContent = item.word;
+                
+                    const newTranslation = document.createElement('p');
+                    newTranslation.classList.add('learned-translate');
+                    newTranslation.textContent = item.translation;
+    
+                    const newButton = document.createElement('button');
+                    newButton.id = 'return-word-btn';
+                    newButton.classList.add('icon-btn');
                     
                     const img = document.createElement('img');
                     img.src = '../image/return.png';
@@ -247,25 +254,46 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                     img.style.display = 'block';
                     img.style.width = '100%';
                     img.style.height = 'auto';
-        
                     newButton.appendChild(img);
-        
+
                     newButton.addEventListener('click', () => {
                         restoreWordToMainDatabase(databaseWords, databaseLearned, item);
-                        newContainer.remove();
-                        console.log('click return-btn', newButton);
-        
+                        row.remove();
                         requestAnimationFrame(updateVerticalCenterLineHeight);
                     });
-                
-                    newContainer.appendChild(newWord);
-                    newContainer.appendChild(newTranslation);
-                    newContainer.appendChild(newButton);
-                
-                    listWordsContainer.appendChild(newContainer);
-                    console.log('final', newContainer);
-        
-                    requestAnimationFrame(updateVerticalCenterLineHeight);
+
+                    row.appendChild(newWord);
+                    row.appendChild(newTranslation);
+                    row.appendChild(newButton);
+
+                    applyRowTheme(row, newButton, index);
+                    return row;
+                };
+
+                const createThemeHeader = (themeName) => {
+                    const header = document.createElement('div');
+                    header.classList.add('list-section-header');
+                    header.textContent = themeName;
+                    header.style.padding = '8px 8px';
+                    header.style.fontWeight = '750';
+                    header.style.fontSize = '18px';
+                    header.style.color = '#fff';
+                    header.style.background = '#2e2e38';
+                    header.style.letterSpacing = '0.3px';
+                    return header;
+                };
+
+                let rowIndex = 0;
+                themes.forEach(themeName => {
+                    const header = createThemeHeader(themeName);
+                    listWordsContainer.appendChild(header);
+
+                    const items = themeToWords[themeName];
+                    items.forEach(item => {
+                        const row = createWordRow(item, rowIndex++);
+                        listWordsContainer.appendChild(row);
+                        requestAnimationFrame(updateVerticalCenterLineHeight);
+                    });
                 });
 
                 resolve();

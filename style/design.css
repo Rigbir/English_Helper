@@ -1439,6 +1439,12 @@ border: 2px solid grey;
     position: relative;
 }
 
+.list-section-header {
+    position: relative;
+    text-align: center;  
+    z-index: 1;        
+}
+
 .vertical-center-line {
     position: absolute;
     top: 0;
@@ -1447,7 +1453,7 @@ border: 2px solid grey;
     border: none;
     width: 2px;
     background-color: black;
-    z-index: 1;
+    z-index: 0;
 }
 
 .horizontal-center-line {
