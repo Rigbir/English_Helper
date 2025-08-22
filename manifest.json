@@ -1,6 +1,6 @@
 {
-    "name": "English Helper",
-    "version": "6",
+    "name": "Wordly",
+    "version": "6.5",
     "description": "Extension",
     "manifest_version": 3,
     "permissions": [
