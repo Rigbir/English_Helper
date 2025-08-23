@@ -19,8 +19,8 @@ export function handlePhoneticMode(foundWord) {
         translateWord.textContent = toLowerCaseAll(foundWord.word);
     }
 
-    console.log('ACTIVE WORD (озвучивалось): ', activeWord.textContent);
-    console.log('TRANSLATE ELEMENT (английский): ', translateWord.textContent);
+    console.log('ACTIVE WORD: ', activeWord.textContent);
+    console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
 }
 
 export function replaceWordPhoneticMode(randomWord) {
