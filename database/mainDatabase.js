@@ -311,7 +311,10 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                     console.log('HANDLE-FOR-MIXED: ', appState.handlerForMixedMode);
                 } else if (appState.mode === 'Phonetic') {
                     console.log("Word object:", word);
-                    activeWord.textContent = toLowerCaseAll(word.word) || "No data";
+                    Array.isArray(word.translation)
+                        ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
+                        : activeWord.textContent = toLowerCaseAll(word.translation) || "No data";
+                    
                     activeWord.style.display = 'none';
                     phoneticVoiceButton.style.visibility = 'visible';
                     phoneticVoiceButton.style.display = 'block'; 
@@ -333,19 +336,22 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 
                             const utterance = new SpeechSynthesisUtterance();
                             utterance.text = wordElement.textContent;
-                            utterance.lang = 'en';
-                            utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
-                            appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
-                
-                            speechSynthesis.speak(utterance);
+                            chrome.storage.local.get({ selectedLanguage: 'ru' }, ({ selectedLanguage }) => {
+                                const langMap = { ru: 'ru-RU', de: 'de-DE', it: 'it-IT', fr: 'fr-FR', es: 'es-ES', da: 'da-DK' };
+                                const targetLang = langMap[selectedLanguage] || 'en-US';
+                                utterance.lang = targetLang;
+                                utterance.rate = appState.countVoiceoverButtonPressed ? 1 : 0.1;
+                                appState.countVoiceoverButtonPressed = !appState.countVoiceoverButtonPressed;
+                                speechSynthesis.speak(utterance);
+                            });
                             console.log(wordElement);
                         });
                         phoneticVoiceButton.dataset.listenerAttached = 'true';
                     }
 
-                    Array.isArray(word.translation)
-                        ? translateWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No translation"
-                        : translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"
+                    Array.isArray(word.word)
+                        ? translateWord.textContent = toLowerCaseAll(word.word[Math.floor(Math.random() * word.word.length)]) || "No translation"
+                        : translateWord.textContent = toLowerCaseAll(word.word) || "No translation"
                     
                     console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
                     console.log("FOURTH MODE");

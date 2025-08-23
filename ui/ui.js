@@ -455,7 +455,11 @@ export function getFoundWordFromDatabase(data, activeWordText) {
                 return foundWord;
             }
         case 'Phonetic':
-            return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
+            return data.find(item => 
+                Array.isArray(item.translation) 
+                    ? item.translation.some(tr => tr?.trim().toLowerCase() === activeWordText)
+                    : item.translation?.trim().toLowerCase() === activeWordText
+            );
         case 'Time Challenge':
             return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
         case 'Missing Letters':
@@ -590,7 +594,7 @@ export function initializeInputFieldAndHintButton(database) {
                         case 'Default': correctAnswer = [foundWord.word]; break;
                         case 'Reverse': correctAnswer = foundWord.translation; break;
                         case 'Mixed': correctAnswer = appState.handlerForMixedMode ? foundWord.translation : [foundWord.word]; break;
-                        case 'Phonetic': correctAnswer = foundWord.translation; break;
+                        case 'Phonetic': correctAnswer = [foundWord.word]; break;
                         case 'Time Challenge': correctAnswer = foundWord.translation; break;
                         case 'Missing Letters': correctAnswer = [foundWord.word]; break;
                     }
@@ -666,10 +670,20 @@ export function replaceCurrentWord(data) {
      const activeWordText = activeWord.textContent.trim().toLowerCase();
      const originalWordText = appState.originalWord?.trim().toLowerCase();
  
-     const filteredData = data.filter(item => 
-         item.word.trim().toLowerCase() !== activeWordText &&
-         item.word.trim().toLowerCase() !== originalWordText
-     );
+     let filteredData;
+     if (appState.mode === 'Phonetic') {
+         filteredData = data.filter(item => {
+             const itemTranslation = Array.isArray(item.translation) 
+                 ? item.translation.some(tr => tr?.trim().toLowerCase() === activeWordText)
+                 : item.translation?.trim().toLowerCase() === activeWordText;
+             return !itemTranslation;
+         });
+     } else {
+         filteredData = data.filter(item => 
+             item.word.trim().toLowerCase() !== activeWordText &&
+             item.word.trim().toLowerCase() !== originalWordText
+         );
+     }
     
     const randomWord = filteredData[Math.floor(Math.random() * filteredData.length)];
 
@@ -678,14 +692,12 @@ export function replaceCurrentWord(data) {
         switch(appState.mode) {
             case 'Default': 
                 replaceWordDefaultMode(randomWord); 
-                // В Default режиме показываем английское слово как перевод
                 Array.isArray(randomWord.word)
                     ? translateWord.textContent = toLowerCaseAll(randomWord.word[Math.floor(Math.random() * randomWord.word.length)])
                     : translateWord.textContent = toLowerCaseAll(randomWord.word);
                 break;
             case 'Reverse': 
                 replaceWordReverseMode(randomWord); 
-                // В Reverse режиме показываем перевод как перевод
                 Array.isArray(randomWord.translation)
                     ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
                     : translateWord.textContent = toLowerCaseAll(randomWord.translation);
@@ -698,9 +710,9 @@ export function replaceCurrentWord(data) {
                 break;
             case 'Phonetic': 
                 replaceWordPhoneticMode(randomWord); 
-                Array.isArray(randomWord.translation)
-                    ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
-                    : translateWord.textContent = toLowerCaseAll(randomWord.translation);
+                Array.isArray(randomWord.word)
+                    ? translateWord.textContent = toLowerCaseAll(randomWord.word[Math.floor(Math.random() * randomWord.word.length)])
+                    : translateWord.textContent = toLowerCaseAll(randomWord.word);
                 break;
             case 'Time Challenge': 
                 replaceWordTimeChallengeMode(randomWord); 
