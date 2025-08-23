@@ -219,6 +219,12 @@ export async function loadLearnedWordsFromDatabase(databaseWords, databaseLearne
                             '#1a1836': { accent: '#e99856', liner: '#e0b4b2' },
                             '#2e2e38': { accent: '#904040', liner: '#cdd8eb' },
                             '#2c2824': { accent: '#76736c', liner: '#c3b9a6' },
+                            '#2d1b3d': { accent: '#9d6b9e', liner: '#c8a2c8' },
+                            '#1f2937': { accent: '#6b7280', liner: '#9ca3af' },
+                            '#064e3b': { accent: '#10b981', liner: '#34d399' }, 
+                            '#0f172a': { accent: '#64748b', liner: '#94a3b8' }, 
+                            '#8b5a2b': { accent: '#d4a574', liner: '#e6ccb2' }, 
+                            '#6b7280': { accent: '#a1a1aa', liner: '#d4d4d8' }
                         };
                         const t = themesMap[color];
 

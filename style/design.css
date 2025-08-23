@@ -205,7 +205,7 @@ html.no-transition, body.no-transition {
     height: 270px;
     grid-template-columns: repeat(3, 1fr);
     grid-gap: 7px;
-    overflow: hidden;
+    /* overflow: hidden; */
     align-content: start;
     justify-content: center;
 }
