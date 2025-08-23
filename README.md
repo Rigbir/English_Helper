@@ -31,40 +31,14 @@ A powerful browser extension designed to help you learn vocabulary in **6 popula
 - **Progress Tracking** - Monitor your learning journey
 - **Customizable Settings** - Tailor the experience to your needs
 
-### **Technical Features**
-- **Cross-Browser Support** - Works on Chrome, Edge, Brave, and other Chromium-based browsers
-- **Offline Capability** - Core functionality works without internet
-- **Performance Optimized** - Lightweight and fast
-- **Privacy Focused** - No data collection or tracking
-
 ## Installation
 
 ### From Chrome Web Store (Recommended)
 1. Visit the [Wordly extension page](https://chromewebstore.google.com/detail/wordly/omnmhbbfdkcaglkikjcijapgcabifikp)
-2. Click **"Add to Chrome"**
+2. Click **"Add to Browser"**
 3. Confirm the installation
 4. The Wordly icon will appear in your browser toolbar
 
-### Manual Installation
-1. Download the extension files from this repository
-2. Open Chrome and go to `chrome://extensions/`
-3. Enable "Developer mode" in the top right
-4. Click "Load unpacked" and select the extension folder
-5. The extension will be installed and ready to use
-
-## Development
-
-### Project Structure
-```
-Extension/
-├── core/           # Core functionality
-├── database/       # Language databases
-├── modes/          # Learning mode implementations
-├── ui/             # User interface components
-├── views/          # Popup and settings views
-├── image/          # Icons and assets
-└── sound/          # Audio files
-```
 ## Issues & Support
 
 ### Reporting Issues
@@ -83,6 +57,7 @@ If you encounter any problems:
 ---
 
 <div align="center">
+
 ## Contact 
 
 **Made with ❤️ by [Rigbir](https://github.com/Rigbir)**
