@@ -50,15 +50,9 @@ If you encounter any problems:
    - Browser and extension version
    - Screenshots (if applicable)
 
-### Getting Help
-- **GitHub Issues**: [Create an issue](https://github.com/Rigbir/Extension/issues)
-- **Email Support**: brezinmaratextension@gmail.com
-
 ---
 
 <div align="center">
-
-## Contact 
 
 **Made with ❤️ by [Rigbir](https://github.com/Rigbir)**
 
