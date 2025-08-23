@@ -27,7 +27,7 @@ function autoMessage() {
     
     const options = {
         type: "basic",
-        iconUrl: "image/favicon.png",
+        iconUrl: chrome.runtime.getURL("image/fav.png"),
         title: "Wordly",
         message: message
     };
@@ -35,6 +35,18 @@ function autoMessage() {
     chrome.notifications.create(options, (id) => {
         if (chrome.runtime.lastError) {
             console.error("Error creating notification:", chrome.runtime.lastError);
+            const fallbackOptions = {
+                type: "basic",
+                title: "Wordly",
+                message: message
+            };
+            chrome.notifications.create(fallbackOptions, (fallbackId) => {
+                if (chrome.runtime.lastError) {
+                    console.error("Fallback notification also failed:", chrome.runtime.lastError);
+                } else {
+                    console.log(`Fallback notification created: ${fallbackId} with message: ${message}`);
+                }
+            });
         } else {
             console.log(`Notification created: ${id} with message: ${message}`);
         }

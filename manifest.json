@@ -20,5 +20,11 @@
     "action": {
         "default_icon": "image/favicon.png",
         "default_popup": "views/popup.html"
-    }
+    },
+    "web_accessible_resources": [
+        {
+            "resources": ["image/*"],
+            "matches": ["<all_urls>"]
+        }
+    ]
 }
