@@ -27,7 +27,7 @@ function autoMessage() {
     
     const options = {
         type: "basic",
-        iconUrl: chrome.runtime.getURL("image/fav.png"),
+        iconUrl: chrome.runtime.getURL("image/favicon.png"),
         title: "Wordly",
         message: message
     };
