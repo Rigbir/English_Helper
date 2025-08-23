@@ -433,13 +433,13 @@ export function initializeNotificationSettings() {
 export function getFoundWordFromDatabase(data, activeWordText) {
     switch (appState.mode) {
         case 'Default':
-            return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
-        case 'Reverse':
             return data.find(item => 
                 Array.isArray(item.translation) 
                     ? item.translation.some(tr => tr?.trim().toLowerCase() === activeWordText)
                     : item.translation?.trim().toLowerCase() === activeWordText
             );
+        case 'Reverse':
+            return data.find(item => item.word?.trim().toLowerCase() === activeWordText);
         case 'Mixed':
             if (!appState.handlerForMixedMode) {
                 const foundWord = data.find(item => 
@@ -587,8 +587,8 @@ export function initializeInputFieldAndHintButton(database) {
                     var correctAnswer = '';
                     
                     switch(appState.mode) {
-                        case 'Default': correctAnswer = foundWord.translation; break;
-                        case 'Reverse': correctAnswer = [foundWord.word]; break;
+                        case 'Default': correctAnswer = [foundWord.word]; break;
+                        case 'Reverse': correctAnswer = foundWord.translation; break;
                         case 'Mixed': correctAnswer = appState.handlerForMixedMode ? foundWord.translation : [foundWord.word]; break;
                         case 'Phonetic': correctAnswer = foundWord.translation; break;
                         case 'Time Challenge': correctAnswer = foundWord.translation; break;
@@ -676,18 +676,47 @@ export function replaceCurrentWord(data) {
     if (randomWord) {
         
         switch(appState.mode) {
-            case 'Default': replaceWordDefaultMode(randomWord); break;
-            case 'Reverse': replaceWordReverseMode(randomWord); break;
-            case 'Mixed': replaceWordMixedMode(randomWord); break;
-            case 'Phonetic': replaceWordPhoneticMode(randomWord); break;
-            case 'Time Challenge': replaceWordTimeChallengeMode(randomWord); break;
-            case 'Missing Letters': replaceWordMissingLettersMode(randomWord); break;
+            case 'Default': 
+                replaceWordDefaultMode(randomWord); 
+                // В Default режиме показываем английское слово как перевод
+                Array.isArray(randomWord.word)
+                    ? translateWord.textContent = toLowerCaseAll(randomWord.word[Math.floor(Math.random() * randomWord.word.length)])
+                    : translateWord.textContent = toLowerCaseAll(randomWord.word);
+                break;
+            case 'Reverse': 
+                replaceWordReverseMode(randomWord); 
+                // В Reverse режиме показываем перевод как перевод
+                Array.isArray(randomWord.translation)
+                    ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
+                    : translateWord.textContent = toLowerCaseAll(randomWord.translation);
+                break;
+            case 'Mixed': 
+                replaceWordMixedMode(randomWord); 
+                Array.isArray(randomWord.translation)
+                    ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
+                    : translateWord.textContent = toLowerCaseAll(randomWord.translation);
+                break;
+            case 'Phonetic': 
+                replaceWordPhoneticMode(randomWord); 
+                Array.isArray(randomWord.translation)
+                    ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
+                    : translateWord.textContent = toLowerCaseAll(randomWord.translation);
+                break;
+            case 'Time Challenge': 
+                replaceWordTimeChallengeMode(randomWord); 
+                Array.isArray(randomWord.translation)
+                    ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
+                    : translateWord.textContent = toLowerCaseAll(randomWord.translation);
+                break;
+            case 'Missing Letters': 
+                replaceWordMissingLettersMode(randomWord); 
+                Array.isArray(randomWord.translation)
+                    ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
+                    : translateWord.textContent = toLowerCaseAll(randomWord.translation);
+                break;
         }
 
-        inputField.value = ''; 
-        Array.isArray(randomWord.translation)
-            ? translateWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
-            : translateWord.textContent = toLowerCaseAll(randomWord.translation);
+        inputField.value = '';
 
         appState.countVoiceoverButtonPressed = true;
 
@@ -788,8 +817,8 @@ export function playWordPronunciation() {
                 
                 let speakLang = 'en-US';
                 switch (appState.mode) {
-                    case 'Default': speakLang = 'en-US'; break;
-                    case 'Reverse': speakLang = targetLang; break;
+                    case 'Default': speakLang = targetLang; break;
+                    case 'Reverse': speakLang = 'en-US'; break;
                     case 'Mixed': speakLang = appState.handlerForMixedMode ? targetLang : 'en-US'; break;
                     case 'Phonetic': speakLang = 'en-US'; break;
                     case 'Time Challenge': speakLang = 'en-US'; break;

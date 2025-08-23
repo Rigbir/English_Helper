@@ -4,10 +4,10 @@ import { appState } from "../core/appState.js";
 
 export function handleReverseMode(foundWord) { 
     const { translateWord } = elements;
-
-    Array.isArray(foundWord.word)
-        ? translateWord.textContent = toLowerCaseAll(foundWord.word[Math.floor(Math.random() * foundWord.translation.length)])
-        : translateWord.textContent = toLowerCaseAll(foundWord.word)
+    
+    Array.isArray(foundWord.translation)
+        ? translateWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)])
+        : translateWord.textContent = toLowerCaseAll(foundWord.translation)
     console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
 }
 
@@ -19,7 +19,5 @@ export function replaceWordReverseMode(randomWord) {
         return; 
     }
 
-    Array.isArray(randomWord.translation)
-        ? activeWord.textContent = toLowerCaseAll(randomWord.translation[Math.floor(Math.random() * randomWord.translation.length)])
-        : activeWord.textContent = toLowerCaseAll(randomWord.translation)
+    activeWord.textContent = toLowerCaseAll(randomWord.word);
 }

@@ -272,6 +272,13 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                 activeWord.style.display = 'block';
 
                 if (appState.mode === 'Default') {
+                    Array.isArray(word.translation)
+                        ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
+                        : activeWord.textContent = toLowerCaseAll(word.translation) || "No data"
+
+                    translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
+                    console.log("FIRST MODE");
+                } else if (appState.mode === 'Reverse') {
                     console.log("Word object:", word);
                     activeWord.textContent = toLowerCaseAll(word.word) || "No data";
 
@@ -280,13 +287,6 @@ export async function fetchRandomWordFromDatabase(database, theme, autoSetWord =
                         : translateWord.textContent = toLowerCaseAll(word.translation) || "No translation"
                     
                     console.log("TRANSLATE ELEMENT: ", translateWord.textContent);
-                    console.log("FIRST MODE");
-                } else if (appState.mode === 'Reverse') {
-                    Array.isArray(word.translation)
-                        ? activeWord.textContent = toLowerCaseAll(word.translation[Math.floor(Math.random() * word.translation.length)]) || "No data"
-                        : activeWord.textContent = toLowerCaseAll(word.translation) || "No data"
-
-                    translateWord.textContent = toLowerCaseAll(word.word) || "No translation";  
                     console.log("SECOND MODE");
                 } else if (appState.mode === 'Mixed') {
                     if (appState.handlerForMixedMode) {
