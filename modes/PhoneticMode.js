@@ -2,17 +2,25 @@ import { toLowerCaseAll } from "../utils/utils.js";
 import { elements } from "../utils/domElements.js";
 
 export function handlePhoneticMode(foundWord) {
-    const { translateWord, phoneticVoiceButton } = elements;
+    const { translateWord, phoneticVoiceButton, activeWord } = elements;
 
-    Array.isArray(foundWord.word) 
-        ? translateWord.textContent = toLowerCaseAll(foundWord.word[Math.floor(Math.random() * foundWord.word.length)])
-        : translateWord.textContent = toLowerCaseAll(foundWord.word)
-    console.log('TRANSLATE ELEMENT: ', translateWord.textContent);
+    if (Array.isArray(foundWord.translation)) {
+        activeWord.textContent = toLowerCaseAll(foundWord.translation[Math.floor(Math.random() * foundWord.translation.length)]);
+    } else {
+        activeWord.textContent = toLowerCaseAll(foundWord.translation);
+    }
 
-    phoneticVoiceButton.classList.add('pulse-animation');
-    setTimeout(() => {
-        phoneticVoiceButton.classList.remove('pulse-animation');
-    }, 1000);
+    phoneticVoiceButton.style.display = 'none';
+    activeWord.style.display = 'block';
+
+    if (Array.isArray(foundWord.word)) {
+        translateWord.textContent = toLowerCaseAll(foundWord.word[Math.floor(Math.random() * foundWord.word.length)]);
+    } else {
+        translateWord.textContent = toLowerCaseAll(foundWord.word);
+    }
+
+    console.log('ACTIVE WORD (озвучивалось): ', activeWord.textContent);
+    console.log('TRANSLATE ELEMENT (английский): ', translateWord.textContent);
 }
 
 export function replaceWordPhoneticMode(randomWord) {

@@ -535,6 +535,12 @@ export function initializeInputFieldAndHintButton(database) {
                 wordContainer.classList.remove('show-translate');
                 console.log('Class removed:', wordContainer.classList);
                 appState.countHelpButtonPressed = 0;
+                
+                if (appState.mode === 'Phonetic') {
+                    const { activeWord, phoneticVoiceButton } = elements;
+                    activeWord.style.display = 'none';
+                    phoneticVoiceButton.style.display = 'block';
+                }
             } 
 
             console.log('AFTER CLICK - COUNT:', appState.countHelpButtonPressed);
@@ -656,6 +662,13 @@ export function initializeInputFieldAndHintButton(database) {
             wordContainer.classList.remove('show-translate');
             appState.countHelpButtonPressed = 0;
             inputField.value = '';
+            
+            if (appState.mode === 'Phonetic') {
+                const { activeWord, phoneticVoiceButton } = elements;
+                activeWord.style.display = 'none';
+                phoneticVoiceButton.style.display = 'block';
+            }
+            
             console.log('Class remove:', wordContainer.classList);
         }
     });
