@@ -2,13 +2,14 @@
 
 # Wordly 🌍 - Multi-Language Learning Extension
 
-A powerful browser extension designed to help you learn vocabulary in **6 popular European languages** while browsing the web. Master English, German, French, Italian, Spanish, and Danish with interactive learning modes and smart notifications.
+A powerful browser extension designed to help you learn vocabulary in **7 popular European languages** while browsing the web. Master Russian, English, German, French, Italian, Spanish, and Danish with interactive learning modes and smart notifications.
 
 [![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install-blue?logo=google-chrome)](https://chromewebstore.google.com/detail/wordly/omnmhbbfdkcaglkikjcijapgcabifikp)
 
 ## Features
 
 ### **Multi-Language Support**
+- **🇷🇺 Russian** - Most popular language in Russia
 - **🇬🇧 English** - Most popular language worldwide
 - **🇩🇪 German** - Language of business and innovation  
 - **🇫🇷 French** - Language of culture and diplomacy
