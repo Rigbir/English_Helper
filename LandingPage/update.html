@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wordly – What’s New</title>
+    <link rel="icon" href="./imageLanding/fav.png" />
+    <link rel="stylesheet" href="./style.css" />
+    <style>
+        /* Minor page-specific tweaks layered over LandingPage/style.css */
+        :root{
+            --wn-purple:#6d5bd0;
+            --wn-purple-2:#8b7ff6;
+            --wn-muted: rgba(0,0,0,.08);
+        }
+        .wn-hero {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            align-items: center;
+            justify-items: center;
+            padding: 80px 20px 36px;
+            text-align: center;
+            background:
+                radial-gradient(1200px 600px at 10% 0%, rgba(141,127,246,.25), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(109,91,208,.25), transparent 60%),
+                linear-gradient(180deg, rgba(109,91,208,.08), rgba(0,0,0,0));
+        }
+        .wn-badge { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 10px; 
+            padding: 8px 14px; 
+            border-radius: 999px; 
+            background: var(--wn-muted);
+            font-weight: 600;
+        }
+        .wn-title { 
+            font-size: clamp(28px, 4vw, 44px); margin: 8px 0 6px; 
+            background: linear-gradient(90deg, var(--wn-purple), var(--wn-purple-2));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .wn-sub { opacity: .85; max-width: 880px; margin: 0 auto; }
+
+        .wn-section { padding: 28px 20px; max-width: 1000px; margin: 0 auto; }
+        .wn-card { 
+            background: rgba(0,0,0,0.04);
+            border-radius: 16px; 
+            padding: 18px; 
+            border: 1px solid rgba(109,91,208,.12);
+            box-shadow: 0 6px 24px rgba(109,91,208,.06);
+        }
+        .wn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .wn-list { margin: 12px 0 0 0; padding-left: 18px; }
+        .wn-list li { margin: 6px 0; }
+
+        .wn-footer { text-align: center; padding: 28px 20px 60px; opacity: .85; }
+        .wn-cta {
+            display: inline-flex; 
+            gap: 12px; 
+            margin-top: 16px; 
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2; /* ensure above any decorative layers */
+        }
+        /* keep legacy wn-btn styles unused now; buttons reuse LandingPage/style.css classes */
+    </style>
+</head>
+<body>
+    <!-- Top visual echoing Landing look -->
+    <header class="wn-hero">
+        <div class="wn-badge">
+            <img src="./imageLanding/fav.png" alt="" width="45" height="45" style="border-radius:4px;" />
+            What’s New in Wordly
+        </div>
+        <h1 class="wn-title">Update <span id="wn-version">vX.Y.Z</span></h1>
+        <p class="wn-sub">Here you can highlight what changed in this release. Replace placeholders below with your version and notes.</p>
+        <div class="wn-cta">
+            <a id="wn-store-link" href="https://chromewebstore.google.com/detail/english-helper/omnmhbbfdkcaglkikjcijapgcabifikp" class="btn btn-primary btn-large btn-glow" rel="noopener" target="_blank">
+                <i class="fab fa-chrome"></i>
+                <span>Open in Chrome Web Store</span>
+                <div class="btn-particles"></div>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Changelog section -->
+        <section class="wn-section">
+            <div class="wn-card">
+                <h2 style="margin:0 0 8px">Changelog</h2>
+                <p style="opacity:.8; margin:0 0 10px">Replace the items below with your release notes.</p>
+                <ul class="wn-list" id="wn-changelog">
+                    <li>[Feature] Placeholder item 1</li>
+                    <li>[Improvement] Placeholder item 2</li>
+                    <li>[Fix] Placeholder item 3</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Highlights grid -->
+        <section class="wn-section">
+            <div class="wn-grid">
+                <div class="wn-card">
+                    <h3 style="margin:0 0 8px">Highlight A</h3>
+                    <p class="wn-sub" style="margin:0">Short description of a key change. Replace this text.</p>
+                </div>
+                <div class="wn-card">
+                    <h3 style="margin:0 0 8px">Highlight B</h3>
+                    <p class="wn-sub" style="margin:0">Another important improvement worth mentioning here.</p>
+                </div>
+                <div class="wn-card">
+                    <h3 style="margin:0 0 8px">Highlight C</h3>
+                    <p class="wn-sub" style="margin:0">Add more cards or remove as needed.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="wn-footer">
+        <div>Thank you for using Wordly!</div>
+        <div style="margin-top:8px;">        
+            <p>&copy; 2024 Wordly. Made with ❤️ by <a href="https://github.com/Rigbir">Rigbir</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Optional: auto-fill version from manifest if available
+        try {
+            fetch('../manifest.json')
+                .then(r => r.ok ? r.json() : null)
+                .then(m => { if (m && m.version) document.getElementById('wn-version').textContent = 'v' + m.version; });
+            // Set Chrome Web Store link only if href is not predefined
+            try {
+                const a = document.getElementById('wn-store-link');
+                if (a) {
+                    const current = a.getAttribute('href');
+                    if (!current || current === '#') {
+                        const id = chrome?.runtime?.id;
+                        const url = id ? `https://chromewebstore.google.com/detail/${id}` : 'https://chromewebstore.google.com/';
+                        a.setAttribute('href', url);
+                    }
+                }
+            } catch(e) { /* noop */ }
+        } catch (e) { /* noop */ }
+    </script>
+</body>
+</html>
+
+
