@@ -18,7 +18,7 @@
         "service_worker": "core/background.js"
     },
     "action": {
-        "default_icon": "image/favicon.png",
+        "default_icon": "image/yellow.png",
         "default_popup": "views/popup.html"
     },
     "web_accessible_resources": [

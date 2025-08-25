@@ -123,7 +123,7 @@ chrome.runtime.onInstalled.addListener((details) => {
             chrome.storage.session.get('updatePageShown', ({ updatePageShown }) => {
                 if (updatePageShown) return;
 
-                const url = chrome.runtime.getURL('LandingPage/update.html');
+                const url = chrome.runtime.getURL('UpdatePage/update.html');
                 chrome.tabs.create({ url });
                 chrome.storage.session.set({ updatePageShown: true });
                 console.log('Opened What\'s New page after update:', url);

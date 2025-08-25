@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wordly – What’s New</title>
+    <link rel="icon" href="../LandingPage/imageLanding/fav.png" />
+    <link rel="stylesheet" href="../LandingPage/style.css" />
+    <style>
+        /* Minor page-specific tweaks layered over LandingPage/style.css */
+        :root{
+            --wn-purple:#6d5bd0;
+            --wn-purple-2:#8b7ff6;
+            --wn-muted: rgba(0,0,0,.08);
+        }
+        ::selection { background:#3b82f6; color:#fff; }
+        ::-moz-selection { background:#3b82f6; color:#fff; }
+        .wn-hero {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+            align-items: center;
+            justify-items: center;
+            padding: 80px 20px 36px;
+            text-align: center;
+            background:
+                radial-gradient(1200px 600px at 10% 0%, rgba(141,127,246,.25), transparent 60%),
+                radial-gradient(900px 500px at 90% 10%, rgba(109,91,208,.25), transparent 60%),
+                linear-gradient(180deg, rgba(109,91,208,.08), rgba(0,0,0,0));
+        }
+        .wn-badge { 
+            display: inline-flex; 
+            cursor: default;
+            align-items: center; 
+            gap: 10px; 
+            padding: 8px 14px; 
+            border-radius: 999px; 
+            background: var(--wn-muted);
+            font-weight: 600;
+        }
+        .wn-title { 
+            font-size: clamp(28px, 4vw, 44px); margin: 8px 0 6px; 
+            background: linear-gradient(90deg, var(--wn-purple), var(--wn-purple-2));
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .wn-sub { opacity: .85; max-width: 880px; margin: 0 auto; }
+
+        .wn-section { padding: 28px 20px; max-width: 1000px; margin: 0 auto; }
+        .wn-card { 
+            background: rgba(0,0,0,0.04);
+            border-radius: 16px; 
+            padding: 18px; 
+            border: 1px solid rgba(109,91,208,.12);
+            box-shadow: 0 6px 24px rgba(109,91,208,.06);
+            position: relative;
+            overflow: hidden;
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease, background-color .25s ease;
+        }
+        /* Glow aura */
+        .wn-card::after {
+            content: "";
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            pointer-events: none;
+            background: radial-gradient(600px 200px at 10% -10%, rgba(141,127,246,.18), transparent 40%),
+                        radial-gradient(500px 200px at 110% 110%, rgba(109,91,208,.18), transparent 40%);
+            opacity: 0;
+            transition: opacity .25s ease;
+        }
+        /* Sheen sweep */
+        .wn-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -60%;
+            width: 40%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.15), transparent);
+            transform: skewX(-15deg);
+            opacity: 0; pointer-events: none;
+        }
+        .wn-card:hover {
+            transform: translateY(-4px);
+            background: rgba(0,0,0,0.045);
+            border-color: rgba(109,91,208,.35);
+            box-shadow: 0 12px 30px rgba(109,91,208,.16);
+        }
+        .wn-card:hover::after { opacity: 1; }
+        .wn-card:hover::before {
+            animation: wn-sheen 900ms ease;
+            opacity: 1;
+        }
+        @keyframes wn-sheen {
+            0% { left: -60%; opacity: 0; }
+            10% { opacity: 1; }
+            100% { left: 120%; opacity: 0; }
+        }
+        /* Accessibility: reduce motion */
+        @media (prefers-reduced-motion: reduce) {
+            .wn-card, .wn-card::after { transition: none; }
+            .wn-card:hover { transform: none; }
+            .wn-card:hover::before { animation: none; opacity: 0; }
+        }
+        .wn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+        .wn-list { margin: 12px 0 0 0; padding-left: 18px; cursor: default; }
+        .wn-list li { margin: 6px 0; }
+
+        .wn-footer { text-align: center; padding: 28px 20px 60px; opacity: .85; cursor: default; }
+        .wn-cta {
+            display: inline-flex; 
+            gap: 12px; 
+            margin-top: 16px; 
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2; /* ensure above any decorative layers */
+        }
+        /* keep legacy wn-btn styles unused now; buttons reuse LandingPage/style.css classes */
+    </style>
+</head>
+<body>
+    <!-- Top visual echoing Landing look -->
+    <header class="wn-hero">
+        <div class="wn-badge">
+            <img src="../LandingPage/imageLanding/fav.png" alt="" width="45" height="45" draggable="false" style="border-radius:4px;" />
+            What’s New in Wordly
+        </div>
+        <h1 class="wn-title">Update <span id="wn-version">vX.Y.Z</span></h1>
+        <div class="wn-cta">
+            <a id="wn-store-link" href="https://chromewebstore.google.com/detail/english-helper/omnmhbbfdkcaglkikjcijapgcabifikp" class="btn btn-primary btn-large btn-glow" rel="noopener" target="_blank">
+                <i class="fab fa-chrome"></i>
+                <span>Open in Chrome Web Store</span>
+                <div class="btn-particles"></div>
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <!-- Unified Update Cards -->
+        <section class="wn-section">
+            <div class="wn-grid" id="wn-cards">
+                <div class="wn-card">
+                    <div style="display:inline-flex;gap:8px;align-items:center;margin-bottom:6px;">
+                        <span class="wn-badge" style="background:rgba(16,185,129,.15);color:#0f766e;">Feature</span>
+                    </div>
+                    <h3 style="margin:0 0 6px" class="wn-card-title">New: Placeholder feature title</h3>
+                    <p>Brief description of the feature. Replace with your own text.</p>
+                </div>
+                <div class="wn-card">
+                    <div style="display:inline-flex;gap:8px;align-items:center;margin-bottom:6px;">
+                        <span class="wn-badge" style="background:rgba(59,130,246,.15);color:#1d4ed8;">Improvement</span>
+                    </div>
+                    <h3 style="margin:0 0 6px" class="wn-card-title">Improved: Placeholder improvement</h3>
+                    <p>Short line about what exactly was improved for users.</p>
+                </div>
+                <div class="wn-card">
+                    <div style="display:inline-flex;gap:8px;align-items:center;margin-bottom:6px;">
+                        <span class="wn-badge" style="background:rgba(234,179,8,.15);color:#854d0e;">Fix</span>
+                    </div>
+                    <h3 style="margin:0 0 6px" class="wn-card-title">Fixed: Placeholder bug</h3>
+                    <p>One sentence about the resolved issue or stability improvement.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="wn-footer">
+        <div>Thank you for using Wordly!</div>
+        <div style="margin-top:8px;">        
+            <p>&copy; 2024 Wordly. Made with ❤️ by <a href="https://github.com/Rigbir">Rigbir</a></p>
+        </div>
+    </footer>
+
+    <script>
+        // Optional: auto-fill version from manifest if available
+        try {
+            fetch('../manifest.json')
+                .then(r => r.ok ? r.json() : null)
+                .then(m => { if (m && m.version) document.getElementById('wn-version').textContent = 'v' + m.version; });
+            // Set Chrome Web Store link only if href is not predefined
+            try {
+                const a = document.getElementById('wn-store-link');
+                if (a) {
+                    const current = a.getAttribute('href');
+                    if (!current || current === '#') {
+                        const id = chrome?.runtime?.id;
+                        const url = id ? `https://chromewebstore.google.com/detail/${id}` : 'https://chromewebstore.google.com/';
+                        a.setAttribute('href', url);
+                    }
+                }
+            } catch(e) { /* noop */ }
+        } catch (e) { /* noop */ }
+        
+        // Sparkle particles on button click (same effect family as index.html)
+        (function(){
+            function createParticles(button){
+                const particles = button.querySelector('.btn-particles');
+                if (!particles) return;
+                for (let i = 0; i < 10; i++) {
+                    const particle = document.createElement('div');
+                    particle.style.cssText = `position:absolute;width:4px;height:4px;background:rgba(255,255,255,.85);border-radius:50%;pointer-events:none;animation:wn-particle 1s ease-out forwards;`;
+                    particle.style.left = Math.random() * 100 + '%';
+                    particle.style.top = Math.random() * 100 + '%';
+                    particle.style.animationDelay = (Math.random() * 0.25) + 's';
+                    particles.appendChild(particle);
+                    setTimeout(() => particle.remove(), 1100);
+                }
+            }
+            const css = `@keyframes wn-particle{0%{transform:translateY(0) scale(1);opacity:1}100%{transform:translateY(-50px) scale(0);opacity:0}}`;
+            const style = document.createElement('style');
+            style.textContent = css;
+            document.head.appendChild(style);
+            document.querySelectorAll('.btn-glow').forEach(btn => {
+                btn.addEventListener('click', () => createParticles(btn));
+            });
+        })();
+    </script>
+</body>
+</html>
+
+
