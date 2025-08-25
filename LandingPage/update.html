@@ -29,6 +29,7 @@
         }
         .wn-badge { 
             display: inline-flex; 
+            cursor: default;
             align-items: center; 
             gap: 10px; 
             padding: 8px 14px; 
@@ -52,10 +53,10 @@
             box-shadow: 0 6px 24px rgba(109,91,208,.06);
         }
         .wn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-        .wn-list { margin: 12px 0 0 0; padding-left: 18px; }
+        .wn-list { margin: 12px 0 0 0; padding-left: 18px; cursor: default; }
         .wn-list li { margin: 6px 0; }
 
-        .wn-footer { text-align: center; padding: 28px 20px 60px; opacity: .85; }
+        .wn-footer { text-align: center; padding: 28px 20px 60px; opacity: .85; cursor: default; }
         .wn-cta {
             display: inline-flex; 
             gap: 12px; 
@@ -71,7 +72,7 @@
     <!-- Top visual echoing Landing look -->
     <header class="wn-hero">
         <div class="wn-badge">
-            <img src="./imageLanding/fav.png" alt="" width="45" height="45" style="border-radius:4px;" />
+            <img src="./imageLanding/fav.png" alt="" width="45" height="45" draggable="false" style="border-radius:4px;" />
             What’s New in Wordly
         </div>
         <h1 class="wn-title">Update <span id="wn-version">vX.Y.Z</span></h1>
